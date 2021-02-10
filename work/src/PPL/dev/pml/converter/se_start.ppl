@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service start
+
+	function start
+
+        if se_OS_process.command_line_arguments is not null then
+            se_CLI_start.start
+        else
+            se_parameters_GUI.ask_parameters_and_consume (
+                formal_parameters = se_PML_convert_command.formal_input_parameters
+                window_title = "PML Converter"
+                form_title = "Convert PML document to HTML"
+                submit_text = "Convert"
+                parameters_consumer = { parameters ->
+                    case type of se_PML_convert_command.execute ( parameters )
+                        when file HTML_file
+                            handle_success_result ( HTML_file )
+                        when anticipated_error error
+                            handle_error_result ( error )
+                    .
+                },
+                exit_system_on_window_close = yes )
+        .
+	.
+	
+	functions access:private
+	    
+	    function handle_success_result ( HTML_file file )
+	        
+	        if se_OS_config.OS_is_Windows then
+	            handle_success_result_on_Windows ( HTML_file )
+            else
+	            handle_success_result_on_non_Windows ( HTML_file )
+            .
+        .
+	    
+	    function handle_success_result_on_Windows ( HTML_file file )
+
+            const question = """The following file has been created:
+{{HTML_file.to_string}}
+Do you want to open it in your default browser?"""
+            const open_file = se_GUI_dialogs.ask_yes_no (
+                title = "Success"
+                question
+                default_answer = yes )
+                
+            if open_file is not null then
+                if open_file then
+                    const open_error = se_desktop_utilities.open_file_in_default_browser ( file = HTML_file )
+                    if open_error is not null then
+                        se_GUI_dialogs.show_error_and_wait ( error = open_error.info )
+                    .
+                .
+            .
+	    .
+
+        // se_desktop_utilities.open_file_in_default_browser freezes the application on Linux Mint and Fedora (2020-06-10)    
+	    function handle_success_result_on_non_Windows ( HTML_file file )
+
+            const info = """The following file has been created:
+{{HTML_file.to_string}}"""
+            se_GUI_dialogs.show_info_and_continue ( title = "Success", info )
+	    .
+	    
+	    function handle_error_result ( error anticipated_error )
+
+            case type of error
+                when PML_code_error PML_code_error then
+                    se_error_GUI.show_text_error_in_new_window (
+                        error = PML_code_error
+                        window_title = "PML Code Error" )
+                otherwise
+                    se_GUI_dialogs.show_error_and_wait ( error = error.info )
+            .
+        .
+	.
+.

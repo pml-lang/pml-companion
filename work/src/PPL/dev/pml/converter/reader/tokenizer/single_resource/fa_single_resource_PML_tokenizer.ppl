@@ -1,0 +1,331 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory single_resource_PML_tokenizer
+
+    attributes access:private
+    	
+    	text_scanner text_scanner_with_line_column
+        resource non_error or null default:null
+    .
+
+    functions
+    
+        has_more_code = a_text_scanner.has_more
+        
+        current_resource = a_resource
+        
+        current_position = a_text_scanner.current_text_position
+        
+        is_at_string = a_text_scanner.is_at_string ( i_string )
+
+        skip_string = a_text_scanner.skip_string ( string )
+        
+        skip_spaces_and_tabs
+            a_text_scanner.skip_spaces_and_tabs
+        .
+        
+        skip_line_continuation
+            consume_regex ( a_config.line_continuation )
+        .
+        
+        // node
+    
+        try_consume_node_start_symbol = skip_character ( a_config.node_start_symbol )
+        
+        consume_node_end_symbol = skip_character ( a_config.node_end_symbol )
+
+        consume_node_name
+		
+		    const position = current_position
+			const value = consume_regex ( a_config.node_tag ) on_null: return null
+            return PML_token.create ( value, position )
+		.
+		
+		skip_one_space_after_node_name
+		
+		    if skip_character ( ' ' ) then
+		        return
+            .
+            skip_character ( '\t' )
+        .
+        
+        consume_text
+        
+            if is_at_character ( a_config.node_start_symbol ) or \
+                is_at_character ( a_config.node_end_symbol ) then
+                return null
+            .
+
+            const position = current_position
+            
+            variable text string
+            
+            const text_minus_last_char = consume_all_to_regex_excluding ( a_config.text_end )
+            
+            if text_minus_last_char is not null then
+                // e.g. abc}
+                const last_character = consume_current_character
+                assert last_character is not null
+                text = text_minus_last_char & last_character.to_string
+            
+            else
+                if is_at_regex ( a_config.text_end ) then
+                    // e.g. a}
+                    const single_character = consume_current_character
+                    assert single_character is not null
+                    text = single_character.to_string
+                else
+                    // e.g. ab dkf hjdskg hds<eof>
+                    const remaining = consume_remaining on_null: return null
+                    text = remaining
+                .
+            .
+            
+            return PML_token.create ( value = text, position )
+        .
+        
+        try_consume_text_in_node_with_raw_text_content
+
+            const position = current_position
+            
+            const regex = regex.create ( """\R[ \t]*{{i_tag}}\{{a_config.node_end_symbol}}""" )
+            
+            const leading_text = consume_all_to_regex_excluding ( regex )
+            if leading_text is null then
+                if not a_text_scanner.is_at_regex ( regex ) then
+    				return create_error_at_current_position ( """Content for '{{i_tag}}' must be terminated on a subsequent line with '{{i_tag}}{{a_config.node_end_symbol}}'.""" )
+                .
+            .
+            
+            const trailing_whitespace = a_text_scanner.consume_spaces_tabs_and_new_lines.result
+            
+            assert skip_string ( i_tag )
+            
+            const text = mutable_string.create
+            if leading_text is not null then
+                text.append ( leading_text )
+            .
+            if trailing_whitespace is not null then
+                text.append ( trailing_whitespace )
+            .
+            assert not text.is_empty
+
+            return PML_token.create ( value = text.to_string, position )
+        .
+        
+        // attributes
+
+        consume_attributes_start_symbol = skip_character ( a_config.attributes_start_symbol )
+
+        consume_attributes_end_symbol = skip_character ( a_config.attributes_end_symbol )
+        
+        consume_attribute_id_value_separator = skip_regex ( a_config.attribute_id_value_separator )
+
+        consume_attribute_id
+
+            const position = current_position
+            const value = consume_regex ( a_config.attribute_id ) on_null: return null
+            return PML_token.create ( value, position )
+        .
+        
+        is_at_attribute_id_and_assignment_symbol = is_at_regex ( a_config.attribute_id_and_assignment_symbol )
+
+        try_consume_attribute_value
+            
+            if is_at_character ( '"' ) then
+                return try_require_quoted_attribute_value
+            else
+                return read_unquoted_attribute_value
+            .
+        .
+        
+        // whitespace
+
+        try_skip_comments
+        
+            repeat forever
+                const comment_found = try_skip_nested_comment on_error: return_error
+                if not comment_found then
+                    exit repeat
+                .
+            .
+            
+            return null
+        .
+        
+        // errors
+        
+        create_error = PML_code_error.create (
+            info,
+            data = null
+            error_position = i_position
+            resource,
+            text_containing_error = a_text_scanner.text_at_line ( i_position.line_number )
+            text_containing_error_start_line = i_position.line_number )
+            
+        create_error_at_current_position = PML_code_error.create (
+            info,
+            data = null
+            error_position = current_position
+            resource,
+            text_containing_error = a_text_scanner.text_at_current_line 
+            text_containing_error_start_line = current_position.line_number )
+    .
+
+    functions access:private
+
+        try_require_quoted_attribute_value -> PML_token or PML_code_error
+
+            const position = current_position
+            
+            const quoted_value = consume_regex ( a_config.quoted_attribute_value )
+            if quoted_value is null then
+                if is_at_string ( '''""''' ) then
+                    return create_error_at_current_position ( "An empty attribute value is not allowed." )
+                else
+                    return create_error_at_current_position ( '''Missing " at end of attribute value.''' )
+                .
+            .
+
+            const value = quoted_value.remove_first.remove_last.replace_all (
+                to_replace = '''\"'''
+                replace_by = '''"''' )
+            
+            return PML_token.create ( value, position )
+        .
+
+        read_unquoted_attribute_value -> PML_token or null
+        
+            const position = current_position
+            
+            variable value string or null = null
+            
+            const any_char_and_space_and_attribute_id_and_assignment_symbol_match_result = is_at_regex_with_match_result (
+                a_config.any_char_and_space_and_attribute_id_and_assignment_symbol )
+            // %wle<any_char_and_space_and_attribute_id_and_assignment_symbol_match_result>
+
+            if any_char_and_space_and_attribute_id_and_assignment_symbol_match_result is null then
+                // no more attribute assignments on current line
+                // read everything until end of line, but exclude line continuation \ at the end
+                value = consume_regex ( a_config.unquoted_attribute_value )
+
+            else
+                ///
+                value = anything_and_space_and_attribute_id_and_assignment_symbol_match_result.group_found ( 1 )
+                if value is null then
+                    return null
+                .
+                value = consume_regex ( a_config.attribute_value )
+                .///
+                
+                const any_char_before_attribute_id_and_assignment_symbol = \
+                    any_char_and_space_and_attribute_id_and_assignment_symbol_match_result.group_found ( 1 )
+                assert any_char_before_attribute_id_and_assignment_symbol is not null
+                // %we<any_char_before_attribute_id_and_assignment_symbol>
+                const scanner = fa_text_scanner.create ( any_char_before_attribute_id_and_assignment_symbol )
+                value = scanner.consume_regex ( a_config.unquoted_attribute_value )
+                assert value is not null
+                assert skip_string ( value )
+            .
+            
+            value = value?.trim_whitespace
+
+            if value is null then
+                return null
+            .
+            
+            return PML_token.create ( value, position )
+        .
+        
+        // comment
+            
+        try_skip_nested_comment -> yes_no or PML_code_error
+        
+            const start_position = current_position
+            
+            if not skip_string ( a_config.comment_start ) then
+                return no
+            .
+            
+            const snippet = consume_all_to_regex_excluding ( a_config.comment_snippet_end )
+            if snippet is null then
+                return unclosed_comment_error ( start_position )
+            .
+
+            if skip_string ( a_config.comment_end ) then
+                return yes
+            
+            else
+                assert is_at_string ( a_config.comment_start )
+
+                // skip embedded comment
+                try_skip_nested_comment on_error: return_error
+
+                if consume_all_to_string_including ( a_config.comment_end ) is not null then
+                    return yes
+                else
+                    return unclosed_comment_error ( start_position )
+                .
+            .
+        .
+
+        unclosed_comment_error ( start_position text_position ) -> PML_code_error
+
+            consume_remaining
+
+            return create_error (
+                info = """A comment must be ended with '{{a_config.comment_end}}'."""
+                position = i_start_position )
+        .
+        
+        // text scanner wrapper functions
+        
+        is_at_character ( character ) -> yes_no = a_text_scanner.is_at_character ( i_character )
+        
+        is_at_regex ( regex ) -> yes_no = a_text_scanner.is_at_regex ( i_regex )
+        
+        is_at_regex_with_match_result ( regex ) -> regex_match_result or null = \
+            a_text_scanner.is_at_regex_with_match_result ( regex )
+        
+        skip_character ( character ) -> yes_no = a_text_scanner.skip_character ( character )
+
+        skip_regex ( regex ) -> yes_no = a_text_scanner.skip_regex ( regex )
+        
+        consume_current_character -> character or null = a_text_scanner.consume_current_character
+        
+        consume_regex ( regex ) -> string or null = a_text_scanner.consume_regex ( regex )
+
+        consume_all_to_string_including ( string ) -> string or null = \
+            a_text_scanner.consume_all_to_string_including ( string )
+        
+        consume_all_to_regex_excluding ( regex ) -> string or null = \
+            a_text_scanner.consume_all_to_regex_excluding ( regex )
+            
+        consume_remaining -> string or null = a_text_scanner.consume_remaining
+    .
+
+
+    creator create_for_code ( PML_code string, resource non_error or null default:null ) \
+        -> single_resource_PML_tokenizer
+
+        this.config = fa_PML_tokenizer_config.create
+        this.text_scanner = fa_text_scanner_with_line_column.create ( i_PML_code )
+        this.resource = i_resource
+        
+        return this
+    .
+
+    creator try_create_for_code_supplier ( PML_code_supplier failable_string_supplier ) \
+        -> single_resource_PML_tokenizer or runtime_error
+    
+        const PML_code = i_PML_code_supplier.get on_error: return_error
+        
+        return create_for_code ( PML_code, resource = PML_code_supplier.resource )
+    .
+
+    creator try_create_for_file ( file ) -> single_resource_PML_tokenizer or runtime_error
+    
+        return try_create_for_code_supplier ( file_string_supplier.create ( i_file ) )
+    .
+.

@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_parser
+
+    functions
+        
+        try_parse ( PML_code_supplier failable_string_supplier ) -> PML_document_AST or runtime_error
+
+        try_parse_file ( file ) -> PML_document_AST or runtime_error
+    
+        try_parse_code ( PML_code string ) -> PML_document_AST or PML_code_error
+    
+        try_parse_with_tokenizer ( tokenizer PML_tokenizer ) -> PML_document_AST or PML_code_error
+    .
+.

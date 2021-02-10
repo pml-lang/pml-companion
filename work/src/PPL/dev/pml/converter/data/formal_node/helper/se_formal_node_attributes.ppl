@@ -1,0 +1,48 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service formal_node_attributes
+
+    att a_id formal_parameter<string or null> = formal_parameter<string or null>.create (
+        ids = [# parameter_id.create ( se_PML_attribute_ids.id ) ]
+        default_value_supplier = { null }
+        value_parser = se_string_parser.instance
+        documentation = simple_documentation.create (
+            title = "Node Identifier"
+            description = "A unique identifier for the node. The id can be used for cross-referencing, or for local links in the resulting HTML code."
+            examples = "id = basic_concept" ) )
+
+    att title formal_parameter<string or null> = formal_parameter<string or null>.create (
+        ids = [# parameter_id.create ( se_PML_attribute_ids.title ) ]
+        default_value_supplier = { null }
+        value_parser = se_string_parser.instance
+        documentation = simple_documentation.create (
+            title = "Node Title"
+            description = "An optional small title, typically displayed above the node."
+            examples = "title = A beautiful idea" ) )
+
+    att caption formal_parameter<string or null> = formal_parameter<string or null>.create (
+        ids = [# parameter_id.create ( se_PML_attribute_ids.caption ) ]
+        default_value_supplier = { null }
+        value_parser = se_string_parser.instance
+        documentation = simple_documentation.create (
+            title = "Node Caption"
+            description = "An optional caption (small text) associated with the node. The caption is typically displayed below the node."
+            examples = '''caption = "Better health through exercise!"''' ) )
+            
+
+    function optional_id_and_title_attributes -> formal_parameters<*>
+        
+        return formal_parameters_builder_with_optional_id_and_title.make_immutable
+    .
+
+    function formal_parameters_builder_with_optional_id_and_title -> any_type_formal_parameters_builder
+
+        const r = any_type_formal_parameters_builder.create
+        
+        r.add_parameter ( a_id )
+        r.add_parameter ( a_title )
+
+        return r
+    .
+.

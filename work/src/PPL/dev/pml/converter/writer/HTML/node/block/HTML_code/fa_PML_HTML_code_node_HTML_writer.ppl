@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_HTML_code_node_HTML_writer type:PML_node_HTML_writer<PML_HTML_code_node>
+
+    function write
+    
+        if i_node.node_id #r null or i_node.title #r null then
+            context.write_node_id_and_title ( node, HTML_tag_name = "div" )
+            context.write ( ">" )
+            context.write_HTML_inline_tag_end ( "div" )
+            context.write_new_line
+        .
+
+        context.write ( i_node.text )
+    .
+    
+    creator create kind:in_all
+.

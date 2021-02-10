@@ -1,0 +1,14 @@
+/.gradle
+/build
+/buildGradle
+/distribution
+/distribution_zip
+/jpackage_distro
+/temp
+/tests
+
+# Directories and files starting with ---
+**/---*
+
+# Directories and files starting with NOGIT_
+**/NOGIT_*

@@ -1,0 +1,33 @@
+Version 1.2.0 2021-02-10
+========================
+
+- New features:
+
+    - The PML_to_HTML_Converter is now open-sourced under the GPL 2.
+    - Development is supported on Linux, macOS, and Windows.
+    - Support for the Gradle build tool has been added.
+    - The 'prism' source code syntax highlighter is now supported, as an alternative to 'lightjs'.
+      Refer to the documentation of nodes 'document', 'code', and 'insert_code' for more information.
+
+
+Version 1.1.0 2021-01-14
+========================
+
+- New features:
+
+    - New tags:
+        - table_data: Simple table data defined as plain CSV text, and rendered as a table.
+        - table: A table layout composed of rows and columns. Besides just text, each cell in the table can have complex content, including nested tables. Conceptually similar to a HTML table.
+        - monospace: A paragraph in which whitespace is preserved, and a monospace font is used.
+        - division: A division or section in the document. Similar to a 'div' tag in HTML.
+        - span: An inline node typically used to render a HTML <span>...</span> inline element with a specific set of HTML attributes.
+
+    - New attributes:
+        - caption: a small text displayed below the node. Available for the following tags: image, audio, video, youtube_video, and table
+
+    - New command line arguments:
+        - Added command line arguments 'HTML_header' and 'HTML_footer' to the PML_to_HTML_Converter. Allows you to:
+            - Provide a custom HTML header/footer for each document, or generate only the HTML body code (no header/footer).
+            - Customize the style of the resulting HTML by providing your specific CSS file(s), in addition to PML's default CSS file, or as a replacement.
+
+- Some minor bug fixes

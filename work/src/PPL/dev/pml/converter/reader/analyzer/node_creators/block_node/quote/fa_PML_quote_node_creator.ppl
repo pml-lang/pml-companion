@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_quote_node_creator type:PML_node_creator<PML_quote_node>
+
+    function create_node
+    
+        // attributes
+        
+        const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
+        
+        se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
+            const node_id = id
+            const title = title )
+            
+        const source = attributes.require_value<string or null> ( "source" )
+        
+        const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
+
+        // child_nodes
+        
+        const child_nodes = i_context.create_non_empty_child_block_nodes ( i_node_AST ) on_error: return_error
+        
+        return PML_quote_node.create ( node_id, title, source, HTML_attributes, child_nodes )
+    .
+    
+    creator create kind:in_all
+.

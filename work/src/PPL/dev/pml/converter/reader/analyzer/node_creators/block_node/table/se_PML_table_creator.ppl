@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_table_creator
+
+    function get_column_horizontal_alignments -> indexed_list<text_horizontal_alignment or null> or null or PML_code_error
+        in attributes any_type_parameters
+        in column_count pos_32
+        in node_AST PML_node_AST
+
+        const attribute_value = i_attributes.get_value<string or null> ( se_PML_table_formal_node.horizontal_alignments_parameter.standard_id )
+        if attribute_value is null then
+            return null
+        .
+
+        const halign_strings = attribute_value.split_by_regex ( se_PML_node_creator_regexes.comma_separator )
+        if halign_strings.size #v i_column_count then
+            return PML_code_error.create_for_token (
+                info = """The number of columns defined in the attribute for horizontal alignments ({{halign_strings.size}}) must be equal to the number of columns in the table ({{i_column_count}})""",
+                token = i_node_AST.attribute_value_token_or_throw ( se_PML_table_formal_node.horizontal_alignments_parameter )
+                resource = i_node_AST.resource )
+        .
+
+        const r = mutable_indexed_list_with_nulls<text_horizontal_alignment or null>.create
+        repeat for each halign_string in halign_strings
+            if halign_string is null then
+                r.append ( null )
+            else
+                case value of halign_string.to_lower_case
+                    when "l", "left"
+                        r.append ( ty_text_horizontal_alignment.left )
+                    when "c", "center"
+                        r.append ( ty_text_horizontal_alignment.center )
+                    when "r", "right"
+                        r.append ( ty_text_horizontal_alignment.right )
+                    otherwise
+                        return PML_code_error.create_for_token (
+                            info = """'{{halign_string}}' is an invalid value for a horizontal alignment. Valid values are:
+l, left
+c, center
+r, right
+Uppercase letters are allowed.""",
+                            token = i_node_AST.attribute_value_token_or_throw ( se_PML_table_formal_node.horizontal_alignments_parameter )
+                            resource = i_node_AST.resource )
+                .
+            .
+        .
+
+        return r.make_immutable
+    .
+.

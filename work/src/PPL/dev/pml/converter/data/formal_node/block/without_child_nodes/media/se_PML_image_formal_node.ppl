@@ -1,0 +1,97 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_image_formal_node
+
+    att attributes formal_parameters<*>
+        default
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+
+            /// TD
+            r.add<relative_file_path or URL> (
+                id = "source"
+                alternative_id = "src"
+                value_parser = { string ->
+                    if i_string.starts_with ( "http//" ) then
+                        return URL.try_parse ( string )
+                    else
+                        return relative_file_path.try_parse ( string )
+                    .
+                } )
+            .///
+            r.add<relative_file_path> (
+                ids = [# "source", "src" ]
+                value_parser = { string => relative_file_path.try_parse ( string ) }
+                title = "Image Source"
+                description = "The relative file path to the image file. The path is relative to the target HTML file."
+                examples = "source = images/ball.png" )
+            r.add<pos_32 or null> (
+                ids = [# "width" ]
+                default_value_supplier = { null }
+                value_parser = { string => pos_32.try_parse ( string ) }
+                title = "Image Width"
+                description = "The width of the image, expressed in pixels."
+                examples = "width = 200" )
+            r.add<pos_32 or null> (
+                ids = [# "height" ]
+                default_value_supplier = { null }
+                value_parser = { string => pos_32.try_parse ( string ) }
+                title = "Image Height"
+                description = "The height of the image, expressed in pixels."
+                examples = "height = 150" )
+            r.add<horizontal_alignment> (
+                ids = [# "align" ],
+                default_value_supplier = { ty_PML_image_node.alignment.default },
+                value_parser = { string ->
+                    case value of string
+                        when "left"
+                            return horizontal_alignment.left
+                        when "center"
+                            return horizontal_alignment.center
+                        when "right"
+                            return horizontal_alignment.right
+                        otherwise
+                            return parse_object_error<horizontal_alignment>.create (
+                                info ="""'{{i_string}}' is an invalid value for image alignment. Valid values are: left, center, and right."""
+                                data = i_string )
+                    .
+                },
+                title = "Horizontal Alignment",
+                description = """The horizontal alignment of the picture. Valid values are: left, center, and right.""",
+                examples = "align = center" )
+            r.add<yes_no> (
+                ids = [# "border" ]
+                default_value_supplier = { ty_PML_image_node.border.default }
+                value_parser = { string => yes_no.try_parse ( string ) }
+                title = "Border"
+                description = "This parameter can be set to 'yes' to draw a border around the image."
+                examples = "border = yes" )
+            r.add<URL or null> (
+                ids = [# "link" ]
+                default_value_supplier = { null }
+                value_parser = { string => URL.try_parse ( string ) }
+                title = "URL link"
+                description = "An URL link to the image. If the user clicks on the image, the browser will head to the specified URL."
+                examples = "link = http://www.example.com/path/image.png" )
+
+            r.add_parameter ( se_formal_node_attributes.caption )
+            
+            return r.make_immutable
+        .
+    .
+
+    att node PML_formal_block_node_without_child_nodes<PML_image_node> = \
+        PML_formal_block_node_without_child_nodes<PML_image_node>.create (
+            tags = [# "image", "img" ]
+            attributes = a_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_image_node_creator.create
+            HTML_writer = PML_image_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Image"
+                description = "An image, such as a .jpg or .png file."
+                examples = '''{image source = images/strawberries.jpg \
+    title = Strawberries (Photo by Jacek Dylag on Unsplash) \
+    link = https://unsplash.com/photos/kH3Sr9K8EBA}''' ) )
+.
+    

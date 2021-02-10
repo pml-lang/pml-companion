@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_dummy_block_node_without_child_nodes_creator type:PML_node_creator<PML_block_node_without_child_nodes>
+
+    function create_node
+
+        if yes then
+            throw "Should never be called"
+        .
+        return PML_youtube_video_node.create ( title = null, node_id = null, caption = null, HTML_attributes = null,
+            youtube_video_id = "dummy" )
+    .
+    
+    creator create kind:in_all
+.

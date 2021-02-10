@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_create_reference_manual_command
+
+    att output_directory_parameter formal_parameter<absolute_or_relative_directory_path> = \
+        formal_parameter<absolute_or_relative_directory_path>.create (
+            ids = [# parameter_id.create ( "output_directory" ), parameter_id.create ( "od" ) ]
+            value_parser = fa_absolute_or_relative_directory_path_parser.create
+            documentation = simple_documentation.create (
+                title = "Output Directory"
+                description = """Output directory in which the PML Reference Manual is created.
+If a relative path is specified then it is relative to the current working directory.
+If the output directory doesn't exist it will be created."""
+                examples = "ref_manual/HTML" ) )
+
+    att temp_directory_parameter formal_parameter<absolute_or_relative_directory_path> = \
+        formal_parameter<absolute_or_relative_directory_path>.create (
+            ids = [# parameter_id.create ( "temp_directory" ), parameter_id.create ( "td" ) ]
+            default_value_supplier = { se_OS_directories.temporary_files_directory_path }
+            value_parser = fa_absolute_or_relative_directory_path_parser.create
+            documentation = simple_documentation.create (
+                title = "Temporary Directory"
+                description = """Temporary directory used to create the PML Reference Manual.
+If a relative path is specified then it is relative to the current working directory.
+By default directory '{{se_OS_directories.temporary_files_directory_path}}' is used.
+The temporary directory can manually be deleted after the PML Reference Manual has been created."""
+                examples = "ref_manual/temp" ) )
+
+    att command explicit_paiom_command<string or anticipated_error> = \
+        explicit_paiom_command<string or anticipated_error>.create (
+        
+        ids = [# PAIOM_command_id.create ( "create_reference_manual" ), PAIOM_command_id.create ( "crm" ) ]
+        formal_input_parameters = any_type_formal_parameters_builder.create
+            .add_parameter ( a_output_directory_parameter )
+            .add_parameter ( a_temp_directory_parameter )
+            .make_immutable
+        executor = { input => se_PML_create_reference_manual_command.execute ( input ) },
+        documentation = simple_documentation.create (
+            title = "Create Reference Manual"
+            description = "This command creates the PML reference manual."
+            examples = null ) )
+
+	function execute ( input any_type_parameters or null ) -> string or anticipated_error
+	
+	    assert i_input is not null
+
+	    const temp_directory_path = i_input.get_value<absolute_or_relative_directory_path> (
+	        a_temp_directory_parameter.standard_id )
+	    const output_directory_path = i_input.get_value<absolute_or_relative_directory_path> (
+	        a_output_directory_parameter.standard_id )
+
+	    return se_PML_reference_manual.create_manual_for_path ( temp_directory_path, output_directory_path )
+    .
+.

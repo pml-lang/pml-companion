@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_to_HTML_config
+
+    attributes
+        
+        PML_input failable_string_supplier
+        
+        resources_directory_path directory_path or null default: se_PML_default_values.resources_directory_path
+        
+        output_directory_path directory_path default: se_PML_default_values.output_directory_path
+            
+        HTML_output_file_name file_name
+            
+        HTML_header failable_string_supplier or null \
+            default: file_string_supplier.create ( se_PML_default_values.HTML_header_file )
+
+        HTML_footer failable_string_supplier or null \
+            default: file_string_supplier.create ( se_PML_default_values.HTML_footer_file )
+
+        CLI_TOC_position PML_TOC_position or null default:null
+
+        CLI_source_code_highlighter PML_source_code_highlighter or null default:null
+
+        // omit_CSS yes_no default:se_PML_default_values.omit_CSS
+    .
+    
+    attributes kind:variable
+
+        document_TOC_position PML_TOC_position or null default:null
+
+        document_source_code_highlighter PML_source_code_highlighter or null default:null
+    .
+
+    functions
+    
+        HTML_output_file -> file
+
+        TOC_position -> PML_TOC_position
+
+        source_code_highlighter -> PML_source_code_highlighter
+    .
+.
+

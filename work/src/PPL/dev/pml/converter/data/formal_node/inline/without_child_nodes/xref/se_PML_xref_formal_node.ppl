@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_xref_formal_node
+
+    att attributes formal_parameters<*>
+        default
+            const r = any_type_formal_parameters_builder.create
+            
+            r.add_string_parameter (
+                ids = [# se_PML_attribute_ids.node_id ]
+                title = "Node Id"
+                description = "The identifier of the target node that is referenced."
+                examples = "node_id = chapter_1" )
+            r.add_string_or_null_parameter (
+                ids = [# se_PML_attribute_ids.text ]
+                default_value_supplier = { null }
+                title = "Text"
+                description = "The text to be displayed for the cross-reference. If this attribute is omitted, then the title of the target node is displayed. If the target node doesn't have a title, then the target node's identifier is displayed instead."
+                examples = "text = Hello World example" )
+            
+            return r.make_immutable
+        .
+    .
+
+    att node PML_formal_inline_node_without_child_nodes<PML_xref_node> = \
+        PML_formal_inline_node_without_child_nodes<PML_xref_node>.create (
+            tags = [# "xref" ]
+            attributes = a_attributes
+    //        default_attribute_id = se_PML_attribute_ids.title
+            HTML_attributes_allowed = yes
+            node_creator = PML_xref_node_creator.create
+            HTML_writer = PML_xref_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Cross-Reference"
+                description = "A cross-reference (link) to another node in the same document."
+                examples = '''{ch title=A Beautiful Solution id=solution
+    text text text
+}
+
+{ch title = Conclusion
+    As we saw in chapter {xref node_id=solution}, it is ...
+}''' ) )
+.
+    

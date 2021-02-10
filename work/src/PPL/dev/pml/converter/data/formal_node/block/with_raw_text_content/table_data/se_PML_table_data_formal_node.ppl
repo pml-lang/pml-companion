@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_table_data_formal_node
+
+    att attributes formal_parameters<*>
+        default
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+            
+            r.add_parameter ( se_PML_table_formal_node.horizontal_alignments_parameter )
+
+            return r.make_immutable
+        .
+    .
+    
+    att node PML_formal_block_node_with_raw_text_content<PML_table_data_node> = \
+        PML_formal_block_node_with_raw_text_content<PML_table_data_node>.create (
+            tags = [# "table_data", "tdata" ]
+            attributes = a_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_table_data_node_creator.create
+            HTML_writer = PML_table_data_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Table Data"
+                description = '''Simple table data defined as plain text, and rendered as a table.
+Each line of text represents a row.
+Cell values in a row are separated by a comma or a TAB character.
+The content of each cell can only be plain text. If formatted text or complex cell content (e.g. picture in a cell, or table in a table) is needed, then please use the 'table' tag.
+A header and footer can optionally be defined.
+The horizontal alignment (left, center, or right) can be specified for each column.
+The data will be rendered as a table.
+The following format rules apply:
+- Rows are separated by a line break. Empty lines are ignored.
+- Cells can be separated by a comma or a TAB character, but both separators cannot be mixed in a table.
+- Spaces before or after cell values are ignored.
+- If the second line is a dash (-) then the first line is a header.
+- If the second-last line is a dash (-) then the last line is a footer.
+'''
+                examples = '''Simple table:
+                
+{table_data
+    cell 1.1, cell 1.2
+    cell 2.1, cell 2.2
+table_data}
+
+{tdata halign="C,L,R" title="Table with header, footer, and column alignments"
+    Position, Product, Price
+    -
+    1, Organic food, 12.50
+    2, Meditation lessons, 150.00
+    -
+    ,,Total: 162.50
+tdata}
+''' ) )
+.

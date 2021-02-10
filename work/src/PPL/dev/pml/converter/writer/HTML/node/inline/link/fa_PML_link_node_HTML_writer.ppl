@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_link_node_HTML_writer type:PML_node_HTML_writer<PML_link_node>
+
+    function write
+    
+        const escaped_URL = i_context.escape_HTML ( i_node.URL.to_string )
+        const escaped_text = i_context.escape_HTML ( i_node.text )
+    
+        context.write ( """<a href="{{escaped_URL}}"""" )
+        context.write_HTML_attributes ( i_node, CSS_class_name = "pml-link" )
+        context.write ( """>{{escaped_text}}</a>""" )
+    .
+    
+    creator create kind:in_all
+.

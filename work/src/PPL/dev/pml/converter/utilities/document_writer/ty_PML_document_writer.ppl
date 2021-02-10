@@ -1,0 +1,55 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_document_writer
+
+    att writer string_writer
+
+    functions
+    
+        // basic writer functions
+
+        write ( string )
+        write_line ( string )
+        write_new_line
+        
+        // indent
+
+        increase_indent
+        decrease_indent
+
+        write_indent
+        write_indented_line ( string )
+        write_indented_lines ( string )
+        
+        // nodes
+
+        write_block_node_start ( tag_name string, attributes map<key:string, value:string> or null )
+        write_block_node_start_on_distinct_line (
+            tag_name string, attributes map<key:string, value:string> or null )
+        write_inline_node_start ( tag_name string, attributes map<key:string, value:string> or null )
+            
+        write_HTML_block_tag_end ( tag_name string or null )
+        write_HTML_block_tag_end_on_distinct_line ( tag_name string or null )
+        write_inline_node_end // ( tag_name string or null )
+        
+        write_node_attributes ( attributes map<key:string, value:string> )
+
+        // specific nodes
+
+        start_document ( title string, authors string or null, date local_date or null )
+        // TD? end_document ( check_no_indent yes_no )
+        end_document
+
+        start_chapter ( title string, id string or null default:null )
+        end_chapter
+        
+        // escaping
+        
+        write_escaped_paragraph ( string )
+        write_non_escaped_paragraph ( string )
+        
+        escape_PML ( string ) -> string
+        escape_HTML ( string ) -> string
+    .
+.

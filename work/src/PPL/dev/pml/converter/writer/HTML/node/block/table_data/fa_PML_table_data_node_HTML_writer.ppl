@@ -1,0 +1,123 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_table_data_node_HTML_writer type:PML_node_HTML_writer<PML_table_data_node>
+
+    function write
+
+        context.write_block_node_start ( i_node, HTML_tag_name = "table", CSS_class_name = "pml-table" )
+        context.increase_indent
+
+        const column_horizontal_alignments = i_node.column_horizontal_alignments
+
+        write_header ( row = i_node.header_row, i_context )
+        write_body ( rows = i_node.body_rows, column_horizontal_alignments, i_context )
+        write_footer ( row = i_node.footer_row, column_horizontal_alignments, i_context )
+
+        context.decrease_indent
+        context.write_HTML_block_tag_end ( "table" )
+    .
+
+    functions access:private
+
+        write_header
+            in row list<string or null> or null
+            in context PML_HTML_writer_context
+
+            if i_row is null then
+                return
+            .
+
+            context.write_HTML_block_tag_start ( HTML_tag_name = "thead", CSS_class_name = "pml-table-header" )
+            context.increase_indent
+
+            write_row ( i_row, cell_tag = "th", cell_CSS_class_name = "pml-table-header-cell", column_horizontal_alignments = null, i_context )
+            
+            context.decrease_indent
+            context.write_HTML_block_tag_end ( "thead" )
+
+        .
+
+        write_footer
+            in row list<string or null> or null
+            in column_horizontal_alignments indexed_list<text_horizontal_alignment or null> or null
+            in context PML_HTML_writer_context
+
+            if i_row is null then
+                return
+            .
+
+            context.write_HTML_block_tag_start ( HTML_tag_name = "tfoot", CSS_class_name = "pml-table-footer" )
+            context.increase_indent
+
+            write_row ( i_row, cell_tag = "td", cell_CSS_class_name = "pml-table-footer-cell", i_column_horizontal_alignments, i_context )
+            
+            context.decrease_indent
+            context.write_HTML_block_tag_end ( "tfoot" )
+
+        .
+
+        write_body
+            in rows list<list<string or null>>
+            in column_horizontal_alignments indexed_list<text_horizontal_alignment or null> or null
+            in context PML_HTML_writer_context
+
+            context.write_HTML_block_tag_start ( HTML_tag_name = "tbody", CSS_class_name = "pml-table-body" )
+            context.increase_indent
+
+            repeat for each row in i_rows
+                write_row ( row, cell_tag = "td", cell_CSS_class_name = "pml-table-body-cell", i_column_horizontal_alignments, i_context )
+            .
+
+            context.decrease_indent
+            context.write_HTML_block_tag_end ( "tbody" )
+        .
+
+        write_row
+            in row list<string or null>
+            in cell_tag string
+            in cell_CSS_class_name string
+            in column_horizontal_alignments indexed_list<text_horizontal_alignment or null> or null
+            in context PML_HTML_writer_context
+
+            context.write_indent_and_string ( "<tr>" )
+            
+            repeat for each cell in i_row counter:column_index
+                const CSS_class_name = get_cell_class_name ( column_index, i_column_horizontal_alignments, i_cell_CSS_class_name )
+                context.write_HTML_inline_tag_start ( HTML_tag_name = i_cell_tag, CSS_class_name )
+
+                if cell is not null then
+                    context.write_escaped_HTML ( cell )
+                .
+
+                context.write_HTML_inline_tag_end ( i_cell_tag )
+            .
+            
+            context.write_HTML_inline_tag_end ( "tr" )
+            context.write_new_line
+        .
+
+        get_cell_class_name -> string
+            in column_index pos_64
+            in column_horizontal_alignments indexed_list<text_horizontal_alignment or null> or null
+            in cell_CSS_class_name string
+
+            if i_column_horizontal_alignments is null then
+                return i_cell_CSS_class_name
+            .
+
+            case enum of column_horizontal_alignments.get ( column_index.to_positive_32 )
+                when null
+                    return i_cell_CSS_class_name
+                when left
+                    return """{{i_cell_CSS_class_name}} pml-text-align-left"""
+                when right
+                    return """{{i_cell_CSS_class_name}} pml-text-align-right"""
+                when center
+                    return """{{i_cell_CSS_class_name}} pml-text-align-center"""
+            .
+        .
+    .
+    
+    creator create kind:in_all
+.

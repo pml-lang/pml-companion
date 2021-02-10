@@ -1,0 +1,175 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_table_data_node_creator type:PML_node_creator<PML_table_data_node>
+
+    function create_node
+
+        const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
+            
+        se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
+            const node_id = id
+            const title = title )
+            
+        const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
+
+        const text = i_context.normalize_text_in_node_with_raw_text_content ( i_node_AST ) on_error: return_error
+        const lines = get_lines ( text, i_node_AST ) on_error: return_error
+
+        const first_line = lines.first
+        const column_separator_regex = get_column_separator_regex ( first_line )
+        const column_count = get_column_count ( first_line, column_separator_regex )
+
+        const header_row = get_header_row ( lines, column_separator_regex )
+        const footer_row = get_footer_row ( lines, column_separator_regex )
+
+        const body_rows = get_body_rows ( lines, column_separator_regex, i_node_AST ) on_error: return_error
+
+        check_column_counts ( column_count, header_row, footer_row, body_rows, i_node_AST ) on_error: return_error
+
+        const column_horizontal_alignments = se_PML_table_creator.get_column_horizontal_alignments (
+            attributes, column_count, i_node_AST ) on_error: return_error
+
+        return PML_table_data_node.create (
+            node_id, title, HTML_attributes, text, header_row, body_rows, footer_row, column_horizontal_alignments )
+    .
+
+    functions access:private
+
+        get_lines ( text string, node_AST PML_node_AST ) -> mutable_indexed_list<string> or PML_code_error
+
+            // const r = i_text.split_by_new_line.stream.skip_nulls.to_mutable_indexed_list
+
+            const r = mutable_indexed_list<string>.create
+
+            const all_lines = i_text.split_by_new_line
+            repeat for each line in all_lines
+                if line is not null then
+                    r.append ( line )
+                .
+            .
+
+            if r.is_empty then
+                return PML_code_error.create_for_node_AST_tag ( info = "There are no rows defined.", i_node_AST)
+            .
+
+            return r
+        .
+
+        get_column_separator_regex ( first_line string ) -> regex or null
+
+            if i_first_line.contains ( "\t" ) then
+                return se_PML_node_creator_regexes.tab_separator
+            else if i_first_line.contains ( "," ) then
+                return se_PML_node_creator_regexes.comma_separator
+            else
+                return null
+            .
+        .
+
+        get_column_count ( first_line string, column_separator_regex regex or null ) -> pos_32
+
+            if i_column_separator_regex is null then
+                return 1
+            .
+
+            return first_line.split_by_regex ( i_column_separator_regex ).size
+        .
+
+        get_header_row ( lines mutable_indexed_list<string>, column_separator_regex regex or null ) -> list<string or null> or null
+
+            if lines.size <# 2 then 
+                return null
+            .
+
+            if lines.get ( 2 ) #v "-" then
+                return null
+            .
+
+            const first_line = lines.first
+            lines.remove_first
+            lines.remove_first
+
+            return get_row_cells ( row = first_line, i_column_separator_regex )
+        .
+
+        get_footer_row ( lines mutable_indexed_list<string>, column_separator_regex regex or null ) -> list<string or null> or null
+
+            if lines.size <# 2 then 
+                return null
+            .
+
+            if lines.get ( lines.size - 1 ) #v "-" then
+                return null
+            .
+
+            const last_line = lines.last
+            lines.remove_last
+            lines.remove_last
+
+            return get_row_cells ( row = last_line, i_column_separator_regex )
+        .
+
+        get_body_rows ( lines mutable_indexed_list<string>, column_separator_regex regex or null, node_AST PML_node_AST ) -> list<list<string or null>> or PML_code_error
+
+            if lines.is_empty then
+                return PML_code_error.create_for_node_AST_tag ( info = "There are no body rows defined.", i_node_AST)
+            .
+
+            const r = mutable_list<list<string or null>>.create
+            repeat for each line in lines
+                const cells = get_row_cells ( row = line, i_column_separator_regex )
+                r.append ( cells )
+            .
+
+            return r.make_immutable
+        .
+
+        get_row_cells ( row string, column_separator_regex regex or null ) -> list<string or null>
+
+            if i_column_separator_regex is null then
+                return list_with_nulls<string or null>.create_singleton ( i_row )
+            .
+
+            return i_row.split_by_regex ( i_column_separator_regex )
+        .
+
+        check_column_counts -> PML_code_error or null
+            in column_count pos_32
+            in header_row list<string or null> or null
+            in footer_row list<string or null> or null
+            in body_rows list<list<string or null>>
+            in node_AST PML_node_AST
+
+            if i_header_row is not null then
+                check_column_count ( i_column_count, row = i_header_row, label = "The table's header row", i_node_AST ) on_error:return_error
+            .
+
+            repeat for each body_row in i_body_rows counter:index
+                check_column_count ( i_column_count, row = body_row, label = """The row number {{index}} in the table's body""", i_node_AST ) on_error:return_error
+            .
+
+            if i_footer_row is not null then
+                check_column_count ( i_column_count, row = i_footer_row, label = "The table's footer row", i_node_AST ) on_error:return_error
+            .
+
+            return null
+        .
+
+        check_column_count -> PML_code_error or null
+            in column_count pos_32
+            in row list<string or null>
+            in label string
+            in node_AST PML_node_AST
+
+            if i_row.size =v i_column_count then
+                return null
+            else
+                return PML_code_error.create_for_node_AST_tag ( info = """{{label}} must contain {{i_column_count}} cells. But it actually contains {{i_row.size}} cells. Values:
+{{i_row.to_long_string}}""", i_node_AST)
+            .
+        .
+    .
+    
+    creator create kind:in_all
+.

@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_audio_formal_node
+
+    att attributes formal_parameters<*>
+        default
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+
+            /// TD
+            r.add<relative_file_path or URL> (
+                id = "source"
+                alternative_id = "src"
+                value_parser = { string ->
+                    if i_string.starts_with ( "http//" ) then
+                        return URL.try_parse ( string )
+                    else
+                        return relative_file_path.try_parse ( string )
+                    .
+                } )
+            .///
+            r.add<relative_file_path> (
+                ids = [# "source", "src" ]
+                value_parser = { string => relative_file_path.try_parse ( string ) }
+                title = "Audio Source"
+                description = "The relative file path to the audio file. The path is relative to the target HTML file."
+                examples = "source = audios/violin.mp3" )
+
+            r.add_parameter ( se_formal_node_attributes.caption )
+
+            // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
+            // TD add autoplay, controls, loop, muted (see https://www.w3schools.com/tags/tag_audio.asp)
+            
+            return r.make_immutable
+        .
+    .
+
+    att node PML_formal_block_node_without_child_nodes<PML_audio_node> = \
+        PML_formal_block_node_without_child_nodes<PML_audio_node>.create (
+            tags = [# "audio" ]
+            attributes = a_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_audio_node_creator.create
+            HTML_writer = PML_audio_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Audio (Sound)"
+                description = "An audio stream (sound), such as an .mp3 or .wav file."
+                examples = '''{audio title="Bird talk" source=audios/bird_talk.mp3}''' ) )
+.
+    

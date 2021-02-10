@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_monospace_node
+
+    inherit PML_block_node_with_child_nodes
+        redefine
+            att child_nodes list<PML_inline_node>
+        .
+    .
+
+    inherit PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    
+//    att keep_indent yes_no default:no
+.

@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_admonition_formal_node
+
+    att attributes formal_parameters<*>
+        default
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+            
+            r.add_string_parameter (
+                ids = [# "label" ]
+                title = "Label"
+                description = "The admonition's label, such as 'Note', 'Tip', 'Warning', etc."
+                examples = "label = Warning" )
+            
+            return r.make_immutable
+        .
+    .
+
+    att node PML_formal_block_node_with_child_nodes<PML_admonition_node> = \
+        PML_formal_block_node_with_child_nodes<PML_admonition_node>.create (
+            tags = [# "admonition", "adm" ]
+            attributes = a_attributes
+//            default_attribute_id = se_PML_attribute_ids.title
+            HTML_attributes_allowed = yes
+            node_creator = PML_admonition_node_creator.create
+            HTML_writer = PML_admonition_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Admonition"
+                description = "A labeled piece of advice, such as a note, tip, warning, etc."
+                examples = '''{adm label=Note
+    We will have a look at some {i striking} examples later in the book.
+}''' ) )
+.
+    

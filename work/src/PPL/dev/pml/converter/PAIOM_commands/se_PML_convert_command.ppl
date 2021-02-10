@@ -1,0 +1,163 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_convert_command
+
+    att input_file_parameter formal_parameter<absolute_or_relative_file_path> = \
+        formal_parameter<absolute_or_relative_file_path>.create (
+            ids = [# parameter_id.create ( "input_file" ), parameter_id.create ( "f" ) ]
+            default_value_supplier = default_input_file_supplier
+            value_parser = fa_absolute_or_relative_file_path_parser.create
+            validator = { path => se_absolute_or_relative_file_path.check_is_existing_file ( path ) }
+            documentation = simple_documentation.create (
+                title = "PML file to convert",
+                description = '''Absolute or relative path of the PML file to convert to HTML.
+If a relative path is specified then it is relative to the current working directory.
+The default value is defined in the following order:
+1. If file index.pml exists in the current working directory, then this is the default file.
+2. If a single .pml file exists in the current working directory, then this is the default file.
+3. There is no default value.'''
+                examples = "input/index.pml" ) )
+
+    att resources_directory_parameter formal_parameter<absolute_or_relative_directory_path or null> = \
+        formal_parameter<absolute_or_relative_directory_path or null>.create (
+            ids = [# parameter_id.create ( "resources_directory" ), parameter_id.create ( "rd" ) ]
+            default_value_supplier = { se_PML_default_values.relative_resources_directory_path }
+            value_parser = fa_absolute_or_relative_directory_path_parser.create
+            validator = { path => se_PML_to_HTML_checker.check_is_existing_directory_or_null ( path ) }
+            documentation = simple_documentation.create (
+                title = "Directory of resources"
+                description = """Optional directory of resources (e.g. media files) that will be copied into the output directory.
+If a relative path is specified then it is relative to the current working directory.
+By default, sub-directory '{{se_PML_default_values.resources_directory_name}}' of the current working directory is used, but only if such a directory exists."""
+                examples = "input/media" ) )
+
+    att output_directory_parameter formal_parameter<absolute_or_relative_directory_path> = \
+        formal_parameter<absolute_or_relative_directory_path>.create (
+            ids = [# parameter_id.create ( "output_directory" ), parameter_id.create ( "od" ) ]
+            default_value_supplier = { se_PML_default_values.relative_output_directory_path }
+            value_parser = fa_absolute_or_relative_directory_path_parser.create
+            documentation = simple_documentation.create (
+                title = "Directory of HTML document"
+                description = """Output directory in which the HTML document is created.
+If a relative path is specified then it is relative to the current working directory.
+By default directory '{{se_PML_default_values.output_directory_name}}' in the current working directory is used.
+If the output directory doesn't exist it will be created."""
+                examples = "output/HTML" ) )
+
+    att HTML_header_file_parameter formal_parameter<absolute_or_relative_file_path or null> = \
+        formal_parameter<absolute_or_relative_file_path or null>.create (
+            ids = [# parameter_id.create ( "HTML_header" ),
+                parameter_id.create ( "html_header" ),
+                parameter_id.create ( "header" ) ]
+            default_value_supplier = { se_PML_default_values.HTML_header_file.path }
+            value_parser = fa_absolute_or_relative_file_path_parser.create
+            validator = { path => se_PML_to_HTML_checker.check_is_existing_file_or_null ( path ) }
+            documentation = simple_documentation.create (
+                title = "HTML header file",
+                description = '''Absolute or relative path of a file that contains the HTML header code.
+If a relative path is specified then it is relative to the current working directory.
+If the value is empty then no header is written to the HTML output file.'''
+                examples = "headers/my_HTML_header.txt" ) )
+
+    att HTML_footer_file_parameter formal_parameter<absolute_or_relative_file_path or null> = \
+        formal_parameter<absolute_or_relative_file_path or null>.create (
+            ids = [# parameter_id.create ( "HTML_footer" ),
+                parameter_id.create ( "html_footer" ),
+                parameter_id.create ( "footer" ) ]
+            default_value_supplier = { se_PML_default_values.HTML_footer_file.path }
+            value_parser = fa_absolute_or_relative_file_path_parser.create
+            validator = { path => se_PML_to_HTML_checker.check_is_existing_file_or_null ( path ) }
+            documentation = simple_documentation.create (
+                title = "HTML footer file",
+                description = '''Absolute or relative path of a file that contains the HTML footer code.
+If a relative path is specified then it is relative to the current working directory.
+If the value is empty then no footer is written to the HTML output file.'''
+                examples = "headers/my_HTML_footer.txt" ) )
+
+///
+    att omit_CSS_parameter formal_parameter<yes_no> = \
+        formal_parameter<yes_no>.create (
+            ids = [# parameter_id.create ( "omit_CSS" ), parameter_id.create ( "omit_css" ) ]
+            default_value_supplier =  { se_PML_default_values.omit_CSS }
+            value_parser = se_yes_no_parser.default_parser
+            validator = null
+            documentation = simple_documentation.create (
+                title = "Omit CSS",
+                description = '''If this parameter is set to 'yes' then:
+- no CSS classes are used in the resulting HTML file
+- no CSS files are copied to the output directory
+By default this parameter is set to 'no'.'''
+                examples = "omit_CSS = yes" ) )
+.///
+
+    att formal_input_parameters formal_parameters<*> = any_type_formal_parameters_builder.create
+        .add_parameter ( a_input_file_parameter )
+        .add_parameter ( a_resources_directory_parameter )
+        .add_parameter ( a_output_directory_parameter )
+        .add_parameter ( a_HTML_header_file_parameter )
+        .add_parameter ( a_HTML_footer_file_parameter )
+        .make_immutable
+        // .add_parameter ( a_omit_CSS_parameter )
+
+    att command explicit_paiom_command<file or anticipated_error> = \
+        explicit_paiom_command<file or anticipated_error>.create (
+        
+        ids = [# PAIOM_command_id.create ( "convert" ) ]
+        formal_input_parameters = a_formal_input_parameters
+        executor = { input => se_PML_convert_command.execute(input) },
+        documentation = simple_documentation.create (
+            title = "PML to HTML Conversion"
+            description = "Convert a PML document into a HTML document."
+            examples = '''pmlc convert -f input/index.pml
+pmlc convert --input_file input/index.pml --output_directory output/HTML --resources_directory images''' ) )
+
+	function execute ( input any_type_parameters or null ) -> file or anticipated_error
+
+        try	
+            assert i_input is not null
+    
+            const PML_input_path = i_input.get_value<absolute_or_relative_file_path> ( a_input_file_parameter.standard_id )
+
+            const resources_directory_path = \
+                i_input.get_value<absolute_or_relative_directory_path or null> ( a_resources_directory_parameter.standard_id )
+            const output_directory_path = \
+                i_input.get_value<absolute_or_relative_directory_path> ( a_output_directory_parameter.standard_id )
+
+            const HTML_header_file_path = \
+                i_input.get_value<absolute_or_relative_file_path or null> ( a_HTML_header_file_parameter.standard_id )
+            const HTML_footer_file_path = \
+                i_input.get_value<absolute_or_relative_file_path or null> ( a_HTML_footer_file_parameter.standard_id )
+
+            // const omit_CSS = i_input.get_value<yes_no> ( a_omit_CSS_parameter.standard_id )
+                
+            const config = PML_to_HTML_config.create_for_paths (
+                root_directory_for_relative_path = se_OS_directories.current_working_directory_path
+                PML_input_path,
+                resources_directory_path,
+                output_directory_path,
+                HTML_header_file_path,
+                HTML_footer_file_path )
+                // omit_CSS )
+        
+            const HTML_file = se_PML_to_HTML_Converter.try_convert ( config ) on_error: return_error
+            
+            // return se_PML_to_HTML_Converter.success_message ( HTML_file )
+            return HTML_file
+        
+        catch_any unanticipated_error
+            log_to_file_unanticipated_error_handler.create.handle_error ( unanticipated_error )
+            return se_unanticipated_error.to_runtime_error ( unanticipated_error )
+        .
+    .
+    
+    functions access:private
+    
+        function default_input_file_supplier -> object_supplier<absolute_or_relative_file_path> or null
+        
+            const path = se_PML_default_values.relative_input_file_path on_null: return null
+            
+            return { path }
+        .
+    .
+.

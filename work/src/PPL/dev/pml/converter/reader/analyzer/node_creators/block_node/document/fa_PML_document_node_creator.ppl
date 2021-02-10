@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_document_node_creator type:PML_node_creator<PML_document_node>
+
+    function create_node
+    
+        // attributes
+        
+        const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
+        
+        const title = attributes.require_value<string> ( se_PML_attribute_ids.title )
+        
+        const authors_string = attributes.require_value<string or null> ( "author" )
+        const authors list<string> or null = authors_string \
+            ?.split_by_regex ( regex.create ( "[ \t]*[,;][ \t]*" ) ) \
+            .stream.skip_nulls.to_list_or_null type_check:no
+        
+        const publication_date = attributes.require_value<local_date> ( "date" )
+        const publication_time = attributes.require_value<local_time> ( "time" )
+
+        const TOC_position = attributes.require_value<PML_TOC_position> ( "TOC_position" )
+        
+        const source_code_highlighter = attributes.require_value<PML_source_code_highlighter> ( "source_code_highlighter" )
+        
+        const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
+
+        // child_nodes
+        
+        const child_nodes = i_context.create_emptyable_child_block_nodes ( i_node_AST ) on_error: return_error
+        
+        return PML_document_node.create (
+            title,
+            authors = authors,
+            publication_date, publication_time,
+            TOC_position,
+            source_code_highlighter,
+            HTML_attributes,
+            child_nodes )
+    .
+    
+    creator create kind:in_all
+.

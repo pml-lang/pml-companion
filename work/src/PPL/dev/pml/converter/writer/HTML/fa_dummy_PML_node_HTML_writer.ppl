@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory dummy_PML_node_HTML_writer type:PML_node_HTML_writer<PML_node>
+
+    function write
+        throw "This should never be reached"
+    .
+    
+    creator create kind:in_all
+.

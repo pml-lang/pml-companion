@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_token
+
+    function to_string = """{{a_value}} at {{a_position.to_string}}"""
+    
+    creator create kind:in_all
+.

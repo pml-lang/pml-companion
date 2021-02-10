@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_table_cell_node_HTML_writer type:PML_node_HTML_writer<PML_table_cell_node>
+
+    function write
+
+        context.write_block_node_with_child_nodes (
+            i_node,
+            HTML_tag_name = "td"
+            CSS_class_name = "pml-table-body-cell"
+            i_config )
+    .
+    
+    creator create kind:in_all
+.

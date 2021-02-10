@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_audio_node
+
+    inherit PML_block_node_without_child_nodes, PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    
+    attributes
+        
+        source relative_file_path // TD or URL
+
+        caption string or null
+    .
+.

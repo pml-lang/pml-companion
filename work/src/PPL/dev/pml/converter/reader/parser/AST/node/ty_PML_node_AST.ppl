@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_node_AST
+
+    inherit has_to_long_string
+
+    attributes
+        
+        resource non_error or null
+        
+        tag PML_token
+        attributes map<key:string, value:PML_node_attribute_AST> or null
+        child_nodes indexed_list<PML_node_AST> or null
+        raw_text_content PML_token or null
+        
+        formal_node PML_formal_node<*>
+    .
+    
+    attributes_check
+        check not ( child_nodes #r null and raw_text_content #r null )
+    .
+    
+    functions
+
+        non_HTML_attributes -> map<key:string, value:string or null> or null
+        
+        HTML_attributes -> map<key:string, value:string or null> or null
+        
+        is_text_node -> yes_no
+        
+        is_whitespace_text_node -> yes_no
+        
+        attribute_value_token_or_throw ( formal_parameter formal_parameter<*> ) -> PML_token
+        
+        attribute_value_token_or_null ( formal_parameter formal_parameter<*> ) -> PML_token or null
+            in_check: object_.attributes #r null
+        .
+    .
+.

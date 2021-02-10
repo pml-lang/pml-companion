@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+record type PML_document_AST
+
+    attributes
+        root_nodes indexed_list<PML_node_AST>
+        // config
+    .
+.

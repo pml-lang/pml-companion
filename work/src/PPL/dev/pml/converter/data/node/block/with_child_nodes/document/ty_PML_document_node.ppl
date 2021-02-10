@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_document_node
+
+    inherit PML_block_node_with_child_nodes
+        redefine
+            att child_nodes list<PML_block_node> or null
+        .
+    .
+    
+    inherit PML_has_HTML_attributes
+    
+    attributes
+        
+        title string
+        // TD sub_title string or null default:null
+        authors list<string> or null default:null
+        publication_date local_date or null default:null
+        publication_time local_time or null default:null
+        // TD version string or null default:null
+        TOC_position PML_TOC_position or null default:null
+        source_code_highlighter PML_source_code_highlighter or null default:null
+    .
+    
+    function chapters -> list<PML_chapter_node> or null
+.

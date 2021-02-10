@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_code
+
+    // TD can be done faster by scanning/replacing once
+
+    function unescape_text ( string ) -> string
+        
+        return i_string \
+            .replace_all (
+                to_replace = '''\{'''
+                replace_by = "{" ) \
+            .replace_all (
+                to_replace = '''\}'''
+                replace_by = "}" ) \
+            .replace_all (
+                to_replace = '''\='''
+                replace_by = "=" ) \
+            .replace_all (
+                to_replace = '''\\'''
+                replace_by = '''\''' )
+    .
+
+    function unescape_attribute_value ( string ) -> string
+        
+        return unescape_text ( i_string )
+    .
+.

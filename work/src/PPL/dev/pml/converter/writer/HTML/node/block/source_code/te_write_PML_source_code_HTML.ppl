@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+template write_PML_source_code_HTML
+
+        context.write_node_id_and_title ( node, HTML_tag_name = "pre" )
+
+        variable pre_class_name string or null
+        variable code_class_name string or null
+        case enum of i_config.source_code_highlighter
+
+            when highlightjs
+                if i_node.use_highlighter then
+                    pre_class_name = null
+                    case value of i_node.language
+                        when "auto"
+                            code_class_name = null
+                        when "text"
+                            code_class_name = "plaintext"
+                        when "none"
+                            code_class_name = "nohighlight"
+                        otherwise
+                            code_class_name = """language-{{i_node.language}}"""
+                    .
+                else
+                    pre_class_name = "pml-code"
+                    code_class_name = "nohighlight"
+                .
+
+            when prism
+                if i_node.use_highlighter then
+                    pre_class_name = null
+                    code_class_name = """language-{{i_node.language}}"""
+                else
+                    pre_class_name = "pml-code"
+                    code_class_name = null
+                .
+
+            when none
+                pre_class_name = "pml-code"
+                code_class_name = null
+        .
+
+        context.write_HTML_attributes ( node, CSS_class_name = pre_class_name )
+        context.write ( ">" )
+        context.write_HTML_inline_tag_start ( HTML_tag_name = "code", CSS_class_name = code_class_name )
+
+        context.write_escaped_HTML ( code )
+
+        context.write_HTML_inline_tag_end ( "code" )
+        context.write_HTML_inline_tag_end ( "pre" )
+        context.write_new_line
+.

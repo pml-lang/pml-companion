@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_table_node_HTML_writer type:PML_node_HTML_writer<PML_table_node>
+
+    function write
+
+///
+        variable CSS_class_name = "pml-table"
+        if i_node.has_border then
+            CSS_class_name = CSS_class_name & " pml-bordered"
+        .
+.///
+
+        context.write_block_node_with_child_nodes (
+            i_node,
+            HTML_tag_name = "table"
+            CSS_class_name = "pml-table"
+            i_config )
+            
+        context.write_node_caption ( i_node.caption )
+    .
+    
+    creator create kind:in_all
+.

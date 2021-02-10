@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_xref_node_creator type:PML_node_creator<PML_xref_node>
+
+    function create_node
+    
+        const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
+        
+        const node_id = attributes.require_value<string> ( se_PML_attribute_ids.node_id )
+        
+        const id_token = i_node_AST.attributes?.get ( se_PML_attribute_ids.node_id ).value
+        assert id_token is not null
+        const node_title = i_context.title_of_existing_node_id ( node_id, i_node_AST, id_token ) \
+            on_error: return_error
+        
+        const text = attributes.require_value<string or null> ( se_PML_attribute_ids.text ) \
+            if_null: node_title \
+            if_null: node_id
+        
+        const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
+
+        return PML_xref_node.create ( node_id, text, HTML_attributes )
+    .
+    
+    creator create kind:in_all
+.

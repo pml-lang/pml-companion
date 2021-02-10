@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_xref_node_HTML_writer type:PML_node_HTML_writer<PML_xref_node>
+
+    function write
+    
+        const node_id = i_context.escape_HTML ( i_node.node_id )
+        const text = i_context.escape_HTML ( i_node.text )
+
+        context.write ( """<a href="#{{node_id}}"""" )
+        context.write_HTML_attributes ( i_node, CSS_class_name = "pml-xref" )
+        context.write ( """>{{text}}</a>""" )
+    .
+    
+    creator create kind:in_all
+.

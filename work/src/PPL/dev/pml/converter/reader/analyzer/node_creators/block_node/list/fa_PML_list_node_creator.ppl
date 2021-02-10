@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_list_node_creator type:PML_node_creator<PML_list_node>
+
+    function create_node
+    
+        const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
+            
+        se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
+            const node_id = id
+            const title = title )
+        
+        const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
+
+        const any_content = i_context.create_non_empty_child_block_nodes ( i_node_AST ) on_error: return_error
+        
+        const elements = mutable_list<PML_list_element_node>.create
+        repeat for each element in any_content
+            case type of element
+                when PML_list_element_node e
+                    elements.append ( e )
+                otherwise
+                    return PML_code_error.create_for_node_AST_tag (
+                        info ="""A list can only contain list elements ('{{se_PML_standard_formal_nodes.list_element.standard_tag}}'). It cannot contain '{{element.tag}}' elements."""
+                        node_AST )
+            .
+        . 
+        
+        return PML_list_node.create ( node_id, title, HTML_attributes, child_nodes = elements.make_immutable )
+    .
+    
+    creator create kind:in_all
+.

@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_list_element_node_HTML_writer type:PML_node_HTML_writer<PML_list_element_node>
+
+    function write
+    
+        i_context.write_indent_and_string ( "<li" )
+        i_context.write_node_id_attribute ( i_node )
+        i_context.write_HTML_attributes ( i_node, CSS_class_name = "pml-list-element" )
+        i_context.write_line ( ">" )
+        i_context.increase_indent
+        
+        if i_node.title as title is not null then
+            i_context.write_indent
+            i_context.write_HTML_inline_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-node-title" )
+            i_context.write_escaped_HTML ( title )
+            i_context.write_HTML_inline_tag_end ( "div" )
+            i_context.write_new_line
+        .
+            
+        i_context.write_nodes ( nodes = i_node.child_nodes, config, increase_indent = no )
+        
+        i_context.decrease_indent
+        i_context.write_HTML_block_tag_end ( "li" )
+    .
+    
+    creator create kind:in_all
+.

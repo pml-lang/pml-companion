@@ -1,0 +1,110 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_HTML_TOC
+
+    function write_TOC
+        in document_node PML_document_node
+        in context PML_HTML_writer_context
+        in max_level pos_32 default:10
+        
+        write_TOC_start ( context )
+
+        if i_document_node.chapters as chapters is not null then
+            repeat for each chapter in chapters
+                write_TOC_chapter ( chapter, i_context, i_max_level )
+            .
+        .
+
+        write_TOC_end ( context )
+    .
+
+    functions access:private
+
+        function write_TOC_chapter
+            in chapter PML_chapter_node
+            in context PML_HTML_writer_context
+            in max_level pos_32 default:10
+    
+            const is_leaf = not chapter.has_sub_chapters or \
+                chapter.level >= max_level
+                
+            const id = i_context.escape_HTML ( chapter.node_id )
+                
+            if is_leaf then
+                context.write_indent_and_string_and_new_line ( "<li>" )
+                context.increase_indent
+                
+                context.write_indent_and_string_and_new_line ( '''<div class="pml-toc-leaf-node">''' )
+                context.increase_indent
+
+                context.write_indent_and_string_and_new_line ( '''<div class="pml-toc-leaf-prefix"></div>''' )
+                
+                const title = context.escape_HTML ( chapter.title )
+                context.write_indent_and_string_and_new_line ( """<a class="pml-toc-leaf-link" href="#{{id}}">{{title}}</a>""" )
+                
+                context.decrease_indent
+                context.write_indent_and_string_and_new_line ( "</div>" )
+                
+                context.decrease_indent
+                context.write_indent_and_string_and_new_line ( "</li>" )
+
+            else
+                context.write_indent_and_string_and_new_line ( "<li>" )
+                context.increase_indent
+                
+                context.write_indent_and_string_and_new_line ( '''<div class="pml-toc-branch-node">''' )
+                context.increase_indent
+
+                context.write_indent_and_string_and_new_line ( '''<div class="pml-toc-branch-prefix pml-toc-branch-hidden"></div>''' )
+                
+                const title = context.escape_HTML ( chapter.title )
+                context.write_indent_and_string_and_new_line ( """<a class="pml-toc-branch-link" href="#{{id}}">{{title}}</a>""" )
+                
+                context.decrease_indent
+                context.write_indent_and_string_and_new_line ( "</div>" )
+
+                context.write_indent_and_string_and_new_line ( '''<ul class="pml-toc-sub-chapters pml-hidden">''' )
+                context.increase_indent
+                
+                if chapter.sub_chapters as sub_chapters is not null then
+                    repeat for each sub_chapter in sub_chapters
+                        write_TOC_chapter ( chapter = sub_chapter, i_context, i_max_level )
+                    .
+                .
+                
+                context.decrease_indent
+                context.write_indent_and_string_and_new_line ( "</ul>" )
+            
+                context.decrease_indent
+                context.write_indent_and_string_and_new_line ( "</li>" )
+            .
+        .
+    
+        function write_TOC_start ( context PML_HTML_writer_context )
+        
+            context.write_indent_and_string_and_new_line ( '''<nav class="pml-toc">''' )
+            context.increase_indent
+    
+            context.write_indent_and_string_and_new_line ( '''<h2 class="pml-toc-title"></h2>''' )
+    
+            context.write_indent_and_string_and_new_line ( '''<div class="pml-toc-content">''' )
+            context.increase_indent
+    
+            context.write_indent_and_string_and_new_line ( '''<ul class="pml-toc-tree">''' )
+            context.increase_indent
+        .
+    
+        function write_TOC_end ( context PML_HTML_writer_context )
+        
+            context.decrease_indent
+            context.write_indent_and_string_and_new_line ( "</ul>" )
+    
+            context.decrease_indent
+            context.write_indent_and_string_and_new_line ( "</div>" )
+    
+            context.decrease_indent
+            context.write_indent_and_string_and_new_line ( "</nav>" )
+        .
+    .
+.

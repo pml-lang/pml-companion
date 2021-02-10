@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_PAIOM_commands
+
+	att commands PAIOM_commands
+		default
+			const r = PAIOM_commands_builder.create
+
+            r.add_command ( se_PML_convert_command.command )
+            r.add_command ( se_PML_help_command.command )
+            r.add_command ( se_PML_tag_info_command.command )
+            r.add_command ( se_PAIOM_command_info_command.create_command (
+                commands_supplier = { () => a_commands }
+                application_start_name = "pmlc" ) )
+            r.add_command ( se_PML_version_command.command )
+            // r.add_command ( se_PML_start_GUI_command.command )
+            r.add_command ( se_PML_create_reference_manual_command.command )
+
+			return r.make_immutable
+		.
+	.
+.

@@ -1,0 +1,68 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_formal_node_registry
+
+    attributes type:mutable_map<key:string, value:PML_formal_node<*>> access:private
+        att any_tag_map
+            default
+                const map = mutable_map<key:string, value:PML_formal_node<*>>.create
+                se_PML_standard_formal_nodes.add_nodes_to_map ( map, only_standard_tag = no )
+                return map
+            .
+        .
+        att standard_tag_map
+            default
+                const map = mutable_map<key:string, value:PML_formal_node<*>>.create
+                se_PML_standard_formal_nodes.add_nodes_to_map ( map, only_standard_tag = yes )
+                return map
+            .
+        .
+    .
+    
+    // allow nodes to be added/removed
+    
+    function register ( formal_node PML_formal_node<*> )
+
+        repeat for each tag in formal_node.tags
+            a_any_tag_map.add ( key = tag, value = formal_node )
+        .
+        
+        a_standard_tag_map.add ( key = formal_node.standard_tag, value = formal_node )
+    .
+    
+    // function register_and_replace ( formal_node )
+    // function remove_formal_node ( tag string )
+    
+    function get_by_any_tag_or_null ( tag string ) -> PML_formal_node<*> or null = \
+        a_any_tag_map.get_or_null ( tag )
+    
+    function get_by_standard_tag ( tag string ) -> PML_formal_node<*> = \
+        a_standard_tag_map.get ( tag )
+        
+    function sorted_formal_nodes -> list<PML_formal_node<*>>
+
+        const r = a_standard_tag_map.value_stream.sort_by_key (
+            key_getter = { formal_node => formal_node.standard_tag.to_lower_case } ).to_list_or_null
+        assert r is not null
+        return r
+    .
+    
+    function sorted_any_tag_list -> list<string>
+    
+        const r = a_any_tag_map.key_stream.sort_by_key (
+            key_getter = { tag => tag.to_lower_case } ).to_list_or_null
+        assert r is not null
+        return r
+    .
+    
+    /// not used
+    function sorted_standard_tag_list -> list<string>
+    
+        const r = a_standard_tag_map.key_stream.sort_by_key (
+            key_getter = { tag => tag.to_lower_case } ).to_list_or_null
+        assert r is not null
+        return r
+    .
+    .///
+.

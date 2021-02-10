@@ -1,0 +1,18 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_attribute_ids
+
+    attributes type:string
+        file = "file"
+        HTML_start = "html_"
+        HTML_class = a_HTML_start & "class"
+        id = "id"
+        node_id = "node_id"
+        text = "text"
+        title = "title"
+        caption = "caption"
+    .
+
+    att HTML_start_size pos_32 = a_HTML_start.size
+.

@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type single_resource_PML_tokenizer
+
+    inherit PML_tokenizer
+
+    functions
+    
+        current_position -> text_position
+
+        is_at_string ( string ) -> yes_no
+
+        skip_string ( string ) -> yes_no
+    .
+.

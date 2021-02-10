@@ -1,0 +1,348 @@
+/*
+    This is the default CSS file used for HTML files created with PML.
+    
+    If you want to change the presentation of your HTML document(s) created with PML, you can:
+        - modify this file
+        - create your own totally customized CSS file, based on this file
+    
+    The original file is stored in sub-directory runtime/resources/css of PML's root directory.
+    Do not modify that file, unless you have a really good reason to do so.
+*/
+
+
+/* basic font */
+
+body {
+    font-family: Verdana, "Open Sans", sans-serif;
+    line-height: 1.7;
+    margin: 0;
+
+    /* can be used to globally increase/decrease text size
+    font-size: 1.2em;
+    */
+}
+
+
+/* document */
+
+.pml-document {
+    /* center content */
+    max-width: 700px;
+    margin: auto;
+}
+
+.pml-document-title {
+    font-size: 2.2em;
+    margin-top: 0.2em;
+}
+
+.pml-document-authors::before {
+    content: "Written by ";
+}
+
+.pml-document-date-time::before {
+    content: "Published ";
+}
+
+.pml-document-header {
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 0.5em;
+}
+
+
+/* titles */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    color: darkgreen;
+
+    margin-top: 1em;
+    margin-bottom: 0px;
+}
+
+.pml-node-title {
+    font-weight: bold;
+    /* margin-bottom: 0.5em; */
+}
+
+.pml-caption {
+    font-style: italic;
+    /* color: darkgreen;
+    font-size: 1.05em;  
+    margin-top: 0.5em; */
+}
+
+
+/* text */
+
+.pml-paragraph {
+}
+
+
+/* table */
+
+.pml-table {
+    border: 1px solid black;
+	border-collapse:collapse;
+}
+
+.pml-table .pml-paragraph {
+    margin: 0;
+}
+
+.pml-table-header-cell, .pml-table-footer-cell, .pml-table-body-cell {
+    padding: 0.3em;
+    border: 1px solid black;
+}
+
+.pml-table-header-cell, .pml-table-footer-cell {
+    font-weight: bold;
+}
+
+.pml-table-header-cell {
+    text-align: center;
+}
+
+
+/* admonition */
+
+.pml-admonition {
+    display: flex;
+    align-items: center;
+}
+
+.pml-admonition-label {
+    font-weight: bold;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.pml-admonition-content {
+    border-left: 1px solid grey;
+    padding-left: 1em;
+}
+
+
+/* quote */
+
+.pml-quote {
+    margin-left: 3.0em;
+    margin-right: 3.0em;
+    font-style: italic;
+}
+
+.pml-quote-text-block {
+    display: flex;
+    align-items: flex-start;
+}
+
+.pml-quote-text-prefix, .pml-quote-text-suffix {
+    font-family: "Times New Roman";
+    font-size: 1.7em;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: -0.4em;
+}
+
+.pml-quote-text-prefix {
+    padding-right: 0.2em;
+}
+
+.pml-quote-text-suffix {
+    padding-left: 0.2em;
+}
+
+.pml-quote-text-prefix::before {
+    content: '“';
+}
+
+.pml-quote-text-suffix::after {
+    content: '”';
+}
+
+.pml-quote-text {
+    font-size: 1.3em;
+}
+
+.pml-quote-source {
+    text-align:right;
+}
+
+.pml-quote-source::before {
+    content: "\2014";
+}
+
+
+/* media */
+
+.pml-image {
+}
+
+.pml-audio {
+}
+
+.pml-video {
+}
+
+.pml-youtube-video {
+}
+
+
+/* monospace, code, input, output */
+
+.pml-monospace, .pml-code, .pml-inline-code, .pml-input, .pml-output {
+    font-family: Consolas, "DejaVu Sans Mono", monospace;
+    white-space: pre-wrap;
+}
+
+.pml-code code {
+    font-family: Consolas, "DejaVu Sans Mono", monospace;
+}
+
+.pml-code, .pml-inline-code, .pml-input, .pml-output {
+    background: #f5f5f5;
+    word-wrap: break-word;
+}
+
+.pml-code, .pml-input, .pml-output {
+    font-size: 0.9em;
+    line-height: 1.4;
+    border-radius: 7px;
+    margin-top: 0.5em;
+    padding: 1em;
+}
+
+.pml-inline-code {
+    /* font-size: 0.95em; */
+    border-radius: 4px;
+    padding: 0.1em .4em 0.1em .4em;
+    /* border: 1px dotted lightgrey; */
+}
+
+.pml-input, .pml-output {
+    border: dotted 1px grey;
+}
+
+
+/* Table of Contents (TOC) */
+
+.pml-toc {
+    border-bottom: 1px solid lightgrey;
+    margin-bottom: 1.5em;
+}
+
+.pml-toc-title {
+    margin-top: 0.7em;
+}
+
+.pml-toc-title::before {
+    content: "Table of Contents";
+}
+
+.pml-toc-tree, .pml-toc-sub-chapters {
+    list-style-type: none; /* remove default bullets */
+}
+
+.pml-toc-tree {
+    padding-left: 0;
+}
+
+.pml-toc-sub-chapters {
+    padding-left: 1.5em;
+}
+
+.pml-toc-branch-node, .pml-toc-leaf-node {
+    display: flex;
+    line-height: 1.2em;
+    margin-top: 0.4em;
+}
+
+.pml-toc-branch-prefix, .pml-toc-leaf-prefix {
+    min-width: 1.0em;
+}
+
+.pml-toc-branch-prefix {
+    cursor: pointer;
+}
+
+.pml-toc-branch-visible::before {
+    content: "-";
+    color: grey;
+}
+
+.pml-toc-branch-hidden::before {
+    content: "+";
+    color: grey;
+}
+
+.pml-toc-leaf-link, .pml-toc-branch-link {
+    text-decoration: none;
+    color: black;
+}
+
+
+/* horizontal split panel (used only if TOC is on the left side)*/
+
+.pml-hsplit-panel {
+    display: flex;
+    height: 100vh;
+}
+
+.pml-hsplit-left-panel, .pml-hsplit-right-panel {
+    overflow: auto; /* show scrollbar if necessary */
+}
+
+.pml-hsplit-left-panel {
+    background: whitesmoke;
+    width: 15%;
+    padding-left: 0.7em;
+    padding-right: 0.7em;
+}
+
+.pml-hsplit-panel-separator {
+    width: 10px;
+    cursor: col-resize;
+    background: lightgrey;
+}
+
+.pml-hsplit-right-panel {
+    flex-grow: 1;
+    padding-left: 0.7em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.pml-hsplit-right-panel-content {
+    max-width: 700px;
+}
+
+
+/* global */
+
+.pml-bordered {
+    border: 1px solid grey;
+}
+
+.pml-hidden {
+    display: none;
+}
+
+.pml-text-align-left {
+    text-align: left;
+}
+
+.pml-text-align-right {
+    text-align: right;
+}
+
+.pml-text-align-center {
+    text-align: center;
+}
+
+/*
+.pml-centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+*/

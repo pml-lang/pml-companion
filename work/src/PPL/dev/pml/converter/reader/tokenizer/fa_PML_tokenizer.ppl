@@ -1,0 +1,220 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_tokenizer
+
+    // This tokenizer uses ty_single_resource_PML_tokenizer to read a single resource
+
+    attributes access:private
+    
+        variable att current_tokenizer single_resource_PML_tokenizer
+        tokenizer_stack single_resource_PML_tokenizer_LIFO_stack
+    .
+
+    functions
+    
+        has_more_code = a_current_tokenizer.has_more_code
+        
+        current_resource = a_current_tokenizer.current_resource
+        
+        skip_spaces_and_tabs
+            a_current_tokenizer.skip_spaces_and_tabs
+        .
+        
+        skip_line_continuation
+            a_current_tokenizer.skip_line_continuation
+        .
+    
+        // nodes
+    
+        try_consume_node_start_symbol
+        
+            repeat while not a_current_tokenizer.has_more_code
+                const has_parent_tokenizer = stop_current_tokenizer
+                if not has_parent_tokenizer then
+                    exit repeat
+                .
+            .
+        
+            if a_current_tokenizer.is_at_string ( a_config.insert_file_start ) then
+                use_new_current_tokenizer on_error:return_error
+            .
+        
+            return a_current_tokenizer.try_consume_node_start_symbol
+        .
+        
+        consume_node_end_symbol = a_current_tokenizer.consume_node_end_symbol
+
+        consume_node_name = a_current_tokenizer.consume_node_name
+        
+        skip_one_space_after_node_name
+            a_current_tokenizer.skip_one_space_after_node_name
+        .
+        
+        consume_text = a_current_tokenizer.consume_text
+        
+        try_consume_text_in_node_with_raw_text_content = \
+            a_current_tokenizer.try_consume_text_in_node_with_raw_text_content ( i_tag )
+        
+        // attributes
+
+        consume_attributes_start_symbol = a_current_tokenizer.consume_attributes_start_symbol
+
+        consume_attributes_end_symbol = a_current_tokenizer.consume_attributes_end_symbol
+
+        consume_attribute_id_value_separator = a_current_tokenizer.consume_attribute_id_value_separator
+
+        consume_attribute_id = a_current_tokenizer.consume_attribute_id
+        
+        is_at_attribute_id_and_assignment_symbol = a_current_tokenizer.is_at_attribute_id_and_assignment_symbol
+
+        try_consume_attribute_value = a_current_tokenizer.try_consume_attribute_value
+        
+        // comments
+
+        try_skip_comments = a_current_tokenizer.try_skip_comments
+        
+        // errors
+        
+        create_error = a_current_tokenizer.create_error ( i_info, i_position )
+
+        create_error_at_current_position = a_current_tokenizer.create_error_at_current_position ( i_info )
+    .
+
+
+    functions access:private
+    
+        use_new_current_tokenizer -> PML_code_error or null
+        
+            const position = a_current_tokenizer.current_position
+        
+            const file = read_insert_file on_error:return_error
+            
+            case type of single_resource_PML_tokenizer.try_create_for_file ( file )
+                
+                when single_resource_PML_tokenizer tokenizer
+                    tokenizer_stack.push ( a_current_tokenizer )
+                    a_current_tokenizer = tokenizer
+                    return null
+                    
+                when runtime_error runtime_error
+                    return create_error (
+                        info = """Error reading file {{file.to_string}}. Reason: {{runtime_error.info}}"""
+                        position )
+            .
+        .
+        
+        stop_current_tokenizer -> yes_no
+            
+            const parent_tokenizer = tokenizer_stack.pop
+            if parent_tokenizer is not null then
+                a_current_tokenizer = parent_tokenizer
+                return yes
+            .
+            return no
+        .
+
+        read_insert_file -> file or PML_code_error
+        
+            const position = a_current_tokenizer.current_position
+
+            const file_path_string = read_insert_file_string on_error:return_error
+        
+            variable absolute_or_relative_file_path absolute_or_relative_file_path
+            case type of fa_absolute_or_relative_file_path_parser.create.try_parse ( file_path_string )
+                when absolute_or_relative_file_path path
+                    absolute_or_relative_file_path = path
+                when error e
+                    return create_error (
+                        info = """'{{file_path_string}}' is an invalid file path. Reason: {{e.info}}"""
+                        position )
+            .
+            assert absolute_or_relative_file_path is not null
+            
+            case type of absolute_or_relative_file_path
+                
+                when file_path absolute_file_path
+                    return file.create ( absolute_file_path )
+                
+                when relative_file_path relative_file_path
+            
+                    variable current_directory directory
+                    case type of a_current_tokenizer.current_resource as current_resource
+                        when file current_file
+                            current_directory = current_file.directory
+                        when null
+                            throw "Unknown resource."
+                        otherwise
+                            assert current_resource is not null 
+                            throw """Unexpected resource {{current_resource.to_string}}"""
+                    .
+                    assert current_directory is not null
+                    
+                    return file.create_for_relative_path (
+                        path = relative_file_path
+                        root_directory = current_directory.path )
+            .
+        .
+        
+        read_insert_file_string -> string or PML_code_error
+        
+            // {insert file = path/file.pml}
+            // {insert path/file.pml}
+            
+            assert a_current_tokenizer.skip_string ( a_config.insert_file_start )
+            a_current_tokenizer.skip_spaces_and_tabs
+            
+            if a_current_tokenizer.skip_string ( se_PML_attribute_ids.file ) then
+                if not a_current_tokenizer.consume_attribute_id_value_separator then
+                    return create_error_at_current_position (
+                        """Expecting attribute assignment symbol '{{a_config.attribute_assignment_symbol}}'.""" )
+                .
+            .
+            
+            const file_token = a_current_tokenizer.try_consume_attribute_value on_error:return_error
+            if file_token is null then
+                return create_error_at_current_position ( "Expecting a file path." )
+            .
+        
+            if not a_current_tokenizer.consume_node_end_symbol then
+                return create_error_at_current_position ( """Expecting '{{a_config.node_end_symbol}}'.""" )
+            .
+            
+            return file_token.value
+        .
+    .
+    
+    
+    creator create ( single_resource_tokenizer single_resource_PML_tokenizer ) -> PML_tokenizer
+    
+        this.config = fa_PML_tokenizer_config.create
+
+        this.current_tokenizer = i_single_resource_tokenizer
+        
+        const tokenizer_stack = single_resource_PML_tokenizer_LIFO_stack.create
+        tokenizer_stack.push ( i_single_resource_tokenizer )
+        this.tokenizer_stack = tokenizer_stack
+
+        return this
+    .
+
+    creator create_for_code ( PML_code string, resource non_error or null default:null ) -> PML_tokenizer
+        
+        const tokenizer = single_resource_PML_tokenizer.create_for_code ( i_PML_code, i_resource )
+        return create ( tokenizer )
+    .
+
+    creator try_create_for_code_supplier ( PML_code_supplier failable_string_supplier ) \
+        -> PML_tokenizer or runtime_error
+    
+        const tokenizer = single_resource_PML_tokenizer.try_create_for_code_supplier ( i_PML_code_supplier ) \
+            on_error:return_error
+        return create ( tokenizer )
+    .
+
+    creator try_create_for_file ( file ) -> PML_tokenizer or runtime_error
+    
+        const tokenizer = single_resource_PML_tokenizer.try_create_for_file ( i_file ) on_error:return_error
+        return create ( tokenizer )
+    .
+.

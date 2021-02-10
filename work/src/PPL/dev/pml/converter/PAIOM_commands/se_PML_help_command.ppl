@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_help_command
+
+    att help_text string = se_CLI_start.usage_text & '''
+The following help commands are available:
+    
+pmlc tag_info
+    Display a summary of all PML tags you can use in a PML document
+
+pmlc tag_info -tag [tag_name]
+    Display detailed information about tag [tag_name]
+    For example, to get help for tag 'image', type:
+    pmlc tag_info -tag image
+    Or simply type:
+    pmlc ti -t image
+
+pmlc command_info
+    Display a summary of all commands
+
+pmlc command_info -command [command_name]
+    Display detailed information about command [command_name]
+    For example, to get help for command 'tag_info', type:
+    pmlc command_info -command tag_info
+    Or simply type:
+    pmlc ci -c tag_info
+    
+Online help is available at
+https://www.pml-lang.dev/help/help_menu.html'''
+
+
+    // TD help, h, -help, --help, /?
+    att command explicit_paiom_command<string> = explicit_paiom_command<string>.create (
+        ids = [#
+            PAIOM_command_id.create ( "help" ),
+            PAIOM_command_id.create ( "-help" ),
+            PAIOM_command_id.create ( "--help" ),
+            PAIOM_command_id.create ( "/help" ),
+            PAIOM_command_id.create ( "/h" ),
+            PAIOM_command_id.create ( "/?" )
+        ]
+        formal_input_parameters = null
+        executor = { input => a_help_text },
+        documentation = simple_documentation.create (
+            title = "Get Help"
+            description = null
+            examples = null ) )
+.

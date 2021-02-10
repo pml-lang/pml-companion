@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_text_node_HTML_writer type:PML_node_HTML_writer<PML_text_node>
+
+    function write
+    
+        context.write_escaped_HTML ( i_node.text )
+    .
+    
+    creator create kind:in_all
+.

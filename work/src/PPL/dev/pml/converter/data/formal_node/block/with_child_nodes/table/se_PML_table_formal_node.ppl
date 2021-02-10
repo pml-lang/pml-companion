@@ -1,0 +1,151 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_table_formal_node
+
+    attribute horizontal_alignments_parameter formal_parameter<string or null> = formal_parameter<string or null>.create (
+        ids = [# parameter_id.create ( "horizontal_alignments" ), parameter_id.create ( "halign" ) ]
+        default_value_supplier = { () => null }
+        value_parser = se_string_parser.instance
+        documentation = simple_documentation.create (
+            title = "Horizontal Alignments for Columns"
+            description = '''This optional parameter specifies the horizontal alignment for each column in a table.
+The alignments are defined as a comma-separated list, in the order of the columns.
+For each column the following values can be specified:
+- left or l
+- center or c
+- right or r
+- [empty] (default alignment (usually left-aligned) will be used)
+The values are case-insensitive. Uppercase letters are allowed.'''
+            examples = '''
+horizontal_alignments = "Left, Center, , Right"
+short from:
+halign = "L, C, , R"''' ) )
+            
+    att attributes formal_parameters<*>
+        default
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+            
+///
+            r.add_yes_no_parameter (
+                ids = [# "border" ]
+                title = "Border"
+                default_value_supplier = { yes }
+                description = "Specifies if a border should be drawn around rows and columns."
+                examples = "border = no" )
+.///
+            r.add_parameter ( se_formal_node_attributes.caption )
+            
+            return r.make_immutable
+        .
+    .
+
+    att node PML_formal_block_node_with_child_nodes<PML_table_node> = \
+        PML_formal_block_node_with_child_nodes<PML_table_node>.create (
+            tags = [# "table" ]
+            attributes = a_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_table_node_creator.create
+            HTML_writer = PML_table_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Table"
+                description = '''A table consisting of rows and columns.
+The content of each cell can be just plain text or any complex node, such as formatted text, a picture, a table (table in a table), etc.
+The table's structure is similar to a HTML table.
+HTML 'class' and 'style' attributes can be use to format the table with CSS.
+The table can optionally have a header and a footer.'''
+                examples = '''Simple table:
+                
+{table
+    {table_row {table_cell C11} {table_cell C12}}
+    {tr {tc C21} {tc C22}}
+}
+
+Table with header and footer:
+
+{table
+    {table_header
+        {tr {tc Pos.} {tc Group} {tc Total invoiced}}
+    }
+    {tr {tc 1} {tc {i Organic} food} {tc html_style="text-align:right;" 12,000.22}}
+    {tr {tc 2} {tc Meditation lessons} {tc html_style="text-align:right;" 21,350.00}}
+    {table_footer
+        {tr {tc} {tc html_style="text-align:right;" Sum:} {tc html_style="text-align:right;" 33,350.22}}
+    }
+}''' ) )
+
+    att table_header_node PML_formal_block_node_with_child_nodes<PML_table_header_node> = \
+        PML_formal_block_node_with_child_nodes<PML_table_header_node>.create (
+            tags = [# "table_header", "thead" ]
+            attributes = null
+            HTML_attributes_allowed = yes
+            node_creator = PML_table_header_node_creator.create
+            HTML_writer = PML_table_header_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Table Header"
+                description = "A header in a table."
+                examples = '''Table with header:
+                
+{table
+    {table_header
+        {tr {tc Header 1} {tc Header 2} {tc Header 3}}
+    }
+    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
+    {tr {tc cell 2.1} {tc cell 2.2} {tc cell 2.3}}
+}''' ) )
+
+    att table_footer_node PML_formal_block_node_with_child_nodes<PML_table_footer_node> = \
+        PML_formal_block_node_with_child_nodes<PML_table_footer_node>.create (
+            tags = [# "table_footer", "tfoot" ]
+            attributes = null
+            HTML_attributes_allowed = yes
+            node_creator = PML_table_footer_node_creator.create
+            HTML_writer = PML_table_footer_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Table Footer"
+                description = "A footer in a table."
+                examples = '''Table with footer:
+                
+{table
+    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
+    {tr {tc cell 2.1} {tc cell 2.2} {tc cell 2.3}}
+    {table_footer
+        {tr {tc Footer 1} {tc Footer 2} {tc Footer 3}}
+    }
+}''' ) )
+
+    att table_row_node PML_formal_block_node_with_child_nodes<PML_table_row_node> = \
+        PML_formal_block_node_with_child_nodes<PML_table_row_node>.create (
+            tags = [# "table_row", "tr" ]
+            attributes = null
+            HTML_attributes_allowed = yes
+            node_creator = PML_table_row_node_creator.create
+            HTML_writer = PML_table_row_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Table Row"
+                description = "A row in a table."
+                examples = '''Table with 2 rows:
+                
+{table
+    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
+    {tr {tc cell 2.1} {tc cell 2.2} {tc row 2.3}}
+}''' ) )
+
+    att table_cell_node PML_formal_block_node_with_child_nodes<PML_table_cell_node> = \
+        PML_formal_block_node_with_child_nodes<PML_table_cell_node>.create (
+            tags = [# "table_cell", "tc" ]
+            attributes = null
+            HTML_attributes_allowed = yes
+            node_creator = PML_table_cell_node_creator.create
+            HTML_writer = PML_table_cell_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Table Cell"
+                description = "A cell in a table row."
+                examples = '''Table with 2 rows and 3 columns:
+                
+{table
+    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
+    {tr {tc cell 2.1} {tc cell 2.2} {tc cell 2.3}}
+}''' ) )
+.
+    

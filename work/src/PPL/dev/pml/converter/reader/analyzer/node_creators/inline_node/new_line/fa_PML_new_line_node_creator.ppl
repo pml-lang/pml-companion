@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_new_line_node_creator type:PML_node_creator<PML_new_line_node>
+
+    function create_node
+    
+        // TD should use cached object
+        return PML_new_line_node.create
+    .
+    
+    creator create kind:in_all
+.

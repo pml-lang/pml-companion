@@ -1,0 +1,336 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_standard_formal_nodes
+
+    attributes type:PML_formal_node<*>
+    
+        document = se_PML_document_formal_node.node
+        
+        chapter = se_PML_chapter_formal_node.node
+
+        division = se_PML_division_formal_node.node
+
+        paragraph = PML_formal_block_node_with_child_nodes<PML_paragraph_node>.create (
+            tags = [# "paragraph", "p" ]
+            attributes = se_formal_node_attributes.optional_id_and_title_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_paragraph_node_creator.create
+            HTML_writer = PML_paragraph_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Paragraph"
+                description = "A paragraph is a set of one or more sentences. Note that it is not required to embed a paragraph within a node. Text not explicitly embedded in a node is automatically converted to a paragraph node. A double-new-line creates a paragraph break. All other whitespace is converted to a single space. Hence, two sentences separated by a single new-line will result in a single paragraph composed of two sentences."
+                examples = '''First sentence of first paragraph. Second sentence of first paragraph.
+                
+First sentence of second paragraph.
+Second sentence of second paragraph.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+{p Third paragraph}''' ) )
+            
+        list = PML_formal_block_node_with_child_nodes<PML_list_node>.create (
+            tags = [# "list" ]
+            attributes = se_formal_node_attributes.optional_id_and_title_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_list_node_creator.create
+            HTML_writer = PML_list_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "List"
+                description = "A bulleted list of text blocks."
+                examples = '''{list
+    {el item 1}
+    {el item 2}
+}''' ) )
+            
+        list_element = PML_formal_block_node_with_child_nodes<PML_list_element_node>.create (
+            tags = [# "list_element", "el" ]
+            attributes = se_formal_node_attributes.optional_id_and_title_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_list_element_node_creator.create
+            HTML_writer = PML_list_element_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "List Element"
+                description = "An element of a list."
+                examples = '''{list title=Some planets
+    {el title = Jupiter
+        Jupiter is ...
+    }
+    {el title = Uranus
+        Uranus is ...
+    }
+    {el title = Neptun
+        Neptun is ...
+    }
+}''' ) )
+
+        table = se_PML_table_formal_node.node
+        table_header = se_PML_table_formal_node.table_header_node
+        table_footer = se_PML_table_formal_node.table_footer_node
+        table_row = se_PML_table_formal_node.table_row_node
+        table_cell = se_PML_table_formal_node.table_cell_node
+
+        table_data = se_PML_table_data_formal_node.node
+            
+        caption = PML_formal_block_node_with_child_nodes<PML_caption_node>.create (
+            tags = [# se_PML_attribute_ids.caption ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_caption_node_creator.create
+            HTML_writer = PML_caption_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Caption"
+                description = "A small title that is not part of he table of contents."
+                examples = '''{caption Figure 1: Clove Hitch Knot}''' ) )
+            
+        admonition = se_PML_admonition_formal_node.node
+        
+        note = PML_formal_block_node_with_child_nodes<PML_admonition_node>.create (
+            tags = [# "note" ]
+            attributes = se_formal_node_attributes.optional_id_and_title_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_note_node_creator.create
+            HTML_writer = PML_admonition_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Note"
+                description = "A note is an admonition whose label is 'Note'."
+                examples = '''{note Please remember that ...}''' ) )
+            
+        quote = se_PML_quote_formal_node.node
+        
+        monospace = se_PML_monospace_formal_node.node
+            
+        HTML_code = PML_formal_block_node_with_raw_text_content<PML_HTML_code_node>.create (
+            tags = [# "HTML", "html" ]
+            attributes = se_formal_node_attributes.optional_id_and_title_attributes
+            HTML_attributes_allowed = no
+            node_creator = PML_HTML_code_node_creator.create
+            HTML_writer = PML_HTML_code_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "HTML Code"
+                description = "A node that contains HTML code. The HTML code is not processed in any way by the PML converter. It is passed as is to the resulting HTML document. This allows you to embed arbitrary HTML code in your final document."
+                examples = '''{html
+    <p>This is pure <b>HTML</b> code.</p>
+html}''' ) )
+            
+        source_code = se_PML_source_code_formal_node.node
+            
+        insert_source_code = se_PML_insert_source_code_formal_node.node
+            
+        input = PML_formal_block_node_with_raw_text_content<PML_input_node>.create (
+            tags = [# "input" ]
+            attributes = se_formal_node_attributes.optional_id_and_title_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_input_node_creator.create
+            HTML_writer = PML_input_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Input"
+                description = "Any input provided to a software application, such as a command typed in a terminal, text contained in a config file, etc."
+                examples = '''{input
+    pmlc create_reference_manual -output_directory path/to/dir
+input}''' ) )
+
+        output = PML_formal_block_node_with_raw_text_content<PML_output_node>.create (
+            tags = [# "output" ]
+            attributes = se_formal_node_attributes.optional_id_and_title_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_output_node_creator.create
+            HTML_writer = PML_output_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Output"
+                description = "Any output created by a software application, such as a result written to the OS's standard output device."
+                examples = '''{output
+    Congratulations!
+    The new database has been created successfully.
+output}''' ) )
+
+        image = se_PML_image_formal_node.node
+        
+        audio = se_PML_audio_formal_node.node
+        
+        video = se_PML_video_formal_node.node
+        youtube_video = se_PML_youtube_video_formal_node.node
+        
+//        anchor = se_PML_anchor_formal_node.node
+            
+        // inline
+        
+        text = PML_formal_inline_node_with_raw_text_content<PML_text_node>.create (
+            tags = [# "text" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_text_node_creator.create
+            HTML_writer = PML_text_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Text"
+                description = null
+                examples = '''It's a good day.''' ) )
+            
+        span = PML_formal_inline_node_with_child_nodes<PML_span_node>.create (
+            tags = [# "span" ]
+            attributes = null
+            HTML_attributes_allowed = yes
+            node_creator = PML_span_node_creator.create
+            HTML_writer = PML_span_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Span"
+                description = "This inline node is typically used to render a HTML <span>...</span> inline element with a specific set of HTML attributes."
+                examples = '''This is a {span html_style="color:red;background-color:yellow" huge} advantage.''' ) )
+
+        bold = PML_formal_inline_node_with_child_nodes<PML_bold_node>.create (
+            tags = [# "bold", "b", "*" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_bold_node_creator.create
+            HTML_writer = PML_bold_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Bold Text"
+                description = null
+                examples = '''This is a {b huge} advantage.''' ) )
+
+        italic = PML_formal_inline_node_with_child_nodes<PML_italic_node>.create (
+            tags = [# "italic", "i", "_" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_italic_node_creator.create
+            HTML_writer = PML_italic_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Italic Text"
+                description = null
+                examples = '''We want {i simplicity}.
+                
+This is a {b {i very} important} point.''' ) )
+            
+        inline_code = PML_formal_inline_node_with_raw_text_content<PML_inline_code_node>.create (
+            tags = [# "inline_code", "c", "`" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_inline_code_node_creator.create
+            HTML_writer = PML_inline_code_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Inline Source Code"
+                description = "Source code embedded within text."
+                examples = '''The assignment {c pi = 3.1415} means we are using {i four} decimals for {c pi}.''' ) )
+
+        verbatim_text = PML_formal_inline_node_with_raw_text_content<PML_verbatim_text_node>.create (
+            tags = [# "verbatim", "vm" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_verbatim_text_node_creator.create
+            HTML_writer = PML_verbatim_text_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Verbatim Text"
+                description = null
+                examples = "Math's ring operator is {verbatim &#x2218;}." ) )
+            
+        link = PML_link_formal_node.node
+            
+        xref = se_PML_xref_formal_node.node
+            
+        new_line = PML_formal_inline_node_without_child_nodes<PML_new_line_node>.create (
+            tags = [# "new_line", "nl" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_new_line_node_creator.create
+            HTML_writer = PML_new_line_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "New Line"
+                description = "An explicit new line (line break) inserted in the document."
+                examples = "Line 1{nl}{nl}Line 2" ) )
+            
+        space = PML_formal_inline_node_without_child_nodes<PML_space_node>.create (
+            tags = [# "space", "sp" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_space_node_creator.create
+            HTML_writer = PML_space_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Space Character"
+                description = "An explicit space character inserted in the document. Whitespace composed of several characters (such as two spaces) is always converted into a single space (as in HTML). Hence, this node can be used to explicitly insert two or more spaces."
+                examples = '''This is  g  o  o  d !  {-- 2 spaces will result in ONE space --}
+                
+This is {sp}g{sp}{sp}o{sp}{sp}o{sp}{sp}d{sp}!''' ) )
+                
+        // text processing
+        
+        insert = se_PML_insert_formal_node.node
+        
+        constant = PML_formal_block_node_without_child_nodes<PML_block_node_without_child_nodes>.create (
+            tags = [# "constant", "const" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = se_PML_node_creator_helper.dummy_block_node_without_child_nodes_creator
+            HTML_writer = fa_dummy_PML_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Constant Parameter"
+                description = "A constant parameter is used to define text snippets that are re-used several times in the document. A constant parameter is composed of an identifier (name) and a value. The value assigned to the constant can be re-used in the document by simply specifying the constant's identifier between [[ and ]]."
+                examples = '''{const examples_root = http://www.example.com/project/source_code/examples}
+
+Here are two examples:
+
+{link url=[[examples_root]]/ex1.html text=example 1}
+
+{link url=[[examples_root]]/ex2.html text=example 2}.''' ) )
+    .
+    
+    function add_nodes_to_map ( map mutable_map<key:string, value:PML_formal_node<*>>, only_standard_tag yes_no  )
+    
+        add_node_to_map ( map, only_standard_tag, node = a_document ) 
+        add_node_to_map ( map, only_standard_tag, node = a_chapter ) 
+        add_node_to_map ( map, only_standard_tag, node = a_division ) 
+        add_node_to_map ( map, only_standard_tag, node = a_paragraph ) 
+        add_node_to_map ( map, only_standard_tag, node = a_list ) 
+        add_node_to_map ( map, only_standard_tag, node = a_table ) 
+        add_node_to_map ( map, only_standard_tag, node = a_table_header ) 
+        add_node_to_map ( map, only_standard_tag, node = a_table_footer ) 
+        add_node_to_map ( map, only_standard_tag, node = a_table_row ) 
+        add_node_to_map ( map, only_standard_tag, node = a_table_cell ) 
+        add_node_to_map ( map, only_standard_tag, node = a_table_data )
+        add_node_to_map ( map, only_standard_tag, node = a_list_element ) 
+        add_node_to_map ( map, only_standard_tag, node = a_image ) 
+        add_node_to_map ( map, only_standard_tag, node = a_audio ) 
+        add_node_to_map ( map, only_standard_tag, node = a_video ) 
+        add_node_to_map ( map, only_standard_tag, node = a_youtube_video ) 
+        add_node_to_map ( map, only_standard_tag, node = a_caption ) 
+        add_node_to_map ( map, only_standard_tag, node = a_admonition )
+        add_node_to_map ( map, only_standard_tag, node = a_note )
+        add_node_to_map ( map, only_standard_tag, node = a_quote )
+        add_node_to_map ( map, only_standard_tag, node = a_monospace )
+        add_node_to_map ( map, only_standard_tag, node = a_HTML_code ) 
+        add_node_to_map ( map, only_standard_tag, node = a_source_code ) 
+        add_node_to_map ( map, only_standard_tag, node = a_insert_source_code )
+        add_node_to_map ( map, only_standard_tag, node = a_input ) 
+        add_node_to_map ( map, only_standard_tag, node = a_output )
+//            add_node_to_map ( map, only_standard_tag, node = a_anchor )
+
+        add_node_to_map ( map, only_standard_tag, node = a_text ) 
+        add_node_to_map ( map, only_standard_tag, node = a_span ) 
+        add_node_to_map ( map, only_standard_tag, node = a_bold ) 
+        add_node_to_map ( map, only_standard_tag, node = a_italic ) 
+        add_node_to_map ( map, only_standard_tag, node = a_inline_code ) 
+        add_node_to_map ( map, only_standard_tag, node = a_verbatim_text )
+        add_node_to_map ( map, only_standard_tag, node = a_link ) 
+        add_node_to_map ( map, only_standard_tag, node = a_xref )
+        add_node_to_map ( map, only_standard_tag, node = a_new_line )
+        add_node_to_map ( map, only_standard_tag, node = a_space )
+        
+        add_node_to_map ( map, only_standard_tag, node = a_insert )
+        add_node_to_map ( map, only_standard_tag, node = a_constant )
+    .
+    
+    functions access:private
+        
+        add_node_to_map
+            in node PML_formal_node<*>
+            in only_standard_tag yes_no
+            in map mutable_map<key:string, value:PML_formal_node<*>>
+        
+            if i_only_standard_tag then
+                map.add ( key = i_node.standard_tag, value = i_node )
+            else
+                repeat for each tag in i_node.tags
+                    map.add ( key = tag, value = i_node )
+                .
+            .
+        .
+    .
+.

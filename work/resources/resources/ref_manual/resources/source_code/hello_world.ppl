@@ -1,0 +1,6 @@
+// Hello world program written in PPL
+// www.ppl-lang.dev
+
+function start
+    OS.out.write_line ( "Hello world" )
+.

@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_text_node_creator type:PML_node_creator<PML_text_node>
+
+    function create_node
+
+        if yes then
+            throw "Should never be called"
+        .
+        return PML_text_node.create ( "qwe" )
+    .
+    
+    creator create kind:in_all
+.

@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_parameter_substitutor
+
+    function substitute_parameters_in_document ( document_node PML_node_AST ) -> PML_node_AST or PML_code_error
+.

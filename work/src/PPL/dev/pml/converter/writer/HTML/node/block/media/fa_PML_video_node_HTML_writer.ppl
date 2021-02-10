@@ -1,0 +1,32 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_video_node_HTML_writer type:PML_node_HTML_writer<PML_video_node>
+
+    function write
+
+        context.write_node_id_and_title ( i_node, HTML_tag_name = "video" )
+        context.write ( ''' controls="controls"''' )
+        if i_node.width as width is not null then
+            context.write ( """ width="{{width}}"""" )
+        .
+
+        if i_node.height as height is not null then
+            context.write ( """ height="{{height}}"""" )
+        .
+        context.write_HTML_attributes ( i_node, CSS_class_name = "pml-video" )
+        context.write_line ( ">" )
+        context.increase_indent
+        
+        const Unix_path = se_directory_or_file_path.to_Unix_path ( i_node.source.to_string )
+        context.write_indent_and_string_and_new_line ( """<source src="{{i_context.escape_HTML ( Unix_path )}}">""" )
+        context.write_indent_and_string_and_new_line ( "Your browser does not support the video element." )
+        
+        context.decrease_indent
+        context.write_indent_and_string_and_new_line ( "</video>" )
+            
+        context.write_node_caption ( i_node.caption )
+    .
+    
+    creator create kind:in_all
+.

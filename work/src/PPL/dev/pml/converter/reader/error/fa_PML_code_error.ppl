@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_code_error
+    
+%fa_text_error_functions
+
+
+    creator create kind:in_all
+
+    creator create_for_node_AST_tag ( info string, node_AST PML_node_AST ) -> PML_code_error = create_for_token (
+        info,
+        token = i_node_AST.tag
+        resource = i_node_AST.resource )
+
+    creator create_for_token ( info string, token PML_token, resource non_error or null ) -> PML_code_error
+        
+        const position = i_token.position
+        variable PML_code string or null = null
+        if i_resource is not null then
+            const temp = se_text_error.try_get_line_if_resource_is_file ( i_resource, position ) on_error: throw_error
+            PML_code = temp
+        .
+                
+        this.info = i_info
+        this.resource = i_resource
+        this.data = i_token.value
+        this.error_position = i_token.position
+        this.text_containing_error = PML_code
+        this.text_containing_error_start_line = if PML_code #r null then position.line_number else null
+        this.parent_error = null
+                
+        return this
+    .
+.

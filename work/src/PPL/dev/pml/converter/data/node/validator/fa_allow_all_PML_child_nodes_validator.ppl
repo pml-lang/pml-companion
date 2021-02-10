@@ -1,0 +1,11 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+// TD remove
+
+factory allow_all_PML_child_nodes_validator type:PML_child_nodes_validator
+
+    function check_child_nodes = null
+    
+    creator create kind:in_all
+.

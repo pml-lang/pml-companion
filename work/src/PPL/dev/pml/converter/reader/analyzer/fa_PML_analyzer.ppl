@@ -1,0 +1,90 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_analyzer
+
+    function try_analyze
+    
+        const root_nodes_AST = i_document_AST.root_nodes
+
+        const non_whitespace_root_nodes_AST = root_nodes_AST
+            .stream
+            .filter ( { node => not node.is_whitespace_text_node } )
+            .to_list_or_null
+        if non_whitespace_root_nodes_AST is null then
+            return PML_code_error.create_for_node_AST_tag (
+                info = """A document must contain a '{{se_PML_standard_formal_nodes.document.standard_tag}}' node."""
+                node_AST = root_nodes_AST.first )
+        .
+    
+        const first_node_AST = non_whitespace_root_nodes_AST.first
+
+        if non_whitespace_root_nodes_AST.size ># 1 then
+            return PML_code_error.create_for_node_AST_tag (
+                info = """There must be exactly one '{{se_PML_standard_formal_nodes.document.standard_tag}}' root node, and no text is allowed before or after the root node."""
+                node_AST = first_node_AST )
+        .
+    
+        const formal_node = first_node_AST.formal_node
+        
+        if formal_node #r se_PML_standard_formal_nodes.document then
+            return PML_code_error.create_for_node_AST_tag (
+                info = """'{{first_node_AST.tag.value}}' is invalid. A document must start with a '{{se_PML_standard_formal_nodes.document.standard_tag}}' node."""
+                node_AST = first_node_AST )
+        .
+        
+        const document_node_AST = PML_parameter_substitutor.create.substitute_parameters_in_document (
+            document_node = first_node_AST ) on_error:return_error
+        
+        const document_creator PML_node_creator<PML_document_node> = formal_node.node_creator type_check:no
+            
+        const node_id_map = create_node_id_map ( document_node_AST ) on_error:return_error
+        
+        return document_creator.create_node (
+            node_AST = document_node_AST
+            context = PML_node_creator_context.create ( node_id_map ) )
+    .
+    
+    functions access:private
+    
+        function create_node_id_map ( document_node PML_node_AST ) \
+            -> map<key:string value:string or null> or null or PML_code_error
+        
+            const map = mutable_map_with_nulls<key:string value:string or null>.create
+            
+            add_node_ids ( node = document_node, map ) on_error:return_error
+            
+            return map.make_immutable_or_null
+        .
+    
+        function add_node_ids ( node PML_node_AST, map mutable_map<key:string value:string or null> ) \
+            -> PML_code_error or null
+            
+            if node.attributes as attributes is not null then
+
+                if attributes.get_or_null ( se_PML_attribute_ids.id ) as id_attribute is not null then
+                    const id = id_attribute.value.value
+                    if map.contains_key ( id ) then
+                        return PML_code_error.create_for_token (
+                            info = """Id '{{id}}' has already been defined earlier in the document."""
+                            token = id_attribute.value
+                            resource = node.resource )
+                    .
+                    const title = attributes.get_or_null ( se_PML_attribute_ids.title )
+                    map.add ( key = id, value = title?.value.value )
+                .
+            .
+            
+            if node.child_nodes as child_nodes is not null then
+                repeat for each child_node in child_nodes
+                    add_node_ids ( node = child_node, map ) on_error:return_error
+                .
+            .
+            
+            return null
+        .
+    .
+
+
+    creator create kind:in_all
+.

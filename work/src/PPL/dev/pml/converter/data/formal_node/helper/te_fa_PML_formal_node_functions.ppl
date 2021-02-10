@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+template fa_PML_formal_node_functions
+
+    function standard_tag = a_tags.first
+    
+    function tags_as_string = se_string_joiner.join (
+        collection = tags
+        join_string = ", " )
+
+    function to_string = standard_tag
+
+    function to_long_string
+
+        const builder = simple_documentation_builder.create
+        
+        builder.append_title ( a_documentation.title )
+        builder.append_form_field_line ( label = if a_tags.size >= 2 then "Tags" else "Tag", value = tags_as_string )
+        
+        builder.append_form_field_line_if_not_null ( label = "Description", value = a_documentation.description )
+
+        builder.append_form_field_line (
+            label = "Block/Inline",
+            value = if se_formal_node.is_inline_node ( this ) then "inline" else "block" )
+
+        builder.append_form_field_line_if_not_null ( label = "Example(s)", value = a_documentation.examples )
+        
+        if a_attributes is not null then
+            builder.append_line ( if a_attributes.standard_id_map.size >= 2 then "Attributes:" else "Attribute:" )
+            builder.append_line_1 ( a_attributes.to_long_string )
+        else
+            builder.append_form_field_line ( label = "Attributes" value = "none" )
+        .
+        
+        builder.append_form_field_line (
+            label = "HTML Attributes",
+            value = if a_HTML_attributes_allowed then "allowed" else "not allowed" )
+        
+        return builder.get_result
+    .
+.
+
+    

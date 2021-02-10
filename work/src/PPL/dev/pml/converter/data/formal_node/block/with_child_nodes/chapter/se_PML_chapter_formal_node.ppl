@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_chapter_formal_node
+
+    att attributes formal_parameters<*>
+        default
+            const r = any_type_formal_parameters_builder.create
+            
+            r.add_string_parameter (
+                ids = [# se_PML_attribute_ids.title ]
+                title = "Chapter Title"
+                examples = "title = Fundamental Concepts" )
+            r.add_parameter ( se_formal_node_attributes.id )
+            
+            return r.make_immutable
+        .
+    .
+
+    att node PML_formal_block_node_with_child_nodes<PML_chapter_node> = \
+        PML_formal_block_node_with_child_nodes<PML_chapter_node>.create (
+            tags = [# "chapter", "ch", "=" ]
+            attributes = a_attributes
+            default_attribute_id = parameter_id.create ( se_PML_attribute_ids.title )
+            HTML_attributes_allowed = yes
+            node_creator = fa_PML_chapter_node_creator.create
+            HTML_writer = fa_PML_chapter_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Chapter"
+                description = "A chapter or sub-chapter of the document. A chapter can have any number of sub-chapters. Chapters can be nested to any level."
+                examples = '''{ch title = Introduction id = intro
+    {ch title = What is This About?
+        blah blah blah
+    }
+    {ch title = Why is This Important?
+        blah blah blah
+    }
+}''' ) )
+.
+    

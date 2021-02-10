@@ -1,0 +1,27 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_document_node
+
+    function tag = se_PML_standard_formal_nodes.document.standard_tag
+    
+    function chapters
+    
+        if a_child_nodes is null then
+            return null
+        .
+        
+        const r = mutable_list<PML_chapter_node>.create
+        repeat for each child_node in a_child_nodes
+            case type of child_node
+                when PML_chapter_node chapter_node
+                    r.append ( chapter_node )
+                otherwise
+                    next repeat
+            .
+        .
+        return r.make_immutable_or_null
+    .
+    
+    creator create kind:in_all
+.

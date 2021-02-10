@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_youtube_video_node
+
+    inherit PML_block_node_without_child_nodes, PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    
+    attributes
+        
+        youtube_video_id string
+        width pos_32 or null default:null
+        height pos_32 or null default:null
+
+        caption string or null
+    .
+.

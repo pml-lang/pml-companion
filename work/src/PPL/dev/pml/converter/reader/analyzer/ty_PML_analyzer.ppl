@@ -1,0 +1,8 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_analyzer
+
+    function try_analyze ( document_AST PML_document_AST ) -> PML_document_node or anticipated_error // TD? PML_code_error
+.
+    

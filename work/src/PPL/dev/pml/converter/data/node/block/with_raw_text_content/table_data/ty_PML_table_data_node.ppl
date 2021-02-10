@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_table_data_node
+
+    inherit PML_block_node_with_raw_text_content, PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+
+    attributes
+        header_row list<string or null> or null
+        body_rows  list<list<string or null>>
+        footer_row list<string or null> or null
+
+        column_horizontal_alignments indexed_list<text_horizontal_alignment or null> or null
+    .
+.

@@ -1,0 +1,7 @@
+# Define how Git handles line breaks (LF on Unix, CRLF on Windows)
+
+# Default behavior
+* text=auto
+
+# Unix script files use LF
+*.sh text eol=lf

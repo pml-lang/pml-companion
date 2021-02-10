@@ -1,0 +1,156 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_parser_tests
+
+    tests
+    
+        const parser = PML_parser.create
+
+        const document_AST_1 = parser.try_parse_code ( "{doc }" ) on_error:throw_error
+        const nodes_1 = document_AST_1.root_nodes
+        verify nodes_1.size =v 1
+        verify nodes_1.first.to_string =v "doc line 1, column 2"
+
+        const document_AST_2 = parser.try_parse_code ( '''{- comment -}{doc }''' ) on_error:throw_error
+        const nodes_2 = document_AST_2.root_nodes
+        verify nodes_2.size =v 1
+        
+        
+        // comments
+
+        const document_AST_3 = parser.try_parse_code ( '''
+        
+        {- comment -}
+        
+        {audio }
+        {- comment -}{- comment -}          {- comment -}
+        {- comment
+            {- comment qwe sadf {node } -}
+        -}
+        
+        {doc
+        
+        }
+        {- comment -}
+        ''' ) on_error:throw_error
+        const nodes_3 = document_AST_3.root_nodes
+        verify nodes_3.size =v 10
+        verify nodes_3.get(3).to_string =v "audio line 5, column 10"
+        verify nodes_3.get(8).to_string =v "doc line 11, column 10"
+        
+        
+        // attributes
+
+        const document_AST_4 = parser.try_parse_code ( '''{ch "A beautiful story" TOC="none" \
+        p3=v3 \
+        p4  =   "value 4"}''' ) on_error:throw_error
+        const nodes_4 = document_AST_4.root_nodes
+        verify nodes_4.size =v 1
+        const doc_node = nodes_4.first
+        verify doc_node.tag.value =v "ch"
+        const attributes = doc_node.attributes
+        verify attributes is not null
+        verify attributes.size =v 4
+        verify attributes.get ( "title" ).value.value =v "A beautiful story"
+        verify attributes.get ( "TOC" ).value.value =v "none"
+        verify attributes.get ( "p3" ).value.value =v "v3"
+        verify attributes.get ( "p4" ).value.value =v "value 4"
+
+        // attributes with parenthesis
+
+        const document_AST_4b = parser.try_parse_code ( '''{ch ( title = "A beautiful story" TOC=none \
+        p3=v3 \
+        p4  =   "value 4" ) }''' ) on_error:throw_error
+        const nodes_4b = document_AST_4b.root_nodes
+        verify nodes_4b.size =v 1
+        const ch_node = nodes_4b.first
+        verify ch_node.tag.value =v "ch"
+        const attributes_4b = ch_node.attributes
+        verify attributes_4b is not null
+        verify attributes_4b.size =v 4
+        verify attributes_4b.get ( "title" ).value.value =v "A beautiful story"
+        verify attributes_4b.get ( "TOC" ).value.value =v "none"
+        verify attributes_4b.get ( "p3" ).value.value =v "v3"
+        verify attributes_4b.get ( "p4" ).value.value =v "value 4"
+
+        // content
+
+        const document_AST_5 = parser.try_parse_code ( '''
+{doc Doc title TOC = left
+
+    {ch title = "Chapter 1"
+        text
+        text
+    }
+
+    {ch title = "Chapter 2"
+        text
+        text
+    }
+
+}''' ) on_error:throw_error
+        const nodes_5 = document_AST_5.root_nodes
+        
+        verify nodes_5.size =v 2
+        
+        const doc_node_5 = nodes_5.last
+        verify doc_node_5.tag.value =v "doc"
+        
+        const attributes_5 = doc_node_5.attributes
+        verify attributes_5 is not null
+        verify attributes_5.size =v 2
+        verify attributes_5.get ( "title" ).value.value =v "Doc title"
+        verify attributes_5.get ( "TOC" ).value.value =v "left"
+        
+        const child_nodes_5 = doc_node_5.child_nodes
+        verify child_nodes_5 is not null
+        verify child_nodes_5.size =v 5
+
+        const chapter_1_node = child_nodes_5.get(2)
+        const chapter_1_attributes = chapter_1_node.attributes
+        verify chapter_1_attributes is not null
+        verify chapter_1_attributes.size =v 1
+        verify chapter_1_attributes.get ( "title" ).value.value =v "Chapter 1"
+        
+        const chapter_1_kids = chapter_1_node.child_nodes
+        verify chapter_1_kids is not null
+        verify chapter_1_kids.size =v 1
+        const chapter_1_text_node = chapter_1_kids.first
+        const chapter_1_text = chapter_1_text_node.raw_text_content?.value
+        verify chapter_1_text is not null
+        verify """<{{chapter_1_text}}>""" =v '''<
+        text
+        text
+    >'''
+
+        // raw text
+
+        const document_AST_6 = parser.try_parse_code ( '''
+{document
+    {code
+        l1
+        l2
+    code}
+}''' ) on_error:throw_error
+        const nodes_6 = document_AST_6.root_nodes
+        
+        verify nodes_6.size =v 2
+        
+        const doc_node_6 = nodes_6.last
+        verify doc_node_6.tag.value =v "document"
+        
+        const child_nodes_6 = doc_node_6.child_nodes
+        verify child_nodes_6 is not null
+        verify child_nodes_6.size =v 3
+
+        const code_node = child_nodes_6.get(2)
+        const code = code_node.raw_text_content?.value
+        verify code is not null
+        verify code =v '''
+        l1
+        l2
+    '''
+    .
+
+.

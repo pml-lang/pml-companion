@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type PML_node_attribute_AST
+
+    attributes
+        id PML_token
+        value PML_token
+    .
+.

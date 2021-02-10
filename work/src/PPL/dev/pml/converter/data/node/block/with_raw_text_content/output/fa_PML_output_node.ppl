@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_output_node
+
+    function tag = se_PML_standard_formal_nodes.output.standard_tag
+    
+    creator create kind:in_all
+.
