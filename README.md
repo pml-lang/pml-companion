@@ -6,7 +6,7 @@
 
 ## Development
 
-For instructions on ho to develop PML see [Developmrnt](Development.md)
+For instructions on how to develop PML see [Developmrnt](Development.md)
 
 ## License
 
