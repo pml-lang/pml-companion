@@ -22,9 +22,9 @@ service PML_tag_info_command
             examples = null ) )
 
 
-	function execute ( input any_type_parameters or null ) -> string
-	
-	    assert i_input is not null
+    function execute ( input any_type_parameters or null ) -> string
+    
+        assert i_input is not null
 
         const tag = i_input.require_value<string or null> ( "tag" )
 
@@ -54,7 +54,7 @@ The following tags exist: {{se_PML_formal_node_registry.sorted_any_tag_list.to_l
         .
     .
 
-	functions access:private
+    functions access:private
 
         function formal_nodes_summary_info -> string
     

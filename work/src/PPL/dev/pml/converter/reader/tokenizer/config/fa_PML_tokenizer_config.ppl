@@ -3,8 +3,8 @@ factory PML_tokenizer_config
     creator create kind:in_all
 
     creator create_customized -> PML_tokenizer_config
-		in node_start_symbol character
-		in node_end_symbol character
+        in node_start_symbol character
+        in node_end_symbol character
 
         this.node_start_symbol = i_node_start_symbol
         this.node_end_symbol = i_node_end_symbol

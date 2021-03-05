@@ -6,9 +6,9 @@ factory PML_document_writer
     attributes access:private
         
         t_writer throwing_string_writer_wrapper
-    	
-    	current_indent mutable_string default:mutable_string.create
-    	single_indent string default: "    "
+        
+        current_indent mutable_string default:mutable_string.create
+        single_indent string default: "    "
     .
 
     // TD escape

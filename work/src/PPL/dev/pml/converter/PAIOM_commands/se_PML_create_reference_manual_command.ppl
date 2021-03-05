@@ -41,15 +41,15 @@ The temporary directory can manually be deleted after the PML Reference Manual h
             description = "This command creates the PML reference manual."
             examples = null ) )
 
-	function execute ( input any_type_parameters or null ) -> string or anticipated_error
-	
-	    assert i_input is not null
+    function execute ( input any_type_parameters or null ) -> string or anticipated_error
+    
+        assert i_input is not null
 
-	    const temp_directory_path = i_input.get_value<absolute_or_relative_directory_path> (
-	        a_temp_directory_parameter.standard_id )
-	    const output_directory_path = i_input.get_value<absolute_or_relative_directory_path> (
-	        a_output_directory_parameter.standard_id )
+        const temp_directory_path = i_input.get_value<absolute_or_relative_directory_path> (
+            a_temp_directory_parameter.standard_id )
+        const output_directory_path = i_input.get_value<absolute_or_relative_directory_path> (
+            a_output_directory_parameter.standard_id )
 
-	    return se_PML_reference_manual.create_manual_for_path ( temp_directory_path, output_directory_path )
+        return se_PML_reference_manual.create_manual_for_path ( temp_directory_path, output_directory_path )
     .
 .
