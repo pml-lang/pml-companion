@@ -33,16 +33,16 @@ examples:
 '''
     .
     
-	function start
-	
-	    const arguments = se_OS_process.command_line_arguments
-	    if arguments is null then
-		    OS.err.write_line ( a_usage_text )
+    function start
+    
+        const arguments = se_OS_process.command_line_arguments
+        if arguments is null then
+            OS.err.write_line ( a_usage_text )
             OS.err.write_line ( "Type 'pmlc help' for more information." )
 
             se_OS_process.exit_with_error
-		.
-		assert arguments is not null
+        .
+        assert arguments is not null
 
         execute_command_line_arguments ( arguments ) (
             const result = result
@@ -62,9 +62,9 @@ examples:
                     se_OS_process.exit_with_success
                 .
         .
-	.
+    .
 
-	functions access:private
+    functions access:private
 
         function execute_command_line_arguments
             in arguments indexed_list<string or null>

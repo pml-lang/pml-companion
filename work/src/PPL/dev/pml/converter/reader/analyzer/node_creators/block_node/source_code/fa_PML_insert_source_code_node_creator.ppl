@@ -12,9 +12,9 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
             const title = title )
 
         const file_path = attributes.require_value<absolute_or_relative_file_path> ( se_PML_attribute_ids.file )
-		const file = file.create_for_absolute_or_relative_path_in_working_directory ( file_path )
-		const code = define_code ( file, i_node_AST, attributes, i_context ) on_error: return_error
-		
+        const file = file.create_for_absolute_or_relative_path_in_working_directory ( file_path )
+        const code = define_code ( file, i_node_AST, attributes, i_context ) on_error: return_error
+        
         const language = attributes.require_value<string> (
             se_PML_source_code_formal_node.language_parameter.standard_id.value )
 
@@ -23,8 +23,8 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
 
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
 
-		return PML_insert_source_code_node.create (
-		    node_id, title, file, code, language, use_highlighter, HTML_attributes )
+        return PML_insert_source_code_node.create (
+            node_id, title, file, code, language, use_highlighter, HTML_attributes )
     .
     
     functions access:private

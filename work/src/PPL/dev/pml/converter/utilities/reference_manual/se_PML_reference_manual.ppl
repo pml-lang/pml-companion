@@ -19,7 +19,7 @@ service PML_reference_manual
 
         return create_manual ( temp_directory, output_directory )
     .
-		
+        
     function create_manual -> string or anticipated_error
         in temp_directory directory
         in output_directory directory

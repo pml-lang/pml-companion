@@ -118,10 +118,10 @@ service PML_to_HTML_Converter
             .
 
             return se_file_copier.try_copy_directory_content (
-		        source = resources_directory
-		        destination = output_directory
-		        file_overwrite_policy = file_copy_overwrite_policy.always_overwrite
-		        include_child_directories = yes )
+                source = resources_directory
+                destination = output_directory
+                file_overwrite_policy = file_copy_overwrite_policy.always_overwrite
+                include_child_directories = yes )
         .
     .
 .

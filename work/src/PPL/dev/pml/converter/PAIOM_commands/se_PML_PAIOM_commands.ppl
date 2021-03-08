@@ -3,9 +3,9 @@
 
 service PML_PAIOM_commands
 
-	att commands PAIOM_commands
-		default
-			const r = PAIOM_commands_builder.create
+    att commands PAIOM_commands
+        default
+            const r = PAIOM_commands_builder.create
 
             r.add_command ( se_PML_convert_command.command )
             r.add_command ( se_PML_help_command.command )
@@ -17,7 +17,7 @@ service PML_PAIOM_commands
             // r.add_command ( se_PML_start_GUI_command.command )
             r.add_command ( se_PML_create_reference_manual_command.command )
 
-			return r.make_immutable
-		.
-	.
+            return r.make_immutable
+        .
+    .
 .

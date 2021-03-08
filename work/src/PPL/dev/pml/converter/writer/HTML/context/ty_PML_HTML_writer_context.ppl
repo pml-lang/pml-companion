@@ -3,9 +3,9 @@
 
 type PML_HTML_writer_context
 
-	att writer string_writer
+    att writer string_writer
 
-	functions
+    functions
 
         // basics
     
