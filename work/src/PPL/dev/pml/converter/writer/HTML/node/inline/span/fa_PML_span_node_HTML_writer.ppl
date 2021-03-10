@@ -4,15 +4,15 @@
 factory PML_span_node_HTML_writer type:PML_node_HTML_writer<PML_span_node>
 
     function write
-    
+
         context.write ( '''<span ''' )
         context.write_HTML_attributes_for_node ( node, CSS_class_name = "pml-span" )
         context.write ( ">" )
-        
+
         context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
-        
+
         context.write ( '''</span>''' )
     .
-    
+
     creator create kind:in_all
 .

@@ -6,13 +6,13 @@ service PML_table_data_formal_node
     att attributes formal_parameters<*>
         default
             const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
-            
+
             r.add_parameter ( se_PML_table_formal_node.horizontal_alignments_parameter )
 
             return r.make_immutable
         .
     .
-    
+
     att node PML_formal_block_node_with_raw_text_content<PML_table_data_node> = \
         PML_formal_block_node_with_raw_text_content<PML_table_data_node>.create (
             tags = [# "table_data", "tdata" ]
@@ -37,7 +37,7 @@ The following format rules apply:
 - If the second-last line is a dash (-) then the last line is a footer.
 '''
                 examples = '''Simple table:
-                
+
 [table_data
     cell 1.1, cell 1.2
     cell 2.1, cell 2.2

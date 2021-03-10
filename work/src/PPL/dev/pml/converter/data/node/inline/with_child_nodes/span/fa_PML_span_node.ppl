@@ -4,6 +4,6 @@
 factory PML_span_node
 
     function tag = se_PML_standard_formal_nodes.span.standard_tag
-    
+
     creator create kind:in_all
 .

@@ -25,7 +25,7 @@ service PML_video_formal_node
                 title = "Video Source"
                 description = "The relative file path to the video file. The path is relative to the target HTML file."
                 examples = "source = videos/happy_kids.mp4" )
-                
+
             r.add<pos_32 or null> (
                 ids = [# "width" ]
                 default_value_supplier = { null }
@@ -33,7 +33,7 @@ service PML_video_formal_node
                 title = "Video Width"
                 description = "The width of the video, expressed in pixels."
                 examples = "width = 600" )
-                
+
             r.add<pos_32 or null> (
                 ids = [# "height" ]
                 default_value_supplier = { null }
@@ -46,7 +46,7 @@ service PML_video_formal_node
 
             // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
             // TD add autoplay, controls, loop, muted, poster (see https://www.w3schools.com/tags/tag_video.asp)
-            
+
             return r.make_immutable
         .
     .
@@ -63,4 +63,3 @@ service PML_video_formal_node
                 description = "A video, such as an .mp4 or .webm file."
                 examples = '''[video source = videos/red_flower.mp4 title = Beautiful Nature]''' ) )
 .
-    

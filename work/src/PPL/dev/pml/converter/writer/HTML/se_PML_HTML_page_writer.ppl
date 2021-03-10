@@ -4,34 +4,34 @@
 service PML_HTML_page_writer
 
     function write_page ( document_node PML_document_node, config PML_to_HTML_config ) -> runtime_error or null
-    
+
         const writer = text_file_writer.create_for_new_or_existing_file (
             file = i_config.HTML_output_file
             append_mode = no ) on_error:return_error
-        
+
         const context = PML_HTML_writer_context.create ( writer, config )
 
         write_HTML_page_header ( context, config, document_title = document_node.title ) on_error:return_error
-        
+
         write_HTML_body_start ( context, document_node, config )
-        
+
         se_PML_document_formal_node.node.HTML_writer.write (
             node = i_document_node, context, i_config )
 
         write_HTML_body_end ( context )
 
         write_HTML_page_footer ( context, config ) on_error:return_error
-        
+
         return writer.try_close
     .
-    
+
     functions access:private
 
         function write_HTML_page_header -> runtime_error or null
             in context PML_HTML_writer_context
             in config PML_to_HTML_config
             in document_title string
-            
+
             if i_config.HTML_header as HTML_header is not null then
                 const header_template = HTML_header.get on_error: return_error
                 context.write ( adapt_HTML_page_header ( header_template, i_context, i_config, i_document_title ) )
@@ -39,7 +39,7 @@ service PML_HTML_page_writer
 
             context.increase_indent
             context.increase_indent
-            
+
             return null
         .
 
@@ -116,7 +116,7 @@ service PML_HTML_page_writer
         function write_HTML_page_footer -> runtime_error or null
             in context PML_HTML_writer_context
             in config PML_to_HTML_config
-        
+
             context.decrease_indent
             context.decrease_indent
 
@@ -148,13 +148,13 @@ service PML_HTML_page_writer
             if i_config.TOC_position =r PML_TOC_position.left then
                 se_PML_HTML_TOC.write_TOC ( document_node, context, max_level = 10 )
             .
-            
+
             context.decrease_indent
             context.write_HTML_block_tag_end ( "aside" )
         .
-        
+
         function write_HTML_body_end ( context PML_HTML_writer_context )
-            
+
             context.write_HTML_block_tag_start ( HTML_tag_name = "aside", CSS_class_name = "pml-doc-right" )
             context.write_HTML_block_tag_end ( "aside" )
 

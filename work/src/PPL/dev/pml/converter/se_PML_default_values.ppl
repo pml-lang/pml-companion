@@ -6,18 +6,18 @@ service PML_default_values
     attributes
         PML_file_name_extension file_name_extension = file_name_extension.create ( "pml" )
         PML_file_name_end string = se_file_name_extension.separator & a_PML_file_name_extension.value
-    
+
         resources_directory_name directory_name = directory_name.create ( "resources" )
         output_directory_name directory_name = directory_name.create ( "output" )
         CSS_directory_name directory_name = directory_name.create ( "css" )
-        
+
 //        HTML_output_file_name file_name = file_name.create ( "result.html" )
-        
+
         CSS_file file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/css/pml-default.css" ) )
         CSS_print_file file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/css/pml-print-default.css" ) )
-        
+
         HTML_header_file file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/html/default_html_header.txt" ) )
         HTML_footer_file file = se_current_application_directories.resource_file (
@@ -25,24 +25,24 @@ service PML_default_values
 
         omit_CSS yes_no = no
     .
-    
+
     function relative_input_file_path -> relative_file_path or null
-    
+
         const file = input_file on_null: return null
-        
+
         return file.path.to_relative_file ( se_OS_directories.current_working_directory_path )
     .
 
     function input_file -> file or null
-    
+
         // If index.pml exists in current working directory, then this is the default file
         const index_dot_pml_file = file.create_for_name_in_working_directory ( file_name.create ( "index.pml" ) )
         if index_dot_pml_file.exists then
             return index_dot_pml_file
         .
-        
+
         // If there is only one pml file, then this is the default file
-        
+
         const PML_files = se_OS_directories.current_working_directory.file_list (
             include_child_directories = no
             filter = { file ->
@@ -53,24 +53,24 @@ service PML_default_values
                 .
             },
             sort_by_path = no ) on_error: throw_error
-        
+
         if PML_files is null then
             return null
         .
-        
+
         if PML_files.size =v 1 then
             return PML_files.first
         else
             return null
         .
-        
+
     .
-    
+
     function HTML_output_file_name_for_input_file_name ( input_file_name file_name ) -> file_name = \
         input_file_name.change_extension ( file_name_extension.create ( "html" ) )
-    
+
     function resources_directory -> directory or null
-    
+
         const r = se_OS_directories.current_working_directory.append_name ( a_resources_directory_name )
         if r.exists then
             return r
@@ -78,7 +78,7 @@ service PML_default_values
             return null
         .
     .
-    
+
     function resources_directory_path -> directory_path or null = resources_directory?.path
 
     function relative_resources_directory_path -> relative_directory_path or null = \
@@ -91,7 +91,7 @@ service PML_default_values
 
     function relative_output_directory_path -> relative_directory_path = \
         output_directory_path.make_relative ( se_OS_directories.current_working_directory_path )
-        
+
     function output_CSS_directory ( output_directory directory ) -> directory = \
         i_output_directory.append_name ( a_CSS_directory_name )
 .

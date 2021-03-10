@@ -4,10 +4,10 @@
 factory PML_space_node_creator type:PML_node_creator<PML_space_node>
 
     function create_node
-    
+
         // TD should use cached object
         return PML_space_node.create
     .
-    
+
     creator create kind:in_all
 .

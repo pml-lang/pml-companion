@@ -4,21 +4,21 @@
 factory PML_audio_node_creator type:PML_node_creator<PML_audio_node>
 
     function create_node
-    
+
         const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
-        
+
         se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
             const node_id = id
             const title = title )
-            
+
         const source = attributes.require_value<relative_file_path> ( "source" )
-        
+
         const caption = attributes.require_value<string or null> ( se_PML_attribute_ids.caption )
-        
+
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
 
         return PML_audio_node.create ( node_id, title, caption, source, HTML_attributes )
     .
-    
+
     creator create kind:in_all
 .

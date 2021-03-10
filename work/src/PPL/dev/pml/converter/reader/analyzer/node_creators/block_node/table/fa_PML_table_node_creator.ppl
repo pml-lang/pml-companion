@@ -4,22 +4,22 @@
 factory PML_table_node_creator type:PML_node_creator<PML_table_node>
 
     function create_node
-    
+
         const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
-        
+
         se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
             const node_id = id
             const title = title )
 
         const caption = attributes.require_value<string or null> ( se_PML_attribute_ids.caption )
         // const has_border = attributes.require_value<yes_no> ( "border" )
-        
+
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
 
         const child_nodes = i_context.create_non_empty_child_block_nodes ( i_node_AST ) on_error: return_error
-        
+
         return PML_table_node.create ( node_id, title, caption, HTML_attributes, child_nodes )
     .
-    
+
     creator create kind:in_all
 .

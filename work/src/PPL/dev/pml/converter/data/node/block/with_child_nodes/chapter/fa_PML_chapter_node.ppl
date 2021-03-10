@@ -4,9 +4,9 @@
 factory PML_chapter_node
 
     function tag = se_PML_standard_formal_nodes.chapter.standard_tag
-    
+
     function has_sub_chapters
-    
+
         if a_child_nodes is null then
             return no
         .
@@ -20,13 +20,13 @@ factory PML_chapter_node
         .
         return no
     .
-    
+
     function sub_chapters
-    
+
         if a_child_nodes is null then
             return null
         .
-        
+
         const r = mutable_list<PML_chapter_node>.create
         repeat for each child_node in a_child_nodes
             case type of child_node

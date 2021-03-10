@@ -5,7 +5,7 @@ service PML_help_command
 
     att help_text string = se_CLI_start.usage_text & '''
 The following help commands are available:
-    
+
 pmlc tag_info
     Display a summary of all PML tags you can use in a PML document
 
@@ -25,7 +25,7 @@ pmlc command_info -command [command_name]
     pmlc command_info -command tag_info
     Or simply type:
     pmlc ci -c tag_info
-    
+
 Online help is available at
 https://www.pml-lang.dev/help/help_menu.html'''
 

@@ -30,7 +30,7 @@ service PML_audio_formal_node
 
             // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
             // TD add autoplay, controls, loop, muted (see https://www.w3schools.com/tags/tag_audio.asp)
-            
+
             return r.make_immutable
         .
     .
@@ -47,4 +47,3 @@ service PML_audio_formal_node
                 description = "An audio stream (sound), such as an .mp3 or .wav file."
                 examples = '''[audio title="Bird talk" source=audios/bird_talk.mp3]''' ) )
 .
-    

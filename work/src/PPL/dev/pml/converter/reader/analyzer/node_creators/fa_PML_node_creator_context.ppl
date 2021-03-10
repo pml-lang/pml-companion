@@ -11,11 +11,11 @@ factory PML_node_creator_context
     .
 
     function get_non_HTML_attributes
-    
+
         case type of se_parameters_creator.try_create_from_string_map_or_null (
             string_map = i_node_AST.non_HTML_attributes
             formal_parameters = i_node_AST.formal_node.attributes )
-            
+
             when any_type_parameters r
                 return r
             when null
@@ -26,7 +26,7 @@ factory PML_node_creator_context
                     i_node_AST )
         .
     .
-    
+
     function get_HTML_attributes = i_node_AST.HTML_attributes
 
     function current_chapter_level = a_current_chapter_level
@@ -34,13 +34,13 @@ factory PML_node_creator_context
     function increase_current_chapter_level
         a_current_chapter_level = a_current_chapter_level + 1
     .
-    
+
     function decrease_current_chapter_level
         a_current_chapter_level = a_current_chapter_level - 1
     .
-    
+
     function get_auto_chapter_id
-    
+
         const id = """ch__{{a_chapter_counter}}"""
         // TD check is unique
 
@@ -48,9 +48,9 @@ factory PML_node_creator_context
 
         return id
     .
-    
+
     function title_of_existing_node_id
-    
+
         if node_ids is not null then
             if node_ids.contains_key ( node_id ) then
                 return node_ids.get ( node_id )
@@ -63,7 +63,7 @@ factory PML_node_creator_context
     .
 
     function create_non_empty_child_block_nodes
-        
+
         const r = create_emptyable_child_block_nodes ( node_AST ) on_error: return_error
         if r is null then
             return PML_code_error.create_for_node_AST_tag (
@@ -72,9 +72,9 @@ factory PML_node_creator_context
         .
         return r
     .
-    
+
     function create_non_empty_child_inline_nodes
-        
+
         const r = create_emptyable_child_inline_nodes ( i_node_AST ) on_error: return_error
         if r is null then
             return PML_code_error.create_for_node_AST_tag (
@@ -83,15 +83,15 @@ factory PML_node_creator_context
         .
         return r
     .
-    
+
     function create_emptyable_child_block_nodes
-    
+
         const child_nodes_AST = i_node_AST.child_nodes on_null:return null
-    
+
         const block_nodes = mutable_list<PML_block_node>.create
-        
+
         variable index = 1
-        
+
         repeat while index <= child_nodes_AST.size
             const child_node_AST = child_nodes_AST.get ( index )
 
@@ -111,15 +111,15 @@ factory PML_node_creator_context
 
         return block_nodes.make_immutable_or_null
     .
-    
+
     function create_emptyable_child_inline_nodes
-    
+
         const child_nodes_AST = i_node_AST.child_nodes on_null:return null
-        
+
         const inline_nodes = mutable_indexed_list<PML_inline_node>.create
-        
+
         repeat for each child_node_AST in child_nodes_AST
-            
+
             const formal_child_node = child_node_AST.formal_node
             if se_formal_node.is_inline_node ( formal_child_node ) then
                 if formal_child_node =r se_PML_standard_formal_nodes.text then
@@ -139,9 +139,9 @@ factory PML_node_creator_context
 
         return inline_nodes.make_immutable_or_null
     .
-    
+
     function require_single_text_child_node
-    
+
         const content = create_non_empty_child_inline_nodes ( i_node_AST ) on_error: return_error
         if content.size =v 1 then
             case type of content.first
@@ -154,17 +154,17 @@ factory PML_node_creator_context
             info ="""Node '{{i_node_AST.tag.value}}' can only contain text. It cannot contain other child nodes."""
             i_node_AST )
     .
-    
+
     function set_keep_whitespace_in_text
-    
+
         a_keep_whitespace_in_text = i_value
     .
-    
+
     function normalize_text_in_node_with_raw_text_content
 
         const parsed_text = i_node_AST.raw_text_content?.value
         assert parsed_text is not null
-        
+
         variable trimmed_text = remove_first_whitespace_line ( parsed_text )
         if trimmed_text is not null then
             trimmed_text = remove_last_whitespace_line ( trimmed_text )
@@ -175,10 +175,10 @@ factory PML_node_creator_context
                 info = """A '{{i_node_AST.tag.value}}' node cannot be empty. It must contain some text."""
                 i_node_AST )
         .
-        
+
         return remove_smallest_indent_in_all_lines_of_text ( trimmed_text )
     .
-    
+
     function remove_smallest_indent_in_all_lines_of_text
 
         const without_indent = multiline_string.create ( i_text ).remove_smallest_indent_in_all_lines (
@@ -187,29 +187,29 @@ factory PML_node_creator_context
 
         return without_indent.get_string
     .
-    
+
 ///
     function find_smallest_indent_in_text_child_nodes
-    
+
 //        const r string or null = null
-//        repeat for each 
+//        repeat for each
 //        return smallest_indent_in_text_node ( i_parent_node )
 
         return smallest_indent_in_child_nodes ( i_parent, current_smallest = null )
     .
 
     function remove_first_line_indent_in_all_text_nodes
-    
+
         return i_node_AST
     .
-.///    
-    
+.///
+
     functions access:private
-    
+
 ///
         function smallest_indent_in_child_nodes ( parent PML_node_AST, current_smallest string or null ) \
             -> string or null
-            
+
             if parent.child_nodes as child_nodes is null then
                 return i_current_smallest
             else
@@ -220,7 +220,7 @@ factory PML_node_creator_context
                     const smallest_indent_in_node = smallest_indent_in_text_node ( node )
                     r = smallest_indent ( indent_1 = r, indent_2 = smallest_indent_in_node )
                     .///
-                    
+
                     r = smallest_indent_with_text_node ( node, i_current_smallest )
 
                     const smallest_indent_in_children = smallest_indent_in_child_nodes (
@@ -231,74 +231,74 @@ factory PML_node_creator_context
                 return r
             .
         .
-        
+
         function smallest_indent_with_text_node ( node PML_node_AST, current_smallest string or null ) -> string or null
-        
+
             if not i_node.is_text_node then
                 return i_current_smallest
             .
-            
+
             const text = i_node.raw_text_content?.value
             assert text is not null
-            
+
             // ignore text that doesn't contain line breaks
             if not text.contains_character ( '\n' ) then
                 return i_current_smallest
             .
-            
+
             const node_indent = multiline_string.create ( text ).find_smallest_indent ( ignore_empty_lines = yes )
             const r = smallest_indent ( indent_1 = i_current_smallest, indent_2 = node_indent )
 
             return r
         .
-        
+
         function smallest_indent ( indent_1 string or null, indent_2 string or null ) -> string or null
-        
+
             if indent_1 is null then
                 return indent_2
             .
-        
+
             if indent_2 is null then
                 return indent_1
             .
-            
+
             return if indent_1.size <# indent_2.size \
                 then indent_1 \
                 else indent_2
         .
 .///
-        
+
         function append_paragraphs -> pos_32 or anticipated_error
             in block_nodes mutable_list<PML_block_node>
             in child_nodes_AST indexed_list<PML_node_AST>
             in start_index pos_32
-            
+
             variable inline_nodes = mutable_indexed_list<PML_inline_node>.create
-            
+
             variable index = start_index
             repeat while index <= i_child_nodes_AST.size
                 const child_node_AST = i_child_nodes_AST.get ( index )
-    
+
                 const formal_child_node = child_node_AST.formal_node
                 if se_formal_node.is_block_node ( formal_child_node ) then
                     exit repeat
                 .
-                
+
                 if formal_child_node =r se_PML_standard_formal_nodes.text then
                     const text = child_node_AST.raw_text_content?.value
                     assert text is not null
-                    
+
                     // Two consecutive new lines are treated as a paragraph break
-                    
+
                     const texts = text.split_by_regex ( se_PML_node_creator_regexes.paragraph_break )
-                    
+
                     if texts.first as first_text is not null then
                         append_text_node ( inline_nodes, text = first_text )
                     .
-    
+
                     if texts.size ># 1 then
                         append_paragraph ( block_nodes, inline_nodes )
-                        
+
                         if texts.size >= 3 then
                             repeat from mid_index = 2 to texts.size - 1
                                 if texts.get ( mid_index ) as mid_text is not null then
@@ -315,34 +315,34 @@ factory PML_node_creator_context
                                 .
                             .
                         .
-                        
+
                         inline_nodes = mutable_indexed_list<PML_inline_node>.create
                         if texts.last as last_text is not null then
                             append_text_node ( inline_nodes, text = last_text )
                         .
                     .
-    
+
                 else
                     append_inline_node ( inline_nodes, node_AST = child_node_AST, formal_node = formal_child_node ) \
                         on_error: return_error
                 .
-                
+
                 index = index + 1
             .
-    
+
             append_paragraph ( block_nodes, inline_nodes )
-    
+
             return index
         .
-        
+
         function append_paragraph
             in block_nodes mutable_list<PML_block_node>
             in inline_nodes mutable_indexed_list<PML_inline_node>
-    
+
             if inline_nodes.is_empty then
                 return
             .
-            
+
             // remove space at end of paragraph
             case type of inline_nodes.last
                 when PML_text_node text_node
@@ -360,7 +360,7 @@ factory PML_node_creator_context
                 otherwise
                     do nothing
             .
-            
+
             const paragraph = PML_paragraph_node.create (
                 node_id = null, title = null, HTML_attributes = null, child_nodes = inline_nodes.make_immutable )
             block_nodes.append ( paragraph )
@@ -370,13 +370,13 @@ factory PML_node_creator_context
             in inline_nodes mutable_indexed_list<PML_inline_node>
             in node_AST PML_node_AST
             in formal_node PML_formal_node<*>
-            
+
             const node = formal_node.node_creator.create_node ( node_AST, context = this ) on_error: return_error
             const n PML_inline_node = node type_check:no
             inline_nodes.append ( n )
             return null
         .
-        
+
         function append_text_node
             in inline_nodes mutable_indexed_list<PML_inline_node>
             in text string
@@ -390,9 +390,9 @@ factory PML_node_creator_context
 
             inline_nodes.append ( PML_text_node.create ( se_PML_code.unescape_text ( trimmed_text ) ) )
         .
-        
+
         function trim_whitespace_in_text ( text string, is_first_node yes_no ) -> string or null
-        
+
             // replace sequences of whitespace with one space
             variable trimmed_text = i_text.replace_all_regex (
                 to_replace = se_PML_tokenizer_config_default_values.whitespace
@@ -406,10 +406,10 @@ factory PML_node_creator_context
                     trimmed_text = trimmed_text.remove_first
                 .
             .
-            
+
             return trimmed_text
         .
-        
+
         function remove_first_whitespace_line ( string ) -> string or null
 
             variable remove_count = 0
@@ -424,7 +424,7 @@ factory PML_node_creator_context
                     exit repeat
                 .
             .
-            
+
             if remove_count =v 0 then
                 return i_string
             else if remove_count =v string.size then
@@ -433,7 +433,7 @@ factory PML_node_creator_context
                 return string.substring_from ( remove_count + 1 )
             .
         .
-        
+
         function remove_last_whitespace_line ( string ) -> string or null
 
             variable remove_count = 0
@@ -448,13 +448,13 @@ factory PML_node_creator_context
                     exit repeat
                 .
             .
-            
+
             if remove_count #v 0 and remove_count #v string.size then
                 if i_string.get ( string.size - remove_count ) =v '\r' then
                     remove_count = remove_count + 1
                 .
             .
-            
+
             if remove_count =v 0 then
                 return i_string
             else if remove_count =v string.size then
@@ -464,12 +464,12 @@ factory PML_node_creator_context
             .
         .
     .
-        
+
     creator create -> PML_node_creator_context
         in node_ids map<key:string value:string or null> or null
-        
+
         this.node_ids = i_node_ids
-        
+
         return this
     .
 .

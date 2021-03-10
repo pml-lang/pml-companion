@@ -29,7 +29,7 @@ The temporary directory can manually be deleted after the PML Reference Manual h
 
     att command explicit_paiom_command<string or anticipated_error> = \
         explicit_paiom_command<string or anticipated_error>.create (
-        
+
         ids = [# PAIOM_command_id.create ( "create_reference_manual" ), PAIOM_command_id.create ( "crm" ) ]
         formal_input_parameters = any_type_formal_parameters_builder.create
             .add_parameter ( a_output_directory_parameter )
@@ -42,7 +42,7 @@ The temporary directory can manually be deleted after the PML Reference Manual h
             examples = null ) )
 
     function execute ( input any_type_parameters or null ) -> string or anticipated_error
-    
+
         assert i_input is not null
 
         const temp_directory_path = i_input.get_value<absolute_or_relative_directory_path> (

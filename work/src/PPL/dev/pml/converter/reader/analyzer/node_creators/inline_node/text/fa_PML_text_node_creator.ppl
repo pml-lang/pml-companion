@@ -10,6 +10,6 @@ factory PML_text_node_creator type:PML_node_creator<PML_text_node>
         .
         return PML_text_node.create ( "qwe" )
     .
-    
+
     creator create kind:in_all
 .

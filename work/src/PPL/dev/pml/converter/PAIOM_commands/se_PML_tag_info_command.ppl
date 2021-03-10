@@ -23,13 +23,13 @@ service PML_tag_info_command
 
 
     function execute ( input any_type_parameters or null ) -> string
-    
+
         assert i_input is not null
 
         const tag = i_input.require_value<string or null> ( "tag" )
 
         const verbosity = i_input.require_value<string or null> ( "verbosity" ) \
-            if_null: if tag =r null then "min" else "max" 
+            if_null: if tag =r null then "min" else "max"
 
         if tag is null then
             // all tags
@@ -57,11 +57,11 @@ The following tags exist: {{se_PML_formal_node_registry.sorted_any_tag_list.to_l
     functions access:private
 
         function formal_nodes_summary_info -> string
-    
+
             const builder = simple_documentation_builder.create
-    
+
             builder.append_document_title ( "Summary of all tags" )
-            
+
             builder.append_new_line
             builder.append_title ( "Block nodes" )
             repeat for each formal_node in se_PML_formal_node_registry.sorted_formal_nodes
@@ -70,7 +70,7 @@ The following tags exist: {{se_PML_formal_node_registry.sorted_any_tag_list.to_l
                         label = formal_node.standard_tag, value = formal_node.documentation.title )
                 .
             .
-            
+
             builder.append_new_line
             builder.append_title ( "Inline nodes" )
             repeat for each formal_node in se_PML_formal_node_registry.sorted_formal_nodes is_first:is_first
@@ -87,22 +87,22 @@ pmlc tag_info -verbosity max
 
 To get more info about a specific tag, type:
 pmlc tag_info -tag [tag_name]''' )
-    
+
             return se_string_constants.current_OS_new_line & builder.get_result
         .
-        
+
         function formal_nodes_info -> string
-    
+
             const builder = simple_documentation_builder.create
-    
+
             builder.append_document_title ( "List of all tags" )
-            
+
             repeat for each formal_node in se_PML_formal_node_registry.sorted_formal_nodes is_first:is_first
                 builder.append_new_line
                 builder.append_new_line
                 builder.append ( formal_node.to_long_string )
             .
-    
+
             return se_string_constants.current_OS_new_line & builder.get_result
         .
     .

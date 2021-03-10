@@ -21,11 +21,11 @@ The values are case-insensitive. Uppercase letters are allowed.'''
 horizontal_alignments = "Left, Center, , Right"
 short from:
 halign = "L, C, , R"''' ) )
-            
+
     att attributes formal_parameters<*>
         default
             const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
-            
+
 ///
             r.add_yes_no_parameter (
                 ids = [# "border" ]
@@ -35,7 +35,7 @@ halign = "L, C, , R"''' ) )
                 examples = "border = no" )
 .///
             r.add_parameter ( se_formal_node_attributes.caption )
-            
+
             return r.make_immutable
         .
     .
@@ -55,7 +55,7 @@ The table's structure is similar to a HTML table.
 HTML 'class' and 'style' attributes can be use to format the table with CSS.
 The table can optionally have a header and a footer.'''
                 examples = '''Simple table:
-                
+
 [table
     [table_row [table_cell C11] [table_cell C12]]
     [tr [tc C21] [tc C22]]
@@ -85,7 +85,7 @@ Table with header and footer:
                 title = "Table Header"
                 description = "A header in a table."
                 examples = '''Table with header:
-                
+
 [table
     [table_header
         [tr [tc Header 1] [tc Header 2] [tc Header 3]]
@@ -105,7 +105,7 @@ Table with header and footer:
                 title = "Table Footer"
                 description = "A footer in a table."
                 examples = '''Table with footer:
-                
+
 [table
     [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
     [tr [tc cell 2.1] [tc cell 2.2] [tc cell 2.3]]
@@ -125,7 +125,7 @@ Table with header and footer:
                 title = "Table Row"
                 description = "A row in a table."
                 examples = '''Table with 2 rows:
-                
+
 [table
     [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
     [tr [tc cell 2.1] [tc cell 2.2] [tc row 2.3]]
@@ -142,10 +142,9 @@ Table with header and footer:
                 title = "Table Cell"
                 description = "A cell in a table row."
                 examples = '''Table with 2 rows and 3 columns:
-                
+
 [table
     [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
     [tr [tc cell 2.1] [tc cell 2.2] [tc cell 2.3]]
 ]''' ) )
 .
-    

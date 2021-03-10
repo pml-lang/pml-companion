@@ -4,9 +4,9 @@
 type PML_table_node
 
     inherit PML_block_node_with_child_nodes
-    
+
     inherit PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
-    
+
     att caption string or null
 
     // att has_border yes_no

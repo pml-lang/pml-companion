@@ -4,6 +4,6 @@
 factory PML_token
 
     function to_string = """{{a_value}} at {{a_position.to_string}}"""
-    
+
     creator create kind:in_all
 .

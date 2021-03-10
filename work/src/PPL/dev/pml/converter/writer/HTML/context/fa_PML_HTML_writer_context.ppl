@@ -9,21 +9,21 @@ factory PML_HTML_writer_context
     .
 
     functions
-        
+
         // basics
-    
+
         write
             a_writer.try_write ( string ) on_error:throw_error
         .
-        
+
         write_line
             a_writer.try_write_line ( string ) on_error:throw_error
         .
-        
+
         write_new_line
             a_writer.try_write_new_line on_error:throw_error
         .
-        
+
 
         // escape
 
@@ -35,23 +35,23 @@ factory PML_HTML_writer_context
 
 
         // indent
-        
+
         write_indent
             if not a_current_indent.is_empty then
                 a_writer.try_write ( a_current_indent.to_string ) on_error:throw_error
             .
         .
-        
+
         write_indent_and_string
             write_indent
             write ( string )
         .
-        
+
         write_indent_and_string_and_new_line
             write_indent
             a_writer.try_write_line ( string ) on_error:throw_error
         .
-        
+
         increase_indent
             a_current_indent.append ( a_single_indent )
         .
@@ -138,15 +138,15 @@ factory PML_HTML_writer_context
         .
 
         write_HTML_attributes_for_node
-        
+
             variable has_explicit_class_attribute = no
-            
+
             if i_node.HTML_attributes as HTML_attributes is not null then
                 repeat for each key, value in HTML_attributes
-                
+
                     const name = key.substring_from ( se_PML_attribute_ids.HTML_start_size + 1 )
                     write ( """ {{name}}=""" )
-                    
+
                     if name =v "class" then
                         // the standard PML class and an explicitly defined class attribute must be merged
                         has_explicit_class_attribute = yes
@@ -176,7 +176,7 @@ factory PML_HTML_writer_context
                     .
                 .
             .
-            
+
             if not has_explicit_class_attribute then
                 if i_CSS_class_name is not null then
                     write_HTML_class_attribute ( i_CSS_class_name )
@@ -186,17 +186,17 @@ factory PML_HTML_writer_context
 
 
         // nodes
-        
+
         write_nodes
-        
+
             if nodes is null then
                 return
             .
-            
+
             if i_increase_indent then
                 co_increase_indent
             .
-            
+
             repeat for each node in nodes
                 const formal_node = se_PML_formal_node_registry.get_by_any_tag_or_null ( node.tag ) \
                     on_null: throw "No formal node found"
@@ -204,21 +204,21 @@ factory PML_HTML_writer_context
                 const writer PML_node_HTML_writer<PML_node> = formal_node.HTML_writer type_check:no
                 writer.write ( node, context = this, config = a_config )
             .
-            
+
             if i_increase_indent then
                 decrease_indent
             .
         .
-    
+
         write_node_id_attribute
 
             if i_node.node_id as id is not null then
                 write ( """ id="{{escape_HTML ( id )}}"""" )
             .
         .
-        
+
         write_node_title
-        
+
             if i_node.title as title is not null then
                 write ( "<div" )
                 write_HTML_class_attribute ( "pml-node-title" )
@@ -234,20 +234,20 @@ factory PML_HTML_writer_context
                 write_HTML_class_attribute ( "pml-node-title" )
                 write_line ( """>{{escape_HTML ( title )}}</p>""" )
             .
-            
+
             write_indent_and_string ( """<{{i_HTML_tag_name}}""" )
 
             if i_node.title is null then
                 write_node_id_attribute ( i_node )
             .
         .
-        
+
         write_node_caption
 
             if i_caption is null then
                 return
             .
-            
+
             write_indent_and_string ( "<p" )
             write_HTML_class_attribute ( "pml-caption" )
             write_line ( """>{{escape_HTML(i_caption)}}</p>""" )
@@ -255,7 +255,7 @@ factory PML_HTML_writer_context
 
 
         // block_node
-        
+
         write_block_node_start
 
             const non_null non_null = i_node
@@ -265,27 +265,27 @@ factory PML_HTML_writer_context
                 otherwise
                     write_indent_and_string ( """<{{i_HTML_tag_name}}""" )
             .
-            
+
             case type of non_null
                 when PML_has_HTML_attributes
                     write_HTML_attributes_for_node ( node = non_null, i_CSS_class_name )
                 otherwise
                     write_HTML_class_attribute ( i_CSS_class_name )
             .
-            
+
             write ( ">" )
-            
+
             if i_append_new_line then
                 write_new_line
             .
         .
-        
+
         write_block_node_with_child_nodes
 
             write_block_node_start ( i_node, i_HTML_tag_name, i_CSS_class_name, append_new_line = i_append_new_line_for_tag )
-    
+
             write_nodes ( nodes = i_node.child_nodes, increase_indent = i_append_new_line_for_tag )
-            
+
             if i_append_new_line_for_tag then
                 write_indent
             .
@@ -296,9 +296,9 @@ factory PML_HTML_writer_context
         write_block_node_with_raw_text_content
 
             write_block_node_start ( i_node, i_HTML_tag_name, i_CSS_class_name, append_new_line = no )
-    
+
             write_escaped_HTML ( i_node.text )
-    
+
             write_HTML_tag_end ( write_indent = no, i_HTML_tag_name, append_new_line = yes )
         .
 
@@ -312,6 +312,6 @@ factory PML_HTML_writer_context
             write_HTML_inline_tag_end ( i_HTML_tag_name )
         .
     .
-    
+
     creator create kind:in_all
 .

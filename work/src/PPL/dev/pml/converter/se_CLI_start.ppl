@@ -15,7 +15,7 @@ service CLI_start
         }
     end java
 .///
-    
+
     attributes // access:private
         usage_text string = '''Command line usage:
 
@@ -23,7 +23,7 @@ pmlc [pml_file_path]
 example:
    pmlc my_article.pml
 
-or 
+or
 pmlc [command] [parameters]?
 Parameter syntax: --[name] [value]
 examples:
@@ -32,9 +32,9 @@ examples:
 
 '''
     .
-    
+
     function start
-    
+
         const arguments = se_OS_process.command_line_arguments
         if arguments is null then
             OS.err.write_line ( a_usage_text )
@@ -49,11 +49,11 @@ examples:
             const allow_process_exit = allow_process_exit )
 
         case type of result
-            
+
             when error e
                 OS.err.write_line ( """Error: {{e.to_string}}""" )
                 se_OS_process.exit_with_error
-                
+
             otherwise
                 if result is not null then
                     OS.out.write_line ( result.to_string )
@@ -70,7 +70,7 @@ examples:
             in arguments indexed_list<string or null>
             out result any
             out allow_process_exit yes_no
-        
+
             if arguments.size =v 1
                 const single_argument = arguments.first
                 if single_argument is null then
@@ -84,7 +84,7 @@ examples:
                         allow_process_exit = yes
                 .
             .
-            
+
             se_PAIOM_command_executor.execute_command_line_arguments_3 (
                 i_arguments
                 commands = se_PML_PAIOM_commands.commands
@@ -93,12 +93,12 @@ examples:
                 const a = allow_process_exit_after_execution )
             return result = r, allow_process_exit = a
         .
-    
+
         function execute_PML_file_to_HTML_file ( file_path string ) -> string or anticipated_error
-        
+
             const HTML_file = se_PML_to_HTML_Converter.try_convert_PML_file_path_string ( i_file_path ) \
                 on_error: return_error
-                
+
             return se_PML_to_HTML_Converter.success_message ( HTML_file )
         .
     .

@@ -32,7 +32,7 @@ factory PML_table_data_node_HTML_writer type:PML_node_HTML_writer<PML_table_data
             context.increase_indent
 
             write_row ( i_row, cell_tag = "th", cell_CSS_class_name = "pml-table-header-cell", column_horizontal_alignments = null, i_context )
-            
+
             context.decrease_indent
             context.write_HTML_block_tag_end ( "thead" )
 
@@ -51,7 +51,7 @@ factory PML_table_data_node_HTML_writer type:PML_node_HTML_writer<PML_table_data
             context.increase_indent
 
             write_row ( i_row, cell_tag = "td", cell_CSS_class_name = "pml-table-footer-cell", i_column_horizontal_alignments, i_context )
-            
+
             context.decrease_indent
             context.write_HTML_block_tag_end ( "tfoot" )
 
@@ -81,7 +81,7 @@ factory PML_table_data_node_HTML_writer type:PML_node_HTML_writer<PML_table_data
             in context PML_HTML_writer_context
 
             context.write_indent_and_string ( "<tr>" )
-            
+
             repeat for each cell in i_row counter:column_index
                 const CSS_class_name = get_cell_class_name ( column_index, i_column_horizontal_alignments, i_cell_CSS_class_name )
                 context.write_HTML_inline_tag_start ( HTML_tag_name = i_cell_tag, CSS_class_name )
@@ -92,7 +92,7 @@ factory PML_table_data_node_HTML_writer type:PML_node_HTML_writer<PML_table_data
 
                 context.write_HTML_inline_tag_end ( i_cell_tag )
             .
-            
+
             context.write_HTML_inline_tag_end ( "tr" )
             context.write_new_line
         .
@@ -118,6 +118,6 @@ factory PML_table_data_node_HTML_writer type:PML_node_HTML_writer<PML_table_data
             .
         .
     .
-    
+
     creator create kind:in_all
 .

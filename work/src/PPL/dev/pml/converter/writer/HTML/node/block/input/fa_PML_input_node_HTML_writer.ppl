@@ -4,9 +4,9 @@
 factory PML_input_node_HTML_writer type:PML_node_HTML_writer<PML_input_node>
 
     function write
-    
+
         context.write_block_node_with_raw_text_content ( i_node, HTML_tag_name = "pre" CSS_class_name = "pml-input" )
     .
-    
+
     creator create kind:in_all
 .

@@ -4,6 +4,6 @@
 factory PML_table_header_node
 
     function tag = se_PML_standard_formal_nodes.table_header.standard_tag
-    
+
     creator create kind:in_all
 .

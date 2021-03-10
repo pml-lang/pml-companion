@@ -10,10 +10,10 @@ service PML_node_creator_helper
 
     function get_node_id_and_title
         in attributes any_type_parameters
-        
+
         out id string or null
         out title string or null
-        
+
         return id = attributes.require_value<string or null> ( se_PML_attribute_ids.id ) \
             title = attributes.require_value<string or null> ( se_PML_attribute_ids.title )
     .

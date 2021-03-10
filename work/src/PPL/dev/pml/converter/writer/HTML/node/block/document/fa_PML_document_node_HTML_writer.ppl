@@ -4,7 +4,7 @@
 factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_node>
 
     function write
-    
+
         context.write_indent_and_string ( "<article" )
         context.write_HTML_attributes_for_node ( node, CSS_class_name = "pml-doc-text" )
         context.write_line ( ">" )
@@ -14,32 +14,32 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
         context.increase_indent
 
         write_title ( title = i_node.title, context )
-        
+
         if i_node.authors as authors is not null then
             write_authors ( authors, context )
         .
-        
+
         if i_node.publication_date #r null or i_node.publication_time #r null then
             write_publication_date_time ( date = i_node.publication_date, time = i_node.publication_time, context )
         .
-        
+
         context.decrease_indent
         context.write_HTML_block_tag_end ( "div" )
-        
+
         if i_config.TOC_position =r PML_TOC_position.top then
             se_PML_HTML_TOC.write_TOC ( document_node = i_node, context, max_level = 10 )
         .
 
         context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
-        
+
         context.decrease_indent
         context.write_HTML_block_tag_end ( "article" )
     .
-    
+
     functions access:private
-    
+
         function write_title ( title string, context PML_HTML_writer_context )
-        
+
             context.write_indent
             context.write_HTML_inline_tag_start ( HTML_tag_name = "h1", CSS_class_name = "pml-doc-title" )
             context.write_escaped_HTML ( title )
@@ -48,7 +48,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
         .
 
         function write_authors ( authors list<string>, context PML_HTML_writer_context )
-        
+
             context.write_indent
             context.write_HTML_inline_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-doc-authors" )
             repeat for each author in i_authors is_first:is_first is_last:is_last
@@ -67,11 +67,11 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
             in date local_date or null
             in time local_time or null
             in context PML_HTML_writer_context
-        
+
             if date =r null and time =r null then
                 return
             .
-            
+
             context.write_indent
             context.write ( "<time" )
             context.write_HTML_class_attribute ( "pml-doc-date-time" )
@@ -79,7 +79,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
             write_date_time ( date, time, context, time_format = "HH:mm:ss" )
             context.write ( '''">''' )
             write_date_time ( date, time, context, time_format = "HH:mm" )
-            
+
             context.write_HTML_inline_tag_end ( "time" )
             context.write_new_line
         .
@@ -89,11 +89,11 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
             in time local_time or null
             in context PML_HTML_writer_context
             in time_format string
-            
+
             if date is not null then
                 context.write ( date.format ( "YYYY-MM-dd" ) )
             .
-            
+
             if time is not null then
                 if date is not null then
                     context.write ( " " )
@@ -102,6 +102,6 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
             .
         .
     .
-        
+
     creator create kind:in_all
 .

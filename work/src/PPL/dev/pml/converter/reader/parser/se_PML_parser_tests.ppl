@@ -4,7 +4,7 @@
 service PML_parser_tests
 
     tests
-    
+
         const parser = PML_parser.create
 
         const document_AST_1 = parser.try_parse_code ( PML_code = "[doc ]" ) on_error:throw_error
@@ -15,22 +15,22 @@ service PML_parser_tests
         const document_AST_2 = parser.try_parse_code ( PML_code = '''[- comment -][doc ]''' ) on_error:throw_error
         const nodes_2 = document_AST_2.root_nodes
         verify nodes_2.size =v 1
-        
-        
+
+
         // comments
 
         const document_AST_3 = parser.try_parse_code ( PML_code = '''
-        
+
         [- comment -]
-        
+
         [audio ]
         [- comment -][- comment -]          [- comment -]
         [- comment
             [- comment qwe sadf [node ] -]
         -]
-        
+
         [doc
-        
+
         ]
         [- comment -]
         ''' ) on_error:throw_error
@@ -38,8 +38,8 @@ service PML_parser_tests
         verify nodes_3.size =v 10
         verify nodes_3.get(3).to_string =v "audio line 5, column 10"
         verify nodes_3.get(8).to_string =v "doc line 11, column 10"
-        
-        
+
+
         // attributes
 
         const document_AST_4 = parser.try_parse_code ( PML_code = '''[ch "A beautiful story" TOC="none" \
@@ -91,18 +91,18 @@ service PML_parser_tests
 
 ]''' ) on_error:throw_error
         const nodes_5 = document_AST_5.root_nodes
-        
+
         verify nodes_5.size =v 2
-        
+
         const doc_node_5 = nodes_5.last
         verify doc_node_5.tag.value =v "doc"
-        
+
         const attributes_5 = doc_node_5.attributes
         verify attributes_5 is not null
         verify attributes_5.size =v 2
         verify attributes_5.get ( "title" ).value.value =v "Doc title"
         verify attributes_5.get ( "TOC" ).value.value =v "left"
-        
+
         const child_nodes_5 = doc_node_5.child_nodes
         verify child_nodes_5 is not null
         verify child_nodes_5.size =v 5
@@ -112,7 +112,7 @@ service PML_parser_tests
         verify chapter_1_attributes is not null
         verify chapter_1_attributes.size =v 1
         verify chapter_1_attributes.get ( "title" ).value.value =v "Chapter 1"
-        
+
         const chapter_1_kids = chapter_1_node.child_nodes
         verify chapter_1_kids is not null
         verify chapter_1_kids.size =v 1
@@ -134,12 +134,12 @@ service PML_parser_tests
     code]
 ]''' ) on_error:throw_error
         const nodes_6 = document_AST_6.root_nodes
-        
+
         verify nodes_6.size =v 2
-        
+
         const doc_node_6 = nodes_6.last
         verify doc_node_6.tag.value =v "document"
-        
+
         const child_nodes_6 = doc_node_6.child_nodes
         verify child_nodes_6 is not null
         verify child_nodes_6.size =v 3

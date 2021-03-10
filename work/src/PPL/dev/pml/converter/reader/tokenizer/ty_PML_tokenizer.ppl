@@ -6,29 +6,29 @@ type PML_tokenizer
     att config PML_tokenizer_config default:PML_tokenizer_config.create
 
     functions
-    
+
         has_more_code -> yes_no
-        
+
         current_resource -> non_error or null
-        
+
         skip_spaces_and_tabs
-        
+
         skip_line_continuation
-    
+
         // node
-    
+
         try_consume_node_start_symbol -> yes_no or PML_code_error
 
         consume_node_end_symbol  -> yes_no
 
         consume_node_name -> PML_token or null
-        
+
         skip_one_space_after_node_name
-        
+
         consume_text -> PML_token or null
-        
+
         try_consume_text_in_node_with_raw_text_content ( tag string ) -> PML_token or PML_code_error
-        
+
         // attributes
 
         consume_attributes_start_symbol -> yes_no
@@ -42,13 +42,13 @@ type PML_tokenizer
         is_at_attribute_id_and_assignment_symbol -> yes_no
 
         try_consume_attribute_value -> PML_token or null or PML_code_error
-        
+
         // comments
 
         try_skip_comments -> PML_code_error or null
-        
+
         // errors
-        
+
         create_error ( info string, position text_position ) -> PML_code_error
 
         create_error_at_current_position ( info string ) -> PML_code_error

@@ -4,12 +4,12 @@
 factory PML_division_node_HTML_writer type:PML_node_HTML_writer<PML_division_node>
 
     function write
-    
+
         context.write_block_node_with_child_nodes (
             i_node,
             HTML_tag_name = "div"
             CSS_class_name = "pml-division" )
     .
-    
+
     creator create kind:in_all
 .

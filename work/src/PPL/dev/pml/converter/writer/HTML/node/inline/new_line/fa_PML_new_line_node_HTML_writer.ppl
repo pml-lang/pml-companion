@@ -4,9 +4,9 @@
 factory PML_new_line_node_HTML_writer type:PML_node_HTML_writer<PML_new_line_node>
 
     function write
-    
+
         context.write ( "<br />" )
     .
-    
+
     creator create kind:in_all
 .
