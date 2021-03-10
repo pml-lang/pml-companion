@@ -1,0 +1,48 @@
+root = true
+
+
+## Repository Configurations
+############################
+[.{git*,editorconfig,*.yml}]
+end_of_line = lf
+indent_style = space
+indent_size = unset
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[.gitmodules]
+indent_style = tab
+
+
+## Shell Scripts
+################
+[*.sh]
+end_of_line = lf
+indent_style = tab
+indent_size = unset
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+
+## Batch Scripts
+################
+[*.bat]
+indent_style = tab
+indent_size = unset
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+
+## PPL Sources
+##############
+[*.ppl]
+indent_style = space
+indent_size = 4
+end_of_line = unset
+charset = utf-8
+trim_trailing_whitespace = unset
+insert_final_newline = true

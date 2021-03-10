@@ -3,12 +3,12 @@
 
 factory PML_HTML_writer_context
 
-	attributes access:private
-    	current_indent mutable_string default:mutable_string.create
-    	single_indent string default: "    "
+    attributes access:private
+        current_indent mutable_string default:mutable_string.create
+        single_indent string default: "    "
     .
 
-	functions
+    functions
         
         // basics
     

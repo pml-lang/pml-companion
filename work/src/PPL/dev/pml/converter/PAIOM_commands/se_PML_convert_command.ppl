@@ -127,9 +127,9 @@ By default this parameter is set to 'no'.'''
             examples = '''pmlc convert -f input/index.pml
 pmlc convert --input_file input/index.pml --output_directory output/HTML --resources_directory images''' ) )
 
-	function execute ( input any_type_parameters or null ) -> file or anticipated_error
+    function execute ( input any_type_parameters or null ) -> file or anticipated_error
 
-        try	
+        try    
             assert i_input is not null
     
             const PML_input_path = i_input.get_value<absolute_or_relative_file_path> ( a_input_file_parameter.standard_id )

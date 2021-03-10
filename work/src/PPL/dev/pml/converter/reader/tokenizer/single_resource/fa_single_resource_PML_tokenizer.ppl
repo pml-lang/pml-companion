@@ -4,8 +4,8 @@
 factory single_resource_PML_tokenizer
 
     attributes access:private
-    	
-    	text_scanner text_scanner_with_line_column
+        
+        text_scanner text_scanner_with_line_column
         resource non_error or null default:null
     .
 
@@ -36,16 +36,16 @@ factory single_resource_PML_tokenizer
         consume_node_end_symbol = skip_character ( a_config.node_end_symbol )
 
         consume_node_name
-		
-		    const position = current_position
-			const value = consume_regex ( a_config.node_tag ) on_null: return null
+        
+            const position = current_position
+            const value = consume_regex ( a_config.node_tag ) on_null: return null
             return PML_token.create ( value, position )
-		.
-		
-		skip_one_space_after_node_name
-		
-		    if skip_character ( ' ' ) then
-		        return
+        .
+        
+        skip_one_space_after_node_name
+        
+            if skip_character ( ' ' ) then
+                return
             .
             skip_character ( '\t' )
         .
@@ -94,7 +94,7 @@ factory single_resource_PML_tokenizer
             const leading_text = consume_all_to_regex_excluding ( regex )
             if leading_text is null then
                 if not a_text_scanner.is_at_regex ( regex ) then
-    				return create_error_at_current_position ( """Content for '{{i_tag}}' must be terminated on a subsequent line with '{{i_tag}}{{a_config.node_end_symbol}}'.""" )
+                    return create_error_at_current_position ( """Content for '{{i_tag}}' must be terminated on a subsequent line with '{{i_tag}}{{a_config.node_end_symbol}}'.""" )
                 .
             .
             

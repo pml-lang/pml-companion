@@ -5,7 +5,7 @@ factory PML_parser
 
     attributes access:private
     	
-    	variable att tokenizer PML_tokenizer default: PML_tokenizer.create_for_code (
+        variable att tokenizer PML_tokenizer default: PML_tokenizer.create_for_code (
             PML_code = "dummy", config = PML_tokenizer_config.create )
     .
 

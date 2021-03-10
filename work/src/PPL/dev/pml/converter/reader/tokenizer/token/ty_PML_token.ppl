@@ -4,7 +4,7 @@
 type PML_token
 
     attributes
-     	value string
-     	position text_position
+        value string
+        position text_position
     .
 .
