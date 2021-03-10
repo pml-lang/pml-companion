@@ -11,7 +11,7 @@ service PML_insert_formal_node
                 ids = [# se_PML_attribute_ids.file ]
                 value_parser = fa_absolute_or_relative_file_path_parser.create
                 title = "File"
-                description = "Absolute or relative path to the file to be inserted. In case of a relative path, it is relative to the directory of the PML file in which the {c insert} is defined."
+                description = "Absolute or relative path to the file to be inserted. In case of a relative path, it is relative to the directory of the PML file in which the [c insert] is defined."
                 examples = "file = chapters/conclusion.pml" )
             
             return r.make_immutable
@@ -28,10 +28,10 @@ service PML_insert_formal_node
             documentation = simple_documentation.create (
                 title = "Insert File"
                 description = "Insert a .pml file in the current document. The text contained in the file is inserted at the position of the 'insert' node. This is useful to split a big document into several files (e.g. each chapter is contained in a different file), or to re-use text snippets that appear in several documents."
-            examples = '''{doc title=A Strange Trip
-{insert file=chapters/introduction.pml}
-{insert file=chapters/story.pml}
-{insert file=chapters/conclusion.pml}
-}''' ) )
+            examples = '''[doc title=A Strange Trip
+    [insert file=chapters/introduction.pml]
+    [insert file=chapters/story.pml]
+    [insert file=chapters/conclusion.pml]
+]''' ) )
 .
     

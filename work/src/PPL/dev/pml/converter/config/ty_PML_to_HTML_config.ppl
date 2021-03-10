@@ -23,7 +23,10 @@ type PML_to_HTML_config
 
         CLI_source_code_highlighter PML_source_code_highlighter or null default:null
 
-        // omit_CSS yes_no default:se_PML_default_values.omit_CSS
+        tag_start_stop_symbols string default: se_PML_tokenizer_config_default_values.node_start_symbol.to_string \
+            .append ( se_PML_tokenizer_config_default_values.node_end_symbol.to_string )
+
+        omit_CSS yes_no default:se_PML_default_values.omit_CSS
     .
     
     attributes kind:variable

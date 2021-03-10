@@ -38,18 +38,18 @@ The following format rules apply:
 '''
                 examples = '''Simple table:
                 
-{table_data
+[table_data
     cell 1.1, cell 1.2
     cell 2.1, cell 2.2
-table_data}
+table_data]
 
-{tdata halign="C,L,R" title="Table with header, footer, and column alignments"
+[tdata halign="C,L,R" title="Table with header, footer, and column alignments"
     Position, Product, Price
     -
     1, Organic food, 12.50
     2, Meditation lessons, 150.00
     -
     ,,Total: 162.50
-tdata}
+tdata]
 ''' ) )
 .

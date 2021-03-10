@@ -306,26 +306,26 @@ factory single_resource_PML_tokenizer
     .
 
 
-    creator create_for_code ( PML_code string, resource non_error or null default:null ) \
+    creator create_for_code ( PML_code string, resource non_error or null default:null, config PML_tokenizer_config ) \
         -> single_resource_PML_tokenizer
 
-        this.config = fa_PML_tokenizer_config.create
+        this.config = i_config
         this.text_scanner = fa_text_scanner_with_line_column.create ( i_PML_code )
         this.resource = i_resource
         
         return this
     .
 
-    creator try_create_for_code_supplier ( PML_code_supplier failable_string_supplier ) \
+    creator try_create_for_code_supplier ( PML_code_supplier failable_string_supplier, config PML_tokenizer_config ) \
         -> single_resource_PML_tokenizer or runtime_error
     
         const PML_code = i_PML_code_supplier.get on_error: return_error
         
-        return create_for_code ( PML_code, resource = PML_code_supplier.resource )
+        return create_for_code ( PML_code, resource = PML_code_supplier.resource, i_config )
     .
 
-    creator try_create_for_file ( file ) -> single_resource_PML_tokenizer or runtime_error
+    creator try_create_for_file ( file, config PML_tokenizer_config ) -> single_resource_PML_tokenizer or runtime_error
     
-        return try_create_for_code_supplier ( file_string_supplier.create ( i_file ) )
+        return try_create_for_code_supplier ( PML_code_supplier = file_string_supplier.create ( i_file ), i_config )
     .
 .

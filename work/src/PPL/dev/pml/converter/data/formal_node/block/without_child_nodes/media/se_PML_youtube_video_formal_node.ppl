@@ -48,9 +48,9 @@ service PML_youtube_video_formal_node
             documentation = simple_documentation.create (
                 title = "Embedded Youtube Video"
                 description = "A Youtube video embedded in the document."
-                examples = '''{youtube_video youtube_id = qrcZqnICYbs \
+                examples = '''[youtube_video youtube_id = qrcZqnICYbs \
     title = Hellzapoppin 1941 - Enjoy! \
     width = 600 \
-    height = 400}''' ) )
+    height = 400]''' ) )
 .
     

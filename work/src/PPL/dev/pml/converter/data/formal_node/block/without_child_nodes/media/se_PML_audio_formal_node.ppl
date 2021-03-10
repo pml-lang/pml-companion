@@ -45,6 +45,6 @@ service PML_audio_formal_node
             documentation = simple_documentation.create (
                 title = "Audio (Sound)"
                 description = "An audio stream (sound), such as an .mp3 or .wav file."
-                examples = '''{audio title="Bird talk" source=audios/bird_talk.mp3}''' ) )
+                examples = '''[audio title="Bird talk" source=audios/bird_talk.mp3]''' ) )
 .
     

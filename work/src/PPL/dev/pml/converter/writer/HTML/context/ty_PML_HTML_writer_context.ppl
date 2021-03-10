@@ -4,6 +4,8 @@
 type PML_HTML_writer_context
 
 	att writer string_writer
+    att config PML_to_HTML_config
+    
 
 	functions
 
@@ -36,13 +38,13 @@ type PML_HTML_writer_context
             in write_indent yes_no
             in HTML_tag_name string
             in CSS_class_name string or null
-// TD?            in close_tag yes_no default:yes
+            in attributes map<key:string, value:string> or null default:null
             in append_new_line yes_no
         .
 
         write_HTML_block_tag_start
             in HTML_tag_name string
-            in CSS_class_name string
+            in CSS_class_name string or null
         .
 
         write_HTML_inline_tag_start
@@ -60,19 +62,24 @@ type PML_HTML_writer_context
 
         write_HTML_inline_tag_end ( HTML_tag_name string )
 
+        // HTML attributes
+
+        write_HTML_attribute ( name string, value string )
+
         write_HTML_class_attribute ( CSS_class_name string )
 
-        write_HTML_attributes ( node PML_has_HTML_attributes, CSS_class_name string or null )
+        write_HTML_attributes ( attributes map<key:string, value:string> )
 
 
         // nodes
         
         write_nodes
             in nodes list<child_of:PML_node> or null
-            in config PML_to_HTML_config
             in increase_indent yes_no
         .
         
+        write_HTML_attributes_for_node ( node PML_has_HTML_attributes, CSS_class_name string or null )
+
         write_node_id_attribute ( node PML_has_optional_id_and_title_attributes )
 
         write_node_title ( node PML_has_optional_id_and_title_attributes )
@@ -96,7 +103,6 @@ type PML_HTML_writer_context
             in HTML_tag_name string
             in CSS_class_name string
             in append_new_line_for_tag yes_no default:yes
-            in config PML_to_HTML_config
         .
 
         write_block_node_with_raw_text_content
@@ -112,7 +118,6 @@ type PML_HTML_writer_context
             in node PML_inline_node_with_child_nodes
             in HTML_tag_name string
             in CSS_class_name string
-            in config PML_to_HTML_config
         .
     .
 .

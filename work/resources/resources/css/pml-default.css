@@ -1,5 +1,5 @@
 /*
-    This is the default CSS file used for HTML files created with PML.
+    This is the default CSS style used for HTML files created with PML.
     
     If you want to change the presentation of your HTML document(s) created with PML, you can:
         - modify this file
@@ -10,12 +10,17 @@
 */
 
 
-/* basic font */
+/* basics */
+
+html {
+    height: 100%;
+}
 
 body {
+    height: 100%;
+    margin: 0;
     font-family: Verdana, "Open Sans", sans-serif;
     line-height: 1.7;
-    margin: 0;
 
     /* can be used to globally increase/decrease text size
     font-size: 1.2em;
@@ -23,30 +28,71 @@ body {
 }
 
 
-/* document */
+/* skeleton */
 
-.pml-document {
-    /* center content */
-    max-width: 700px;
-    margin: auto;
+.pml-doc-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-.pml-document-title {
+.pml-doc-header, .pml-doc-footer {
+    flex-grow: 0;
+
+    /*
+    padding:1em;
+    */
+}
+
+.pml-doc-content {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: row;
+
+    height: 100%; /* allow individual scroll bars for left, text, and right */
+}
+
+.pml-doc-left, .pml-doc-right {
+    flex-grow: 1;
+    width: 10%;
+
+    background-color: #fafafa;
+}
+
+.pml-doc-text {
+    flex-grow: 0;
+    max-width: 800px;
+}
+
+.pml-doc-left, .pml-doc-text, .pml-doc-right {
+    overflow-y: auto; /* show scrollbar if necessary */
+    scrollbar-width: thin; /* works only in Firefox (2021-01-28) */
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+
+/* document */
+
+.pml-doc-title-wrapper {
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 0.5em;
+}
+
+.pml-doc-title {
     font-size: 2.2em;
     margin-top: 0.2em;
 }
 
-.pml-document-authors::before {
+.pml-doc-authors::before {
     content: "Written by ";
 }
 
-.pml-document-date-time::before {
+.pml-doc-date-time::before {
     content: "Published ";
-}
-
-.pml-document-header {
-    border-bottom: 1px solid lightgrey;
-    padding-bottom: 0.5em;
 }
 
 
@@ -83,7 +129,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .pml-table {
     border: 1px solid black;
-	border-collapse:collapse;
+	border-collapse: collapse;
 }
 
 .pml-table .pml-paragraph {
@@ -138,7 +184,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .pml-quote-text-prefix, .pml-quote-text-suffix {
     font-family: "Times New Roman";
-    font-size: 1.7em;
+    font-size: 1.5em;
     font-weight: bold;
     font-style: italic;
     margin-top: -0.4em;
@@ -157,15 +203,20 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .pml-quote-text-suffix::after {
-    content: '”';
+    /* content: '”'; */
 }
 
 .pml-quote-text {
-    font-size: 1.3em;
+    font-size: 1.2em;
+}
+
+.pml-quote-text .pml-paragraph {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 .pml-quote-source {
-    text-align:right;
+    text-align: right;
 }
 
 .pml-quote-source::before {
@@ -227,93 +278,45 @@ h1, h2, h3, h4, h5, h6 {
 /* Table of Contents (TOC) */
 
 .pml-toc {
+    /*
     border-bottom: 1px solid lightgrey;
-    margin-bottom: 1.5em;
+    padding-bottom: 1em;
+    */
 }
 
 .pml-toc-title {
     margin-top: 0.7em;
 }
 
-.pml-toc-title::before {
-    content: "Table of Contents";
-}
-
-.pml-toc-tree, .pml-toc-sub-chapters {
-    list-style-type: none; /* remove default bullets */
-}
-
-.pml-toc-tree {
-    padding-left: 0;
-}
-
-.pml-toc-sub-chapters {
+.pml-toc ul {
     padding-left: 1.5em;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
-.pml-toc-branch-node, .pml-toc-leaf-node {
-    display: flex;
-    line-height: 1.2em;
+.pml-toc li {
+    list-style-type: none; /* remove standard bullet */
+    line-height: 120%;
     margin-top: 0.4em;
 }
 
-.pml-toc-branch-prefix, .pml-toc-leaf-prefix {
-    min-width: 1.0em;
+.pml-toc a {
+    text-decoration: none;
+    color: inherit;
 }
 
-.pml-toc-branch-prefix {
+.pml-toc summary {
+    list-style-position: outside; /* works in Firefox, but not (yet?) in Chrome */
     cursor: pointer;
 }
 
-.pml-toc-branch-visible::before {
-    content: "-";
-    color: grey;
+/* hack because list-style-position doesn't work (yet?) in Chrome */
+.pml-toc summary::-webkit-details-marker {
+    margin-left: -1em;
 }
 
-.pml-toc-branch-hidden::before {
-    content: "+";
-    color: grey;
-}
-
-.pml-toc-leaf-link, .pml-toc-branch-link {
-    text-decoration: none;
-    color: black;
-}
-
-
-/* horizontal split panel (used only if TOC is on the left side)*/
-
-.pml-hsplit-panel {
-    display: flex;
-    height: 100vh;
-}
-
-.pml-hsplit-left-panel, .pml-hsplit-right-panel {
-    overflow: auto; /* show scrollbar if necessary */
-}
-
-.pml-hsplit-left-panel {
-    background: whitesmoke;
-    width: 15%;
-    padding-left: 0.7em;
-    padding-right: 0.7em;
-}
-
-.pml-hsplit-panel-separator {
-    width: 10px;
-    cursor: col-resize;
-    background: lightgrey;
-}
-
-.pml-hsplit-right-panel {
-    flex-grow: 1;
-    padding-left: 0.7em;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.pml-hsplit-right-panel-content {
-    max-width: 700px;
+.pml-toc-tree {
+    margin-left: 1em;
 }
 
 

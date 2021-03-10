@@ -19,7 +19,8 @@ type PML_document_node
         publication_date local_date or null default:null
         publication_time local_time or null default:null
         // TD version string or null default:null
-        TOC_position PML_TOC_position or null default:null
+        TOC_title string or null default: "Table of Contents"
+        TOC_position PML_TOC_position default: PML_TOC_position.left
         source_code_highlighter PML_source_code_highlighter or null default:null
     .
     

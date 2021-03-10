@@ -35,9 +35,16 @@ service PML_document_formal_node
                 description = "The time the document has been published, in ISO format (hh:mm)."
                 examples = "time = 10:15" )
 
-            r.add<PML_TOC_position or null> (
+            r.add_string_or_null_parameter (
+                ids = [# "TOC_title" ]
+                default_value_supplier = { ty_PML_document_node.TOC_title.default },
+                title = "TOC Title"
+                description = "The title of the table of contents.",
+                examples = "TOC_title = Contents" )
+
+            r.add<PML_TOC_position> (
                 ids = [# "TOC_position" ]
-                default_value_supplier = { null },
+                default_value_supplier = { ty_PML_document_node.TOC_position.default },
                 value_parser = { string ->
                     case value of string
                         when "left"
@@ -53,7 +60,7 @@ service PML_document_formal_node
                     .
                 },
                 title = "TOC Position",
-                description = "The position of the table of contents ('left', 'top', or 'none'). Default is 'left'.",
+                description = "The position of the table of contents ('left', 'top', or 'none').",
                 examples = "top" )
 
             r.add<PML_source_code_highlighter or null> (
@@ -92,11 +99,11 @@ service PML_document_formal_node
             documentation = simple_documentation.create (
                 title = "Document"
                 description = "Every PML document must start with a 'document' node. It is the root node of the document."
-                examples = '''{doc title = A Nice Surprise \
+                examples = '''[doc title = A Nice Surprise \
     author = Giovanni Spiridigliotsky \
     date = 2018-11-30
     
     blah blah blah
-}''' ) )
+]''' ) )
 .
     

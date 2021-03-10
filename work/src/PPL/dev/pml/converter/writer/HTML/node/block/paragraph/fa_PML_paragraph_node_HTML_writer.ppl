@@ -9,8 +9,7 @@ factory PML_paragraph_node_HTML_writer type:PML_node_HTML_writer<PML_paragraph_n
             i_node,
             HTML_tag_name = "p"
             CSS_class_name = "pml-paragraph"
-			append_new_line_for_tag = no
-            i_config )
+			append_new_line_for_tag = no )
     .
     
     creator create kind:in_all

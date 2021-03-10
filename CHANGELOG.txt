@@ -1,3 +1,45 @@
+Version 1.3.0 2021-03-09
+========================
+
+- Backwards-incompatible changes:
+
+    - The tag's open/close symbols have changed from {} to []
+        Example:
+        old version: {i great}
+        new version: [i great]
+        If you want to keep {} you can run the converter with the parameter --tag_start_stop_symbols "{}"
+
+    - The open/close symbols for embedding variables have changed from [[]] to <<>>
+        Example:
+        old version: [[name]]
+        new version: <<name>>
+
+- New features:
+
+    - A new CSS file, named pml-print-default.css, has been added.
+      This file has specific styles defined for documents printed in a browser.
+      These styles are also applied when a document is sent to a PDF writer, such as 'Microsoft Print to PDF' in Windows.
+      You can use CSS's full printing support to adapt printed document to your specific needs,
+      such as printing two columns on a page.
+
+    - New attributes:
+        - Tag 'document': attribute 'TOC_title' has been added.
+          It defines the title displayed for the table of contents.
+          The default value is "Table of Contents".
+
+    - New command line arguments:
+        - Argument 'tag_start_stop_symbols' has been added.
+          It allows you to define which symbols you want to use to start/stop tags.
+          Currently supported values are {} and []
+
+- Improvements:
+
+    - The Javascript code for expanding/collapsing the table of contents has been removed.
+      The HTML <details> tag is used instead.
+
+    - The Javascript code for sliding the separator between the table of contents and the text has been removed.
+
+
 Version 1.2.0 2021-02-10
 ========================
 
@@ -17,17 +59,22 @@ Version 1.1.0 2021-01-14
 
     - New tags:
         - table_data: Simple table data defined as plain CSV text, and rendered as a table.
-        - table: A table layout composed of rows and columns. Besides just text, each cell in the table can have complex content, including nested tables. Conceptually similar to a HTML table.
+        - table: A table layout composed of rows and columns.
+          Besides just text, each cell in the table can have complex content, including nested tables.
+          Conceptually similar to a HTML table.
         - monospace: A paragraph in which whitespace is preserved, and a monospace font is used.
         - division: A division or section in the document. Similar to a 'div' tag in HTML.
-        - span: An inline node typically used to render a HTML <span>...</span> inline element with a specific set of HTML attributes.
+        - span: An inline node typically used to render a HTML <span>...</span> inline element with a specific set of
+          HTML attributes.
 
     - New attributes:
-        - caption: a small text displayed below the node. Available for the following tags: image, audio, video, youtube_video, and table
+        - caption: a small text displayed below the node. Available for the following tags:
+          image, audio, video, youtube_video, and table
 
     - New command line arguments:
         - Added command line arguments 'HTML_header' and 'HTML_footer' to the PML_to_HTML_Converter. Allows you to:
             - Provide a custom HTML header/footer for each document, or generate only the HTML body code (no header/footer).
-            - Customize the style of the resulting HTML by providing your specific CSS file(s), in addition to PML's default CSS file, or as a replacement.
+            - Customize the style of the resulting HTML by providing your specific CSS file(s), in addition to PML's
+              default CSS file, or as a replacement.
 
 - Some minor bug fixes

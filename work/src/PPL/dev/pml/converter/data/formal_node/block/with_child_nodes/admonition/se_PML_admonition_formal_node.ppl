@@ -28,8 +28,8 @@ service PML_admonition_formal_node
             documentation = simple_documentation.create (
                 title = "Admonition"
                 description = "A labeled piece of advice, such as a note, tip, warning, etc."
-                examples = '''{adm label=Note
-    We will have a look at some {i striking} examples later in the book.
-}''' ) )
+                examples = '''[adm label=Note
+    We will have a look at some [i striking] examples later in the book.
+]''' ) )
 .
     

@@ -5,9 +5,9 @@ service PML_HTML_snippet
 
     function create_HTML_snippet ( PML_code string ) -> string or anticipated_error
     
-        const code = """{doc title = Snippet
+        const code = """{{se_PML_tokenizer_config_default_values.node_start_symbol}}doc title = Snippet
 {{PML_code}}
-}"""
+{{se_PML_tokenizer_config_default_values.node_end_symbol}}"""
         const file = se_text_file_writer.create_temporary_text_file (
             file_name_extension = se_PML_default_values.PML_file_name_extension
             delete_file_on_exit = yes
@@ -22,8 +22,8 @@ service PML_HTML_snippet
         config.document_TOC_position = PML_TOC_position.none
 
         const writer = memory_string_writer.create
-        const context = PML_HTML_writer_context.create ( writer )
-        context.write_nodes ( nodes = document_node.child_nodes, config, increase_indent = no )
+        const context = PML_HTML_writer_context.create ( writer, config )
+        context.write_nodes ( nodes = document_node.child_nodes, increase_indent = no )
 
         const result = writer.get_result
         assert result is not null
@@ -31,7 +31,7 @@ service PML_HTML_snippet
     .
     
     tests
-        const r string = create_HTML_snippet ( "This is {i important}." ) type_check:no
+        const r string = create_HTML_snippet ( "This is [i important]." ) type_check:no
         verify r =v '''<p class="pml-paragraph">This is <i class="pml-italic">important</i>.</p>
 '''
     .

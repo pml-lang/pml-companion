@@ -6,11 +6,11 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
     function write
     
         context.write_indent_and_string ( "<article" )
-        context.write_HTML_attributes ( node, CSS_class_name = "pml-document" )
+        context.write_HTML_attributes_for_node ( node, CSS_class_name = "pml-doc-text" )
         context.write_line ( ">" )
         context.increase_indent
 
-        context.write_HTML_block_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-document-header" )
+        context.write_HTML_block_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-doc-title-wrapper" )
         context.increase_indent
 
         write_title ( title = i_node.title, context )
@@ -30,7 +30,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
             se_PML_HTML_TOC.write_TOC ( document_node = i_node, context, max_level = 10 )
         .
 
-        context.write_nodes ( nodes = i_node.child_nodes, config, increase_indent = no )
+        context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
         
         context.decrease_indent
         context.write_HTML_block_tag_end ( "article" )
@@ -41,7 +41,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
         function write_title ( title string, context PML_HTML_writer_context )
         
             context.write_indent
-            context.write_HTML_inline_tag_start ( HTML_tag_name = "h1", CSS_class_name = "pml-document-title" )
+            context.write_HTML_inline_tag_start ( HTML_tag_name = "h1", CSS_class_name = "pml-doc-title" )
             context.write_escaped_HTML ( title )
             context.write_HTML_inline_tag_end ( "h1" )
             context.write_new_line
@@ -50,7 +50,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
         function write_authors ( authors list<string>, context PML_HTML_writer_context )
         
             context.write_indent
-            context.write_HTML_inline_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-document-authors" )
+            context.write_HTML_inline_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-doc-authors" )
             repeat for each author in i_authors is_first:is_first is_last:is_last
                 if is_last and authors.size ># 1 then
                     context.write ( " and " )
@@ -74,7 +74,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
             
             context.write_indent
             context.write ( "<time" )
-            context.write_HTML_class_attribute ( "pml-document-date-time" )
+            context.write_HTML_class_attribute ( "pml-doc-date-time" )
             context.write ( ''' datetime="''' )
             write_date_time ( date, time, context, time_format = "HH:mm:ss" )
             context.write ( '''">''' )

@@ -44,7 +44,7 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
         .
 
         context.write_indent_and_string ( "<img" )
-        context.write_HTML_attributes ( node, CSS_class_name )
+        context.write_HTML_attributes_for_node ( node, CSS_class_name )
         
         const Unix_path = se_directory_or_file_path.to_Unix_path ( i_node.source.to_string )
         context.write ( """ src="{{i_context.escape_HTML ( Unix_path )}}"""" )
@@ -61,7 +61,7 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
             context.write ( """ height="{{height}}"""" )
         .
         
-        context.write_line ( ">" )
+        context.write_line ( " />" )
     .
     
     creator create kind:in_all

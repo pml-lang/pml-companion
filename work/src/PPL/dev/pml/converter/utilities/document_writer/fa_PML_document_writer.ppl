@@ -138,6 +138,7 @@ factory PML_document_writer
         
         end_document
             write_HTML_block_tag_end_on_distinct_line ( tag_name = null )
+            t_writer.try_close
         .
 
         start_chapter
@@ -163,22 +164,22 @@ factory PML_document_writer
         
 //            write_new_line
             write_indent
-            write_line ( """{p {{escape_HTML(i_string)}}}""" )
+            write_line ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}p {{escape_HTML(i_string)}}{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" )
         .
         
         write_non_escaped_paragraph
         
 //            write_new_line
             write_indent
-            write_line ( """{p {{i_string}}}""" )
+            write_line ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}p {{i_string}}{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" )
         .
 
         // TD should be made faster        
         escape_PML = i_string.replace_all (
-            to_replace = "{"
-            replace_by = '''\{''' ).replace_all (
-            to_replace = "}"
-            replace_by = '''\}''' ).replace_all (
+            to_replace = se_PML_tokenizer_config_default_values.node_start_symbol.to_string
+            replace_by = """\{{se_PML_tokenizer_config_default_values.node_start_symbol}}""" ).replace_all (
+            to_replace = se_PML_tokenizer_config_default_values.node_end_symbol.to_string
+            replace_by = """\{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" ).replace_all (
             to_replace = "="
             replace_by = '''\=''' )
             

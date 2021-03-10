@@ -40,8 +40,8 @@ service PML_source_code_formal_node
             documentation = simple_documentation.create (
                 title = "Source Code"
                 description = "A block of source code."
-                examples = '''{code
+                examples = '''[code
     i = 0;
     j = 1;
-code}''' ) )
+code]''' ) )
 .

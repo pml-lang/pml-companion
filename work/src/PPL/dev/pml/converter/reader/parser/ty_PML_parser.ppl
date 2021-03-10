@@ -5,11 +5,20 @@ type PML_parser
 
     functions
         
-        try_parse ( PML_code_supplier failable_string_supplier ) -> PML_document_AST or runtime_error
+        try_parse -> PML_document_AST or runtime_error
+            in PML_code_supplier failable_string_supplier
+            in tokenizer_config PML_tokenizer_config default:PML_tokenizer_config.create
+        .
 
-        try_parse_file ( file ) -> PML_document_AST or runtime_error
+        try_parse_file -> PML_document_AST or runtime_error
+            in file file
+            in tokenizer_config PML_tokenizer_config default:PML_tokenizer_config.create
+        .
     
-        try_parse_code ( PML_code string ) -> PML_document_AST or PML_code_error
+        try_parse_code -> PML_document_AST or PML_code_error
+            in PML_code string
+            in tokenizer_config PML_tokenizer_config default:PML_tokenizer_config.create
+        .
     
         try_parse_with_tokenizer ( tokenizer PML_tokenizer ) -> PML_document_AST or PML_code_error
     .

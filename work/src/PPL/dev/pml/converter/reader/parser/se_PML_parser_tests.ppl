@@ -7,32 +7,32 @@ service PML_parser_tests
     
         const parser = PML_parser.create
 
-        const document_AST_1 = parser.try_parse_code ( "{doc }" ) on_error:throw_error
+        const document_AST_1 = parser.try_parse_code ( PML_code = "[doc ]" ) on_error:throw_error
         const nodes_1 = document_AST_1.root_nodes
         verify nodes_1.size =v 1
         verify nodes_1.first.to_string =v "doc line 1, column 2"
 
-        const document_AST_2 = parser.try_parse_code ( '''{- comment -}{doc }''' ) on_error:throw_error
+        const document_AST_2 = parser.try_parse_code ( PML_code = '''[- comment -][doc ]''' ) on_error:throw_error
         const nodes_2 = document_AST_2.root_nodes
         verify nodes_2.size =v 1
         
         
         // comments
 
-        const document_AST_3 = parser.try_parse_code ( '''
+        const document_AST_3 = parser.try_parse_code ( PML_code = '''
         
-        {- comment -}
+        [- comment -]
         
-        {audio }
-        {- comment -}{- comment -}          {- comment -}
-        {- comment
-            {- comment qwe sadf {node } -}
-        -}
+        [audio ]
+        [- comment -][- comment -]          [- comment -]
+        [- comment
+            [- comment qwe sadf [node ] -]
+        -]
         
-        {doc
+        [doc
         
-        }
-        {- comment -}
+        ]
+        [- comment -]
         ''' ) on_error:throw_error
         const nodes_3 = document_AST_3.root_nodes
         verify nodes_3.size =v 10
@@ -42,9 +42,9 @@ service PML_parser_tests
         
         // attributes
 
-        const document_AST_4 = parser.try_parse_code ( '''{ch "A beautiful story" TOC="none" \
+        const document_AST_4 = parser.try_parse_code ( PML_code = '''[ch "A beautiful story" TOC="none" \
         p3=v3 \
-        p4  =   "value 4"}''' ) on_error:throw_error
+        p4  =   "value 4"]''' ) on_error:throw_error
         const nodes_4 = document_AST_4.root_nodes
         verify nodes_4.size =v 1
         const doc_node = nodes_4.first
@@ -59,9 +59,9 @@ service PML_parser_tests
 
         // attributes with parenthesis
 
-        const document_AST_4b = parser.try_parse_code ( '''{ch ( title = "A beautiful story" TOC=none \
+        const document_AST_4b = parser.try_parse_code ( PML_code = '''[ch ( title = "A beautiful story" TOC=none \
         p3=v3 \
-        p4  =   "value 4" ) }''' ) on_error:throw_error
+        p4  =   "value 4" ) ]''' ) on_error:throw_error
         const nodes_4b = document_AST_4b.root_nodes
         verify nodes_4b.size =v 1
         const ch_node = nodes_4b.first
@@ -76,20 +76,20 @@ service PML_parser_tests
 
         // content
 
-        const document_AST_5 = parser.try_parse_code ( '''
-{doc Doc title TOC = left
+        const document_AST_5 = parser.try_parse_code ( PML_code = '''
+[doc Doc title TOC = left
 
-    {ch title = "Chapter 1"
+    [ch title = "Chapter 1"
         text
         text
-    }
+    ]
 
-    {ch title = "Chapter 2"
+    [ch title = "Chapter 2"
         text
         text
-    }
+    ]
 
-}''' ) on_error:throw_error
+]''' ) on_error:throw_error
         const nodes_5 = document_AST_5.root_nodes
         
         verify nodes_5.size =v 2
@@ -126,13 +126,13 @@ service PML_parser_tests
 
         // raw text
 
-        const document_AST_6 = parser.try_parse_code ( '''
-{document
-    {code
+        const document_AST_6 = parser.try_parse_code ( PML_code = '''
+[document
+    [code
         l1
         l2
-    code}
-}''' ) on_error:throw_error
+    code]
+]''' ) on_error:throw_error
         const nodes_6 = document_AST_6.root_nodes
         
         verify nodes_6.size =v 2

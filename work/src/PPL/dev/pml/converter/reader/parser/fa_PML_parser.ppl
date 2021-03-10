@@ -5,24 +5,27 @@ factory PML_parser
 
     attributes access:private
     	
-    	variable att tokenizer PML_tokenizer default: PML_tokenizer.create_for_code ( PML_code = "dummy" )
+    	variable att tokenizer PML_tokenizer default: PML_tokenizer.create_for_code (
+            PML_code = "dummy", config = PML_tokenizer_config.create )
     .
 
     function try_parse
 
-        const tokenizer = PML_tokenizer.try_create_for_code_supplier ( i_PML_code_supplier ) on_error: return_error
+        const tokenizer = PML_tokenizer.try_create_for_code_supplier (
+            i_PML_code_supplier, i_config = i_tokenizer_config ) on_error: return_error
         return try_parse_with_tokenizer ( tokenizer )
     .
     
     function try_parse_file
 
-        const tokenizer = PML_tokenizer.try_create_for_file ( i_file ) on_error: return_error
+        const tokenizer = PML_tokenizer.try_create_for_file (
+            i_file, i_config = i_tokenizer_config ) on_error: return_error
         return try_parse_with_tokenizer ( tokenizer )
     .
     
     function try_parse_code
 
-        const tokenizer = PML_tokenizer.create_for_code ( i_PML_code )
+        const tokenizer = PML_tokenizer.create_for_code ( i_PML_code, i_config = i_tokenizer_config )
         return try_parse_with_tokenizer ( tokenizer )
     .
     

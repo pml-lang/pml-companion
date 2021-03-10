@@ -41,7 +41,7 @@ template write_PML_source_code_HTML
                 code_class_name = null
         .
 
-        context.write_HTML_attributes ( node, CSS_class_name = pre_class_name )
+        context.write_HTML_attributes_for_node ( node, CSS_class_name = pre_class_name )
         context.write ( ">" )
         context.write_HTML_inline_tag_start ( HTML_tag_name = "code", CSS_class_name = code_class_name )
 

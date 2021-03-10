@@ -8,8 +8,7 @@ factory PML_table_row_node_HTML_writer type:PML_node_HTML_writer<PML_table_row_n
         context.write_block_node_with_child_nodes (
             i_node,
             HTML_tag_name = "tr"
-            CSS_class_name = "pml-table-row"
-            i_config )
+            CSS_class_name = "pml-table-row" )
     .
     
     creator create kind:in_all

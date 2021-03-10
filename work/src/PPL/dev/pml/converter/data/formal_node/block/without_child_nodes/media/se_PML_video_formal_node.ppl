@@ -61,6 +61,6 @@ service PML_video_formal_node
             documentation = simple_documentation.create (
                 title = "Video"
                 description = "A video, such as an .mp4 or .webm file."
-                examples = '''{video source = videos/red_flower.mp4 title = Beautiful Nature}''' ) )
+                examples = '''[video source = videos/red_flower.mp4 title = Beautiful Nature]''' ) )
 .
     

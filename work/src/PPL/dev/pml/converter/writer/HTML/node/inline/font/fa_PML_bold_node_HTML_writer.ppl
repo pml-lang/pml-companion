@@ -5,7 +5,7 @@ factory PML_bold_node_HTML_writer type:PML_node_HTML_writer<PML_bold_node>
 
     function write
     
-        context.write_inline_node_with_child_nodes ( i_node, HTML_tag_name = "b", CSS_class_name = "pml-bold", i_config )
+        context.write_inline_node_with_child_nodes ( i_node, HTML_tag_name = "b", CSS_class_name = "pml-bold" )
     .
     
     creator create kind:in_all

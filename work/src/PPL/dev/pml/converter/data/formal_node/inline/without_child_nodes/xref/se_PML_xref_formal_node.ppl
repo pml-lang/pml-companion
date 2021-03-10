@@ -34,12 +34,12 @@ service PML_xref_formal_node
             documentation = simple_documentation.create (
                 title = "Cross-Reference"
                 description = "A cross-reference (link) to another node in the same document."
-                examples = '''{ch title=A Beautiful Solution id=solution
+                examples = '''[ch title=A Beautiful Solution id=solution
     text text text
-}
+]
 
-{ch title = Conclusion
-    As we saw in chapter {xref node_id=solution}, it is ...
-}''' ) )
+[ch title = Conclusion
+    As we saw in chapter [xref node_id=solution], it is ...
+]''' ) )
 .
     

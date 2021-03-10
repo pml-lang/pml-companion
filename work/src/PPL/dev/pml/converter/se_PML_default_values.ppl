@@ -15,15 +15,15 @@ service PML_default_values
         
         CSS_file file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/css/pml-default.css" ) )
-        // CSS_print_file file = se_current_application_directories.resource_file (
-        //    relative_file_path.create ( "resources/css/pml-print-default.css" ) )
+        CSS_print_file file = se_current_application_directories.resource_file (
+            relative_file_path.create ( "resources/css/pml-print-default.css" ) )
         
         HTML_header_file file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/html/default_html_header.txt" ) )
         HTML_footer_file file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/html/default_html_footer.txt" ) )
 
-        // omit_CSS yes_no = no
+        omit_CSS yes_no = no
     .
     
     function relative_input_file_path -> relative_file_path or null

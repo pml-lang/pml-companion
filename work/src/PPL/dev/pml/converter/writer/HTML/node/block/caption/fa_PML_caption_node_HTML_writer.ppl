@@ -7,7 +7,7 @@ factory PML_caption_node_HTML_writer type:PML_node_HTML_writer<PML_caption_node>
     
         context.write_indent
         context.write_HTML_inline_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-caption" )
-        context.write_nodes ( nodes = i_node.child_nodes, config, increase_indent = no )
+        context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
         context.write_HTML_inline_tag_end ( "div" )
         context.write_new_line
     .

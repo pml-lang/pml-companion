@@ -73,6 +73,9 @@ factory PML_HTML_writer_context
             if i_CSS_class_name is not null then
                 write_HTML_class_attribute ( i_CSS_class_name )
             .
+            if i_attributes is not null then
+                write_HTML_attributes ( i_attributes )
+            .
             write ( ">" )
 
             if i_append_new_line then
@@ -113,12 +116,28 @@ factory PML_HTML_writer_context
             write_HTML_tag_end ( write_indent = no, i_HTML_tag_name, append_new_line = no )
         .
 
+        // HTML attributes
+
+        write_HTML_attribute
+
+            write ( """ {{i_name}}="{{escape_HTML(i_value)}}"""" )
+        .
+
         write_HTML_class_attribute
 
-            write ( """ class="{{i_CSS_class_name}}"""" )
+            if not a_config.omit_CSS then
+                write ( """ class="{{i_CSS_class_name}}"""" )
+            .
         .
 
         write_HTML_attributes
+
+            repeat for each name, value in attributes
+                write_HTML_attribute ( name, value )
+            .
+        .
+
+        write_HTML_attributes_for_node
         
             variable has_explicit_class_attribute = no
             
@@ -183,7 +202,7 @@ factory PML_HTML_writer_context
                     on_null: throw "No formal node found"
                 // formal_node.HTML_writer.write ( node, context = this, config )
                 const writer PML_node_HTML_writer<PML_node> = formal_node.HTML_writer type_check:no
-                writer.write ( node, context = this, config )
+                writer.write ( node, context = this, config = a_config )
             .
             
             if i_increase_indent then
@@ -249,7 +268,7 @@ factory PML_HTML_writer_context
             
             case type of non_null
                 when PML_has_HTML_attributes
-                    write_HTML_attributes ( node = non_null, i_CSS_class_name )
+                    write_HTML_attributes_for_node ( node = non_null, i_CSS_class_name )
                 otherwise
                     write_HTML_class_attribute ( i_CSS_class_name )
             .
@@ -265,7 +284,7 @@ factory PML_HTML_writer_context
 
             write_block_node_start ( i_node, i_HTML_tag_name, i_CSS_class_name, append_new_line = i_append_new_line_for_tag )
     
-            write_nodes ( nodes = i_node.child_nodes, i_config, increase_indent = i_append_new_line_for_tag )
+            write_nodes ( nodes = i_node.child_nodes, increase_indent = i_append_new_line_for_tag )
             
             if i_append_new_line_for_tag then
                 write_indent
@@ -289,7 +308,7 @@ factory PML_HTML_writer_context
         write_inline_node_with_child_nodes
 
             write_HTML_inline_tag_start ( i_HTML_tag_name, i_CSS_class_name )
-            write_nodes ( nodes = i_node.child_nodes, config, increase_indent = no )
+            write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
             write_HTML_inline_tag_end ( i_HTML_tag_name )
         .
     .

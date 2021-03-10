@@ -14,7 +14,7 @@ factory PML_video_node_HTML_writer type:PML_node_HTML_writer<PML_video_node>
         if i_node.height as height is not null then
             context.write ( """ height="{{height}}"""" )
         .
-        context.write_HTML_attributes ( i_node, CSS_class_name = "pml-video" )
+        context.write_HTML_attributes_for_node ( i_node, CSS_class_name = "pml-video" )
         context.write_line ( ">" )
         context.increase_indent
         

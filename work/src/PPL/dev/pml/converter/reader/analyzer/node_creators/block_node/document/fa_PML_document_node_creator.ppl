@@ -19,6 +19,8 @@ factory PML_document_node_creator type:PML_node_creator<PML_document_node>
         const publication_date = attributes.require_value<local_date> ( "date" )
         const publication_time = attributes.require_value<local_time> ( "time" )
 
+        const TOC_title = attributes.require_value<string or null> ( "TOC_title" )
+        
         const TOC_position = attributes.require_value<PML_TOC_position> ( "TOC_position" )
         
         const source_code_highlighter = attributes.require_value<PML_source_code_highlighter> ( "source_code_highlighter" )
@@ -33,7 +35,7 @@ factory PML_document_node_creator type:PML_node_creator<PML_document_node>
             title,
             authors = authors,
             publication_date, publication_time,
-            TOC_position,
+            TOC_title, TOC_position,
             source_code_highlighter,
             HTML_attributes,
             child_nodes )

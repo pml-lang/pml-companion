@@ -84,14 +84,15 @@ service PML_image_formal_node
         PML_formal_block_node_without_child_nodes<PML_image_node>.create (
             tags = [# "image", "img" ]
             attributes = a_attributes
+            default_attribute_id = parameter_id.create ( "source" )
             HTML_attributes_allowed = yes
             node_creator = PML_image_node_creator.create
             HTML_writer = PML_image_node_HTML_writer.create
             documentation = simple_documentation.create (
                 title = "Image"
                 description = "An image, such as a .jpg or .png file."
-                examples = '''{image source = images/strawberries.jpg \
+                examples = '''[image source = images/strawberries.jpg \
     title = Strawberries (Photo by Jacek Dylag on Unsplash) \
-    link = https://unsplash.com/photos/kH3Sr9K8EBA}''' ) )
+    link = https://unsplash.com/photos/kH3Sr9K8EBA]''' ) )
 .
     

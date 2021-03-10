@@ -16,8 +16,8 @@ service PML_division_formal_node
             documentation = simple_documentation.create (
                 title = "Division"
                 description = "A division or section in the document. This node is typically used to render a HTML <div>...</div> block with a specific set of HTML attributes."
-            examples = '''{div html_class=syntax-block
+            examples = '''[div html_class=syntax-block
     text text text
-}''' ) )
+]''' ) )
 .
     

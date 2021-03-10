@@ -90,7 +90,7 @@ factory PML_tokenizer
         
             const file = read_insert_file on_error:return_error
             
-            case type of single_resource_PML_tokenizer.try_create_for_file ( file )
+            case type of single_resource_PML_tokenizer.try_create_for_file ( file, config = a_current_tokenizer.config )
                 
                 when single_resource_PML_tokenizer tokenizer
                     tokenizer_stack.push ( a_current_tokenizer )
@@ -187,7 +187,7 @@ factory PML_tokenizer
     
     creator create ( single_resource_tokenizer single_resource_PML_tokenizer ) -> PML_tokenizer
     
-        this.config = fa_PML_tokenizer_config.create
+        this.config = i_single_resource_tokenizer.config
 
         this.current_tokenizer = i_single_resource_tokenizer
         
@@ -198,23 +198,26 @@ factory PML_tokenizer
         return this
     .
 
-    creator create_for_code ( PML_code string, resource non_error or null default:null ) -> PML_tokenizer
+    creator create_for_code ( PML_code string, resource non_error or null default:null, config PML_tokenizer_config ) \
+        -> PML_tokenizer
         
-        const tokenizer = single_resource_PML_tokenizer.create_for_code ( i_PML_code, i_resource )
-        return create ( tokenizer )
+        const single_resource_tokenizer = single_resource_PML_tokenizer.create_for_code (
+            i_PML_code, i_resource, i_config )
+        return create ( single_resource_tokenizer )
     .
 
-    creator try_create_for_code_supplier ( PML_code_supplier failable_string_supplier ) \
+    creator try_create_for_code_supplier ( PML_code_supplier failable_string_supplier, config PML_tokenizer_config ) \
         -> PML_tokenizer or runtime_error
     
-        const tokenizer = single_resource_PML_tokenizer.try_create_for_code_supplier ( i_PML_code_supplier ) \
-            on_error:return_error
-        return create ( tokenizer )
+        const single_resource_tokenizer = single_resource_PML_tokenizer.try_create_for_code_supplier (
+            i_PML_code_supplier, i_config ) on_error:return_error
+        return create ( single_resource_tokenizer )
     .
 
-    creator try_create_for_file ( file ) -> PML_tokenizer or runtime_error
+    creator try_create_for_file ( file, config PML_tokenizer_config ) -> PML_tokenizer or runtime_error
     
-        const tokenizer = single_resource_PML_tokenizer.try_create_for_file ( i_file ) on_error:return_error
-        return create ( tokenizer )
+        const single_resource_tokenizer = single_resource_PML_tokenizer.try_create_for_file (
+            i_file, i_config ) on_error:return_error
+        return create ( single_resource_tokenizer )
     .
 .

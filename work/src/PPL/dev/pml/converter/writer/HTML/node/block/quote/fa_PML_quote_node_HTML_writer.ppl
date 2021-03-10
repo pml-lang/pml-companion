@@ -18,7 +18,7 @@ factory PML_quote_node_HTML_writer type:PML_node_HTML_writer<PML_quote_node>
         context.write_new_line
         
         context.write_HTML_block_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-quote-text" )
-        context.write_nodes ( nodes = i_node.child_nodes, config, increase_indent = yes )
+        context.write_nodes ( nodes = i_node.child_nodes, increase_indent = yes )
         context.write_HTML_block_tag_end ( "div" )
 
         context.write_indent

@@ -131,9 +131,10 @@ factory PML_parameter_substitutor
             variable r = i_string
             repeat for each name, value in a_constants
                 r = r.replace_all (
-                    to_replace = """[[{{name}}]]"""
+                    to_replace = """<<{{name}}>>"""
                     replace_by = value )
             .
+//                    to_replace = """[[{{name}}]]"""
 
             // TD? check if there are undefined parameters in i_string (should depend on config)
             

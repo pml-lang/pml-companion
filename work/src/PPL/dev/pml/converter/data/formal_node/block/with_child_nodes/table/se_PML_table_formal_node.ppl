@@ -15,7 +15,7 @@ For each column the following values can be specified:
 - left or l
 - center or c
 - right or r
-- [empty] (default alignment (usually left-aligned) will be used)
+- {empty} (default alignment (usually left-aligned) will be used)
 The values are case-insensitive. Uppercase letters are allowed.'''
             examples = '''
 horizontal_alignments = "Left, Center, , Right"
@@ -56,23 +56,23 @@ HTML 'class' and 'style' attributes can be use to format the table with CSS.
 The table can optionally have a header and a footer.'''
                 examples = '''Simple table:
                 
-{table
-    {table_row {table_cell C11} {table_cell C12}}
-    {tr {tc C21} {tc C22}}
-}
+[table
+    [table_row [table_cell C11] [table_cell C12]]
+    [tr [tc C21] [tc C22]]
+]
 
 Table with header and footer:
 
-{table
-    {table_header
-        {tr {tc Pos.} {tc Group} {tc Total invoiced}}
-    }
-    {tr {tc 1} {tc {i Organic} food} {tc html_style="text-align:right;" 12,000.22}}
-    {tr {tc 2} {tc Meditation lessons} {tc html_style="text-align:right;" 21,350.00}}
-    {table_footer
-        {tr {tc} {tc html_style="text-align:right;" Sum:} {tc html_style="text-align:right;" 33,350.22}}
-    }
-}''' ) )
+[table
+    [table_header
+        [tr [tc Pos.] [tc Group] [tc Total invoiced]]
+    ]
+    [tr [tc 1] [tc [i Organic] food] [tc html_style="text-align:right;" 12,000.22]]
+    [tr [tc 2] [tc Meditation lessons] [tc html_style="text-align:right;" 21,350.00]]
+    [table_footer
+        [tr [tc] [tc html_style="text-align:right;" Sum:] [tc html_style="text-align:right;" 33,350.22]]
+    ]
+]''' ) )
 
     att table_header_node PML_formal_block_node_with_child_nodes<PML_table_header_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_header_node>.create (
@@ -86,13 +86,13 @@ Table with header and footer:
                 description = "A header in a table."
                 examples = '''Table with header:
                 
-{table
-    {table_header
-        {tr {tc Header 1} {tc Header 2} {tc Header 3}}
-    }
-    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
-    {tr {tc cell 2.1} {tc cell 2.2} {tc cell 2.3}}
-}''' ) )
+[table
+    [table_header
+        [tr [tc Header 1] [tc Header 2] [tc Header 3]]
+    ]
+    [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
+    [tr [tc cell 2.1] [tc cell 2.2] [tc cell 2.3]]
+]''' ) )
 
     att table_footer_node PML_formal_block_node_with_child_nodes<PML_table_footer_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_footer_node>.create (
@@ -106,13 +106,13 @@ Table with header and footer:
                 description = "A footer in a table."
                 examples = '''Table with footer:
                 
-{table
-    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
-    {tr {tc cell 2.1} {tc cell 2.2} {tc cell 2.3}}
-    {table_footer
-        {tr {tc Footer 1} {tc Footer 2} {tc Footer 3}}
-    }
-}''' ) )
+[table
+    [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
+    [tr [tc cell 2.1] [tc cell 2.2] [tc cell 2.3]]
+    [table_footer
+        [tr [tc Footer 1] [tc Footer 2] [tc Footer 3]]
+    ]
+]''' ) )
 
     att table_row_node PML_formal_block_node_with_child_nodes<PML_table_row_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_row_node>.create (
@@ -126,10 +126,10 @@ Table with header and footer:
                 description = "A row in a table."
                 examples = '''Table with 2 rows:
                 
-{table
-    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
-    {tr {tc cell 2.1} {tc cell 2.2} {tc row 2.3}}
-}''' ) )
+[table
+    [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
+    [tr [tc cell 2.1] [tc cell 2.2] [tc row 2.3]]
+]''' ) )
 
     att table_cell_node PML_formal_block_node_with_child_nodes<PML_table_cell_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_cell_node>.create (
@@ -143,9 +143,9 @@ Table with header and footer:
                 description = "A cell in a table row."
                 examples = '''Table with 2 rows and 3 columns:
                 
-{table
-    {tr {tc cell 1.1} {tc cell 1.2} {tc cell 1.3}}
-    {tr {tc cell 2.1} {tc cell 2.2} {tc cell 2.3}}
-}''' ) )
+[table
+    [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
+    [tr [tc cell 2.1] [tc cell 2.2] [tc cell 2.3]]
+]''' ) )
 .
     

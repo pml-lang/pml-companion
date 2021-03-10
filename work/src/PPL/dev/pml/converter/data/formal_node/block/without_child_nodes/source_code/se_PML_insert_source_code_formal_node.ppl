@@ -82,6 +82,6 @@ If parameter '{{a_include_to_regex_parameter_id}}' is set to 'yes' (default valu
             documentation = simple_documentation.create (
                 title = "Insert Source Code"
                 description = "Insert source code stored in an external file."
-                examples = '''{insert_code file=resources/ref_manual/resources/source_code/hello_world.ppl}''' ) )
+                examples = '''[insert_code file=resources/ref_manual/resources/source_code/hello_world.ppl]''' ) )
 .
     

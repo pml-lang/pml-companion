@@ -28,13 +28,13 @@ service PML_chapter_formal_node
             documentation = simple_documentation.create (
                 title = "Chapter"
                 description = "A chapter or sub-chapter of the document. A chapter can have any number of sub-chapters. Chapters can be nested to any level."
-                examples = '''{ch title = Introduction id = intro
-    {ch title = What is This About?
+                examples = '''[ch title = Introduction id = intro
+    [ch title = What is This About?
         blah blah blah
-    }
-    {ch title = Why is This Important?
+    ]
+    [ch title = Why is This Important?
         blah blah blah
-    }
-}''' ) )
+    ]
+]''' ) )
 .
     

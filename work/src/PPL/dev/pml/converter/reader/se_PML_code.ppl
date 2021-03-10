@@ -3,11 +3,20 @@
 
 service PML_code
 
-    // TD can be done faster by scanning/replacing once
+    /// TD can be done faster by:
+        scanning/replacing once
+        replacing only tag-start-stop-symbols actually used (depending on the config)
+    .///
 
     function unescape_text ( string ) -> string
         
         return i_string \
+            .replace_all (
+                to_replace = '''\['''
+                replace_by = "[" ) \
+            .replace_all (
+                to_replace = '''\]'''
+                replace_by = "]" ) \
             .replace_all (
                 to_replace = '''\{'''
                 replace_by = "{" ) \

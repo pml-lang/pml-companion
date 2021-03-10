@@ -26,7 +26,7 @@ First sentence of second paragraph.
 Second sentence of second paragraph.
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
-{p Third paragraph}''' ) )
+[p Third paragraph]''' ) )
             
         list = PML_formal_block_node_with_child_nodes<PML_list_node>.create (
             tags = [# "list" ]
@@ -37,10 +37,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             documentation = simple_documentation.create (
                 title = "List"
                 description = "A bulleted list of text blocks."
-                examples = '''{list
-    {el item 1}
-    {el item 2}
-}''' ) )
+                examples = '''[list
+    [el item 1]
+    [el item 2]
+]''' ) )
             
         list_element = PML_formal_block_node_with_child_nodes<PML_list_element_node>.create (
             tags = [# "list_element", "el" ]
@@ -51,17 +51,17 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             documentation = simple_documentation.create (
                 title = "List Element"
                 description = "An element of a list."
-                examples = '''{list title=Some planets
-    {el title = Jupiter
+                examples = '''[list title=Some planets
+    [el title = Jupiter
         Jupiter is ...
-    }
-    {el title = Uranus
+    ]
+    [el title = Uranus
         Uranus is ...
-    }
-    {el title = Neptun
+    ]
+    [el title = Neptun
         Neptun is ...
-    }
-}''' ) )
+    ]
+]''' ) )
 
         table = se_PML_table_formal_node.node
         table_header = se_PML_table_formal_node.table_header_node
@@ -80,7 +80,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             documentation = simple_documentation.create (
                 title = "Caption"
                 description = "A small title that is not part of he table of contents."
-                examples = '''{caption Figure 1: Clove Hitch Knot}''' ) )
+                examples = '''[caption Figure 1: Clove Hitch Knot]''' ) )
             
         admonition = se_PML_admonition_formal_node.node
         
@@ -93,7 +93,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             documentation = simple_documentation.create (
                 title = "Note"
                 description = "A note is an admonition whose label is 'Note'."
-                examples = '''{note Please remember that ...}''' ) )
+                examples = '''[note Please remember that ...]''' ) )
             
         quote = se_PML_quote_formal_node.node
         
@@ -108,9 +108,9 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
             documentation = simple_documentation.create (
                 title = "HTML Code"
                 description = "A node that contains HTML code. The HTML code is not processed in any way by the PML converter. It is passed as is to the resulting HTML document. This allows you to embed arbitrary HTML code in your final document."
-                examples = '''{html
+                examples = '''[html
     <p>This is pure <b>HTML</b> code.</p>
-html}''' ) )
+html]''' ) )
             
         source_code = se_PML_source_code_formal_node.node
             
@@ -125,9 +125,9 @@ html}''' ) )
             documentation = simple_documentation.create (
                 title = "Input"
                 description = "Any input provided to a software application, such as a command typed in a terminal, text contained in a config file, etc."
-                examples = '''{input
+                examples = '''[input
     pmlc create_reference_manual -output_directory path/to/dir
-input}''' ) )
+input]''' ) )
 
         output = PML_formal_block_node_with_raw_text_content<PML_output_node>.create (
             tags = [# "output" ]
@@ -138,10 +138,10 @@ input}''' ) )
             documentation = simple_documentation.create (
                 title = "Output"
                 description = "Any output created by a software application, such as a result written to the OS's standard output device."
-                examples = '''{output
+                examples = '''[output
     Congratulations!
     The new database has been created successfully.
-output}''' ) )
+output]''' ) )
 
         image = se_PML_image_formal_node.node
         
@@ -174,7 +174,7 @@ output}''' ) )
             documentation = simple_documentation.create (
                 title = "Span"
                 description = "This inline node is typically used to render a HTML <span>...</span> inline element with a specific set of HTML attributes."
-                examples = '''This is a {span html_style="color:red;background-color:yellow" huge} advantage.''' ) )
+                examples = '''This is a [span html_style="color:red;background-color:yellow" huge] advantage.''' ) )
 
         bold = PML_formal_inline_node_with_child_nodes<PML_bold_node>.create (
             tags = [# "bold", "b", "*" ]
@@ -185,7 +185,7 @@ output}''' ) )
             documentation = simple_documentation.create (
                 title = "Bold Text"
                 description = null
-                examples = '''This is a {b huge} advantage.''' ) )
+                examples = '''This is a [b huge] advantage.''' ) )
 
         italic = PML_formal_inline_node_with_child_nodes<PML_italic_node>.create (
             tags = [# "italic", "i", "_" ]
@@ -196,9 +196,9 @@ output}''' ) )
             documentation = simple_documentation.create (
                 title = "Italic Text"
                 description = null
-                examples = '''We want {i simplicity}.
+                examples = '''We want [i simplicity].
                 
-This is a {b {i very} important} point.''' ) )
+This is a [b [i very] important] point.''' ) )
             
         inline_code = PML_formal_inline_node_with_raw_text_content<PML_inline_code_node>.create (
             tags = [# "inline_code", "c", "`" ]
@@ -209,7 +209,7 @@ This is a {b {i very} important} point.''' ) )
             documentation = simple_documentation.create (
                 title = "Inline Source Code"
                 description = "Source code embedded within text."
-                examples = '''The assignment {c pi = 3.1415} means we are using {i four} decimals for {c pi}.''' ) )
+                examples = '''The assignment [c pi = 3.1415] means we are using [i four] decimals for [c pi].''' ) )
 
         verbatim_text = PML_formal_inline_node_with_raw_text_content<PML_verbatim_text_node>.create (
             tags = [# "verbatim", "vm" ]
@@ -220,7 +220,7 @@ This is a {b {i very} important} point.''' ) )
             documentation = simple_documentation.create (
                 title = "Verbatim Text"
                 description = null
-                examples = "Math's ring operator is {verbatim &#x2218;}." ) )
+                examples = "Math's ring operator is [verbatim &#x2218;]." ) )
             
         link = PML_link_formal_node.node
             
@@ -235,7 +235,7 @@ This is a {b {i very} important} point.''' ) )
             documentation = simple_documentation.create (
                 title = "New Line"
                 description = "An explicit new line (line break) inserted in the document."
-                examples = "Line 1{nl}{nl}Line 2" ) )
+                examples = "Line 1[nl][nl]Line 2" ) )
             
         space = PML_formal_inline_node_without_child_nodes<PML_space_node>.create (
             tags = [# "space", "sp" ]
@@ -246,9 +246,9 @@ This is a {b {i very} important} point.''' ) )
             documentation = simple_documentation.create (
                 title = "Space Character"
                 description = "An explicit space character inserted in the document. Whitespace composed of several characters (such as two spaces) is always converted into a single space (as in HTML). Hence, this node can be used to explicitly insert two or more spaces."
-                examples = '''This is  g  o  o  d !  {-- 2 spaces will result in ONE space --}
+                examples = '''This is  g  o  o  d !  [-- 2 spaces will result in ONE space --]
                 
-This is {sp}g{sp}{sp}o{sp}{sp}o{sp}{sp}d{sp}!''' ) )
+This is [sp]g[sp][sp]o[sp][sp]o[sp][sp]d[sp]!''' ) )
                 
         // text processing
         
@@ -262,14 +262,14 @@ This is {sp}g{sp}{sp}o{sp}{sp}o{sp}{sp}d{sp}!''' ) )
             HTML_writer = fa_dummy_PML_node_HTML_writer.create
             documentation = simple_documentation.create (
                 title = "Constant Parameter"
-                description = "A constant parameter is used to define text snippets that are re-used several times in the document. A constant parameter is composed of an identifier (name) and a value. The value assigned to the constant can be re-used in the document by simply specifying the constant's identifier between [[ and ]]."
-                examples = '''{const examples_root = http://www.example.com/project/source_code/examples}
+                description = "A constant parameter is used to define text snippets that are re-used several times in the document. A constant parameter is composed of an identifier (name) and a value. The value assigned to the constant can be re-used in the document by simply specifying the constant's identifier between << and >>."
+                examples = '''[const examples_root = http://www.example.com/project/source_code/examples]
 
 Here are two examples:
 
-{link url=[[examples_root]]/ex1.html text=example 1}
+[link url=<<examples_root>>/ex1.html text=example 1]
 
-{link url=[[examples_root]]/ex2.html text=example 2}.''' ) )
+[link url=<<examples_root>>/ex2.html text=example 2].''' ) )
     .
     
     function add_nodes_to_map ( map mutable_map<key:string, value:PML_formal_node<*>>, only_standard_tag yes_no  )

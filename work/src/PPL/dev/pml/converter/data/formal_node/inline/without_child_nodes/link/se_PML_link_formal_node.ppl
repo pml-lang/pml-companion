@@ -35,6 +35,6 @@ service PML_link_formal_node
             documentation = simple_documentation.create (
                 title = "URL Link"
                 description = "A URL link to a resource, such as a website or a file to download."
-                examples = '''Please have a look at {link url=http://www.example.com/articles/123 text=this article} for more information.''' ) )
+                examples = '''Please have a look at [link url=http://www.example.com/articles/123 text=this article] for more information.''' ) )
 .
     

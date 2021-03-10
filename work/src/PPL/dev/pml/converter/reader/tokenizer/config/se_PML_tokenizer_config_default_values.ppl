@@ -2,10 +2,10 @@ service PML_tokenizer_config_default_values
 
     attributes type:character
         
-        node_start_symbol = '{'
-        node_end_symbol = '}'
-//        node_start_symbol = '['
-//        node_end_symbol = ']'
+//        node_start_symbol = '{'
+//        node_end_symbol = '}'
+        node_start_symbol = '['
+        node_end_symbol = ']'
 
         attributes_start_symbol = '('
         attributes_end_symbol = ')'

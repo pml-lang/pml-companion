@@ -29,8 +29,8 @@ service PML_quote_formal_node
             documentation = simple_documentation.create (
                 title = "Quote"
                 description = "A piece of text said or written by somebody else."
-                examples = '''{quote source=Albert Einstein, physicist
+                examples = '''[quote source=Albert Einstein, physicist
     Everything should be as simple as possible, but not simpler.
-}''' ) )
+]''' ) )
 .
     
