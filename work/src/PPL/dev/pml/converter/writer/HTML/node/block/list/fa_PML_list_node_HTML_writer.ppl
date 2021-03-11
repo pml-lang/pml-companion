@@ -4,12 +4,12 @@
 factory PML_list_node_HTML_writer type:PML_node_HTML_writer<PML_list_node>
 
     function write
-    
+
         context.write_block_node_with_child_nodes (
             i_node,
             HTML_tag_name = "ul"
             CSS_class_name = "pml-list" )
     .
-    
+
     creator create kind:in_all
 .

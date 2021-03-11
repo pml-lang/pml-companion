@@ -13,7 +13,7 @@ service PML_insert_formal_node
                 title = "File"
                 description = "Absolute or relative path to the file to be inserted. In case of a relative path, it is relative to the directory of the PML file in which the [c insert] is defined."
                 examples = "file = chapters/conclusion.pml" )
-            
+
             return r.make_immutable
         .
     .
@@ -34,4 +34,3 @@ service PML_insert_formal_node
     [insert file=chapters/conclusion.pml]
 ]''' ) )
 .
-    

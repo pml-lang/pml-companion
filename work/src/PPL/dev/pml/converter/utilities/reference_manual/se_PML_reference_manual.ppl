@@ -11,7 +11,7 @@ service PML_reference_manual
     function create_manual_for_path -> string or anticipated_error
         in temp_directory_path absolute_or_relative_directory_path
         in output_directory_path absolute_or_relative_directory_path
-        
+
         const temp_directory = \
             directory.create_for_absolute_or_relative_path_in_working_directory ( i_temp_directory_path )
         const output_directory = \
@@ -19,26 +19,26 @@ service PML_reference_manual
 
         return create_manual ( temp_directory, output_directory )
     .
-        
+
     function create_manual -> string or anticipated_error
         in temp_directory directory
         in output_directory directory
-    
+
         const PML_file = create_PML_file ( temp_directory ) on_error:return_error
         const HTM_file = create_HTML_file ( output_directory, PML_file ) on_error:return_error
-            
+
         return """Ok. The manual has been created in file
 {{HTM_file.to_string}}"""
     .
-    
+
     functions access:private
-    
+
 ///
         function copy_resources ( temp_directory directory ) -> runtime_error or null
-        
+
             const resources_source_directory = \
                 se_current_application_directories.resource_directory ( a_resources_directory_path )
-                
+
             return se_file_copier.try_copy_directory (
                 source = resources_source_directory
                 destination_parent = temp_directory
@@ -46,9 +46,9 @@ service PML_reference_manual
                 include_child_directories = yes )
         .
 .///
-    
+
         function create_PML_file ( temp_directory directory ) -> file or runtime_error
-        
+
             const PML_file = file.create_for_name (
                 file_name = a_PML_file_name
                 directory = temp_directory.path )
@@ -56,12 +56,12 @@ service PML_reference_manual
             use resource const text_file_writer = text_file_writer.create_for_new_or_existing_file (
                 file = PML_file
                 append_mode = no ) on_error:return_error
-            
+
                 const writer = PML_document_writer.create ( text_file_writer )
-            
+
                 write_document ( writer )
             .
-            
+
             return PML_file
         .
 
@@ -71,17 +71,17 @@ service PML_reference_manual
 
             const config = PML_to_HTML_config.create (
                 PML_input = file_string_supplier.create ( i_PML_file )
-                resources_directory_path = 
+                resources_directory_path =
                     se_current_application_directories.resource_directory_path ( a_resources_directory_path )
                 output_directory_path = i_output_directory.path
                 HTML_output_file_name = \
                     se_PML_default_values.HTML_output_file_name_for_input_file_name ( i_PML_file.name ) )
-        
+
             return se_PML_to_HTML_Converter.try_convert ( config )
         .
-        
+
         function write_document ( writer PML_document_writer )
-        
+
             writer.start_document (
                 title = "PML Reference Manual"
                 authors = "Christian Neumanns"
@@ -91,29 +91,29 @@ service PML_reference_manual
             chapter_block_nodes ( writer )
             chapter_inline_nodes ( writer )
             chapter_text_processing_nodes ( writer )
-        
+
             writer.end_document
         .
 
         function chapter_introduction ( writer PML_document_writer )
-        
+
             writer.start_chapter ( title = "Introduction" )
-            
+
             writer.write_non_escaped_paragraph ( "This document describes all standard PML nodes. For each type of node, its tags and attributes are listed, and an example demonstrates how to use it." )
-            
+
             writer.write_non_escaped_paragraph ( '''If you have questions or suggestions then please send an email to contact {at} pml-lang {dot} dev. Thank you.''' )
-            
+
             writer.end_chapter
         .
 
         function chapter_block_nodes ( writer PML_document_writer )
-        
+
             writer.start_chapter ( title = "Block Nodes" )
 
             writer.write_non_escaped_paragraph ( "A [i block] node represents a section that starts at a given line in the document and ends at a subsequent line." )
-            
+
             writer.write_non_escaped_paragraph ( "For example, the [c chapter] node is a [i block] node. It starts at a given line of the document, and ends at a subsequent line." )
-            
+
             writer.start_chapter ( title = "Fundamental Nodes" )
                 write_node ( writer, node = se_PML_standard_formal_nodes.document )
                 write_node ( writer, node = se_PML_standard_formal_nodes.paragraph )
@@ -144,7 +144,7 @@ service PML_reference_manual
                 write_node ( writer, node = se_PML_standard_formal_nodes.division )
                 write_node ( writer, node = se_PML_standard_formal_nodes.HTML_code )
             writer.end_chapter
-    
+
             writer.start_chapter ( title = "Media" )
                 write_node ( writer, node = se_PML_standard_formal_nodes.image )
                 write_node ( writer, node = se_PML_standard_formal_nodes.audio )
@@ -163,13 +163,13 @@ service PML_reference_manual
         .
 
         function chapter_inline_nodes ( writer PML_document_writer )
-        
+
             writer.start_chapter ( title = "Inline Nodes" )
 
             writer.write_non_escaped_paragraph ( "An [i inline] node represents a part of a paragraph (a block of text). It starts at some character position in the paragraph, and ends at a subsequent position." )
-            
+
             writer.write_non_escaped_paragraph ( "For example, the [c italic] node is an [i inline] node. All text contained in it is written in [i italics]." )
-            
+
             writer.start_chapter ( title = "Font" )
                 write_node ( writer, node = se_PML_standard_formal_nodes.bold )
                 write_node ( writer, node = se_PML_standard_formal_nodes.italic )
@@ -187,7 +187,7 @@ service PML_reference_manual
         .
 
         function chapter_text_processing_nodes ( writer PML_document_writer )
-        
+
             writer.start_chapter ( title = "Text Processing Nodes" )
 
             chapter_comments ( writer )
@@ -198,11 +198,11 @@ service PML_reference_manual
         .
 
         function chapter_comments ( writer PML_document_writer )
-        
+
             writer.start_chapter ( title = "Comment" )
-            
+
             writer.write_non_escaped_paragraph ( '''A comment starts with [c \[-] and ends with [c -\]]. Comments can appear anywhere and they can be nested to any level. Text within comments is ignored.''' )
-            
+
             write_node_examples ( writer, examples = '''This is [- good -] awesome.
 [- TODO: explain why -]
 
@@ -210,8 +210,8 @@ Text
 [-
     This [i bad] text not show.
     [- a
-       nested
-       comment -]
+        nested
+        comment -]
 -]
 
 More text''' )
@@ -220,9 +220,9 @@ More text''' )
         .
 
         function write_node ( writer PML_document_writer, node PML_formal_node<*>, show_result yes_no default:yes )
-        
+
             writer.start_chapter ( title = node.documentation.title, id = """node_{{node.standard_tag}}""" )
-            
+
             write_node_tags ( writer, node )
             write_node_description ( writer, node )
             write_node_attributes ( writer, node )
@@ -233,10 +233,10 @@ More text''' )
         .
 
         function write_node_tags ( writer PML_document_writer, node PML_formal_node<*> )
-        
+
             writer.write_new_line
             writer.write_indent
-            writer.write ( """[b {{if node.tags.size >= 2 then "Tags" else "Tag"}}:] [c """ ) 
+            writer.write ( """[b {{if node.tags.size >= 2 then "Tags" else "Tag"}}:] [c """ )
             repeat for each tag in node.tags is_first:is_first
                 if not is_first then
                     writer.write ( ", " )
@@ -245,9 +245,9 @@ More text''' )
             .
             writer.write_line ( "]" )
         .
-        
+
         function write_node_description ( writer PML_document_writer, node PML_formal_node<*> )
-        
+
             if node.documentation.description as description is not null then
                 writer.write_new_line
                 writer.write_non_escaped_paragraph ( '''[b Description]''' )
@@ -257,7 +257,7 @@ More text''' )
         .
 
         function write_node_attributes ( writer PML_document_writer, node PML_formal_node<*> )
-        
+
             writer.write_new_line
             writer.write_non_escaped_paragraph ( '''[b Attributes]''' )
 
@@ -265,17 +265,17 @@ More text''' )
 
                 writer.write_indented_line ( "[list" )
                 writer.increase_indent
-                
+
                 // repeat for each formal_parameter in attributes.sorted_list
                 const list list<formal_parameter<*>> = attributes.sorted_list type_check:no
                 repeat for each formal_parameter in list
-                
+
                     const title = writer.escape_PML (
                         formal_parameter.documentation?.title
                         if_null: se_string_utilities.convert_id_to_title ( formal_parameter.standard_id.value ) )
                     writer.write_indent
                     writer.write ( """[el title={{title}}""" )
-                    
+
                     if node.default_attribute_id as default_attribute_id is not null then
                         if formal_parameter.standard_id.value =v default_attribute_id.value then
                             writer.write ( " (default attribute)" )
@@ -283,14 +283,14 @@ More text''' )
                     .
 
                     writer.write_new_line
-                    
+
                     writer.increase_indent
-                    
+
                     write_formal_parameter ( writer, formal_parameter )
 
                     writer.decrease_indent
                     writer.write_indented_line ( "]" )
-                .          
+                .
 
                 writer.decrease_indent
                 writer.write_indented_line ( "]" )
@@ -303,10 +303,10 @@ More text''' )
 
             writer.write_indented_line ( "[html" )
             writer.increase_indent
-            
+
             writer.write_indented_line ( '''<table border=0 cellspacing=0 cellpadding=3 style="margin-bottom:1em;">''' )
             writer.increase_indent
-            
+
             const id_title = if formal_parameter.ids.size >= 2 then "Ids" else "Id"
             // write_form_field_unescaped ( writer, title = id_title,
             //    content = """<pre>{{formal_parameter.ids_as_string}}</pre>""" )
@@ -315,20 +315,20 @@ More text''' )
             if formal_parameter.documentation?.description as description is not null then
                 write_form_field ( writer, title = "Description", content = description )
             .
-            
+
             write_form_field ( writer, title = "Type", content = formal_parameter.value_type.to_string )
-            
+
             write_form_field ( writer, title = "Required", content = formal_parameter.is_required.to_string )
-            
+
             if formal_parameter.default_value_supplier as default_value_supplier is not null then
                 const value = se_object.to_string_or_null_string ( default_value_supplier.get )
                 write_form_field ( writer, title = "Default value", content = value )
             .
-            
+
             if formal_parameter.allowed_values as allowed_values is not null then
                 write_form_field ( writer, title = "Allowed Values", content = allowed_values.to_long_string )
             .
-            
+
             if formal_parameter.documentation?.examples as examples is not null then
                 write_form_field ( writer, title = "Example", content = examples )
             .
@@ -341,12 +341,12 @@ More text''' )
         .
 
         function write_form_field ( writer PML_document_writer, title string, content string )
-        
+
             write_form_field_unescaped ( writer, title, content = writer.escape_HTML ( content ) )
         .
 
         function write_form_field_unescaped ( writer PML_document_writer, title string, content string )
-        
+
             variable content_ = content.remove_all_character ( '\r' )
             assert content_ is not null
             content_ = content.replace_all (
@@ -358,7 +358,7 @@ More text''' )
         .
 
         function write_node_HTML_attributes ( writer PML_document_writer, node PML_formal_node<*> )
-        
+
             const value = if i_node.HTML_attributes_allowed then "allowed" else "not allowed"
             writer.write_new_line
             writer.write_non_escaped_paragraph ( """[b HTML attributes]: {{value}}""" )
@@ -368,47 +368,47 @@ More text''' )
             in writer PML_document_writer
             in examples string or null
             in show_result yes_no default:yes
-        
+
             if i_examples is null then
                 return
             .
-            
+
             writer.write_new_line
             writer.write_non_escaped_paragraph ( '''[b Example]''' )
 
             if show_result then
                 writer.write_indented_line ( "[list" )
                 writer.increase_indent
-                
+
                 // PML code
-                    
+
                 writer.write_indented_line ( "[el" )
                 writer.increase_indent
-                    
+
                 writer.write_non_escaped_paragraph ( '''PML code:''' )
             .
 
             if not examples.starts_with ( "[code" ) then
-                writer.write_indented_line ( "[code" ) 
-                writer.write_line ( examples ) 
+                writer.write_indented_line ( "[code" )
+                writer.write_line ( examples )
                 writer.write_indented_line ( "code]" )
             else
-                writer.write_indented_line ( "[html" ) 
+                writer.write_indented_line ( "[html" )
                 writer.write_line ( '''<pre class="pml-code">''' )
-                writer.write_line ( examples ) 
-                writer.write_line ( "</pre>" ) 
+                writer.write_line ( examples )
+                writer.write_line ( "</pre>" )
                 writer.write_indented_line ( "html]" )
             .
 
             if not show_result then
                 return
             .
-            
+
             writer.decrease_indent
             writer.write_indented_line ( "]" )
-            
+
             // result
-            
+
             // %we<examples>
 
             variable HTML_code string
@@ -420,35 +420,35 @@ More text''' )
                     OS_process.exit_with_error
             .
             assert HTML_code is not null
-            
+
             writer.write_indented_line ( "[el" )
             writer.increase_indent
-                
+
             writer.write_non_escaped_paragraph ( '''Result:''' )
 
-            writer.write_indented_line ( "[html" ) 
-            writer.write_line ( '''<div style="border: 1px dotted grey; padding-left: 1em; padding-right: 1em;border-radius: 7px;">''' ) 
-            writer.write_line ( HTML_code ) 
-            writer.write_line ( "</div>" ) 
+            writer.write_indented_line ( "[html" )
+            writer.write_line ( '''<div style="border: 1px dotted grey; padding-left: 1em; padding-right: 1em;border-radius: 7px;">''' )
+            writer.write_line ( HTML_code )
+            writer.write_line ( "</div>" )
             writer.write_indented_line ( "html]" )
-            
+
             writer.decrease_indent
             writer.write_indented_line ( "]" )
-            
+
             // HTML code
-                
+
             writer.write_indented_line ( "[el" )
             writer.increase_indent
-                
+
             writer.write_non_escaped_paragraph ( '''HTML code generated:''' )
 
-            writer.write_indented_line ( "[code" ) 
-            writer.write_line ( HTML_code ) 
+            writer.write_indented_line ( "[code" )
+            writer.write_line ( HTML_code )
             writer.write_indented_line ( "code]" )
-            
+
             writer.decrease_indent
             writer.write_indented_line ( "]" )
-            
+
             // list
 
             writer.decrease_indent

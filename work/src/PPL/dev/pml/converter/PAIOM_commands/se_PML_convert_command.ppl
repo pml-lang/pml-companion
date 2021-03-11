@@ -117,7 +117,7 @@ By default this parameter is set to 'no'.'''
 
     att command explicit_paiom_command<file or anticipated_error> = \
         explicit_paiom_command<file or anticipated_error>.create (
-        
+
         ids = [# PAIOM_command_id.create ( "convert" ) ]
         formal_input_parameters = a_formal_input_parameters
         executor = { input => se_PML_convert_command.execute(input) },
@@ -129,9 +129,9 @@ pmlc convert --input_file input/index.pml --output_directory output/HTML --resou
 
     function execute ( input any_type_parameters or null ) -> file or anticipated_error
 
-        try    
+        try
             assert i_input is not null
-    
+
             const PML_input_path = i_input.get_value<absolute_or_relative_file_path> ( a_input_file_parameter.standard_id )
 
             const resources_directory_path = \
@@ -147,7 +147,7 @@ pmlc convert --input_file input/index.pml --output_directory output/HTML --resou
             const tag_start_stop_symbols = i_input.get_string ( a_tag_start_stop_symbols_parameter.standard_id )
 
             const omit_CSS = i_input.get_value<yes_no> ( a_omit_CSS_parameter.standard_id )
-                
+
             const config = PML_to_HTML_config.create_for_paths (
                 root_directory_for_relative_path = se_OS_directories.current_working_directory_path
                 PML_input_path,
@@ -157,24 +157,24 @@ pmlc convert --input_file input/index.pml --output_directory output/HTML --resou
                 HTML_footer_file_path,
                 tag_start_stop_symbols
                 omit_CSS )
-        
+
             const HTML_file = se_PML_to_HTML_Converter.try_convert ( config ) on_error: return_error
-            
+
             // return se_PML_to_HTML_Converter.success_message ( HTML_file )
             return HTML_file
-        
+
         catch_any unanticipated_error
             log_to_file_unanticipated_error_handler.create.handle_error ( unanticipated_error )
             return se_unanticipated_error.to_runtime_error ( unanticipated_error )
         .
     .
-    
+
     functions access:private
-    
+
         function default_input_file_supplier -> object_supplier<absolute_or_relative_file_path> or null
-        
+
             const path = se_PML_default_values.relative_input_file_path on_null: return null
-            
+
             return { path }
         .
     .

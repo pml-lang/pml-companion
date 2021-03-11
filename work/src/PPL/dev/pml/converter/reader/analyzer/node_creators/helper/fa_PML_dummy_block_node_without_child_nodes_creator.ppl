@@ -11,6 +11,6 @@ factory PML_dummy_block_node_without_child_nodes_creator type:PML_node_creator<P
         return PML_youtube_video_node.create ( title = null, node_id = null, caption = null, HTML_attributes = null,
             youtube_video_id = "dummy" )
     .
-    
+
     creator create kind:in_all
 .

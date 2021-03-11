@@ -6,20 +6,20 @@ type PML_formal_node <node child_of:PML_node usage:in_out> factories:none
     inherit has_to_long_string
 
     attributes
-    
+
         tags ordered_set<string>
-        
+
         // attributes
         a_attributes formal_parameters<*> or null
         default_attribute_id parameter_id or null default:null
         HTML_attributes_allowed yes_no
-        
+
         node_creator PML_node_creator<node>
         HTML_writer PML_node_HTML_writer<node>
 
         documentation simple_documentation
     .
-    
+
     attributes_check
         if default_attribute_id is not null then
             check i_attributes #r null
@@ -27,11 +27,11 @@ type PML_formal_node <node child_of:PML_node usage:in_out> factories:none
             check i_attributes.contains_id ( default_attribute_id )
         .
     .
-    
+
     functions
 
         standard_tag -> string
-    
+
         tags_as_string -> string
     .
 .

@@ -6,7 +6,7 @@ service PML_link_formal_node
     att attributes formal_parameters<*>
         default
             const r = any_type_formal_parameters_builder.create
-            
+
             r.add<URL> (
                 ids = [# "url" ]
                 value_parser = { string => URL.try_parse ( string ) }
@@ -19,7 +19,7 @@ service PML_link_formal_node
                 title = "URL text"
                 description = "The text to be displayed instead of the URL. If no text is specified then the URL itself is displayed."
                 examples = '''text = our website''' )
-            
+
             return r.make_immutable
         .
     .
@@ -37,4 +37,3 @@ service PML_link_formal_node
                 description = "A URL link to a resource, such as a website or a file to download."
                 examples = '''Please have a look at [link url=http://www.example.com/articles/123 text=this article] for more information.''' ) )
 .
-    

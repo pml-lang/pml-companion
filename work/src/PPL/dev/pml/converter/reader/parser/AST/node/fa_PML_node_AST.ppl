@@ -6,15 +6,15 @@ factory PML_node_AST
     function non_HTML_attributes = get_attributes ( HTML_attributes = no )
 
     function HTML_attributes = get_attributes ( HTML_attributes = yes )
-    
+
     function get_attributes access:private ( HTML_attributes yes_no ) -> map<key:string, value:string or null> or null
-    
+
         if a_attributes is null then
             return null
         .
-        
+
         const r = mutable_map_with_nulls<key:string, value:string or null>.create
-        
+
         repeat for each value attribute_AST in a_attributes
             const id = attribute_AST.id.value
             const is_HTML_attribute = id.size ># se_PML_attribute_ids.HTML_start_size and \
@@ -26,34 +26,34 @@ factory PML_node_AST
                     value = se_PML_code.unescape_attribute_value ( attribute_AST.value.value ) )
             .
         .
-        
+
         return r.make_immutable_or_null
     .
-    
+
     function is_text_node = tag.value =v se_PML_standard_formal_nodes.text.standard_tag
-    
+
     function is_whitespace_text_node
-    
+
         if not is_text_node then
             return no
         .
-        
+
         const text = a_raw_text_content
         assert text is not null
         return text.value.matches_regex ( se_PML_tokenizer_config_default_values.whitespace )
     .
-    
+
     function attribute_value_token_or_throw
-        
+
         const r = attribute_value_token_or_null ( i_formal_parameter )
         assert r is not null
         return r
     .
-    
+
     function attribute_value_token_or_null
-        
+
         assert a_attributes is not null
-        
+
         repeat for each id in formal_parameter.ids
             if attributes.get_or_null ( id.value ) as attribute_AST is not null then
                 return attribute_AST.value
@@ -61,40 +61,40 @@ factory PML_node_AST
         .
         return null
     .
-    
+
     function to_string
-    
+
         const r = mutable_string.create
-        
+
         r.append ( a_tag.value )
-        
+
         if a_attributes is not null then
             repeat for each attribute in a_attributes
                 r.append ( " " )
                 r.append ( attribute.to_string )
             .
         .
-        
+
         r.append ( """ {{a_tag.position.to_string}}""" )
-        
+
         return r.to_string
     .
-    
+
     function to_long_string
-    
+
         const r = mutable_string.create
-        
+
         r.append_line ( to_string )
-        
+
         if a_child_nodes is not null then
             repeat for each child_node in a_child_nodes
                 r.append_line ( "Child-node:" )
                 r.append_line ( child_node.to_long_string )
             .
         .
-        
+
         return r.to_string
     .
-    
+
     creator create kind:in_all
 .

@@ -12,7 +12,7 @@ service PML_youtube_video_formal_node
                 title = "Youtube Video Id"
                 description = "The identifier of the Youtube video. This identifier is displayed in the video's URL on Youtube. Example: If the URL of the Youtube video is https://www.youtube.com/watch?v=NUDhA4hXdS8 then the identifier is NUDhA4hXdS8."
                 examples = "youtube_id = NUDhA4hXdS8" )
-                
+
             r.add<pos_32 or null> (
                 ids = [# "width" ]
                 default_value_supplier = { null }
@@ -20,7 +20,7 @@ service PML_youtube_video_formal_node
                 title = "Video Width"
                 description = "The width of the video, expressed in pixels."
                 examples = "width = 600" )
-                
+
             r.add<pos_32 or null> (
                 ids = [# "height" ]
                 default_value_supplier = { null }
@@ -33,7 +33,7 @@ service PML_youtube_video_formal_node
 
             // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
             // TD add other Youtube parameters
-            
+
             return r.make_immutable
         .
     .
@@ -53,4 +53,3 @@ service PML_youtube_video_formal_node
     width = 600 \
     height = 400]''' ) )
 .
-    

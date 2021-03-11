@@ -29,17 +29,17 @@ service formal_node_attributes
             title = "Node Caption"
             description = "An optional caption (small text) associated with the node. The caption is typically displayed below the node."
             examples = '''caption = "Better health through exercise!"''' ) )
-            
+
 
     function optional_id_and_title_attributes -> formal_parameters<*>
-        
+
         return formal_parameters_builder_with_optional_id_and_title.make_immutable
     .
 
     function formal_parameters_builder_with_optional_id_and_title -> any_type_formal_parameters_builder
 
         const r = any_type_formal_parameters_builder.create
-        
+
         r.add_parameter ( a_id )
         r.add_parameter ( a_title )
 

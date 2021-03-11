@@ -4,25 +4,25 @@
 factory PML_monospace_node_creator type:PML_node_creator<PML_monospace_node>
 
     function create_node
-    
+
         const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
 
         se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
             const node_id = id
             const title = title )
-            
+
 //        const keep_indent = attributes.get_value<yes_no> ( se_PML_monospace_formal_node.keep_indent_parameter_id )
-            
+
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
 
         i_context.set_keep_whitespace_in_text ( yes )
-        
+
         const child_nodes = i_context.create_non_empty_child_inline_nodes ( i_node_AST ) on_error: return_error
-        
+
         i_context.set_keep_whitespace_in_text ( no )
-        
+
         return PML_monospace_node.create ( node_id, title, HTML_attributes, child_nodes )
     .
-    
+
     creator create kind:in_all
 .

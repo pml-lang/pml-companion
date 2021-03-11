@@ -4,6 +4,6 @@
 factory PML_youtube_video_node
 
     function tag = se_PML_standard_formal_nodes.youtube_video.standard_tag
-    
+
     creator create kind:in_all
 .

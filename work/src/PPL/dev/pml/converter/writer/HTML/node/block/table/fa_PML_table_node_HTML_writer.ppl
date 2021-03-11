@@ -16,9 +16,9 @@ factory PML_table_node_HTML_writer type:PML_node_HTML_writer<PML_table_node>
             i_node,
             HTML_tag_name = "table"
             CSS_class_name = "pml-table" )
-            
+
         context.write_node_caption ( i_node.caption )
     .
-    
+
     creator create kind:in_all
 .

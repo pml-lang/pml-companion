@@ -4,12 +4,12 @@
 factory PML_table_footer_node_HTML_writer type:PML_node_HTML_writer<PML_table_footer_node>
 
     function write
-    
+
         context.write_block_node_with_child_nodes (
             i_node,
             HTML_tag_name = "tfoot"
             CSS_class_name = "pml-table-footer" )
     .
-    
+
     creator create kind:in_all
 .

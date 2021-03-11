@@ -6,14 +6,14 @@ service PML_quote_formal_node
     att attributes formal_parameters<*>
         default
             const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
-            
+
             r.add_string_or_null_parameter (
                 ids = [# "source" ]
                 default_value_supplier = { null }
                 title = "Source of Quote"
                 description = "The source of the quote, such as the name of a person, the title of an article, etc."
                 examples = "source = Dalai Lama" )
-            
+
             return r.make_immutable
         .
     .
@@ -33,4 +33,3 @@ service PML_quote_formal_node
     Everything should be as simple as possible, but not simpler.
 ]''' ) )
 .
-    

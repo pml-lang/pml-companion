@@ -6,11 +6,11 @@ factory PML_source_code_node_creator type:PML_node_creator<PML_source_code_node>
     function create_node
 
         const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
-            
+
         se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
             const node_id = id
             const title = title )
-            
+
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
 
         const text = i_context.normalize_text_in_node_with_raw_text_content ( i_node_AST ) on_error: return_error
@@ -24,6 +24,6 @@ factory PML_source_code_node_creator type:PML_node_creator<PML_source_code_node>
         return PML_source_code_node.create (
             node_id, title, HTML_attributes, text, language, use_highlighter )
     .
-    
+
     creator create kind:in_all
 .

@@ -4,10 +4,10 @@
 factory PML_source_code_node_HTML_writer type:PML_node_HTML_writer<PML_source_code_node>
 
     function write
-    
+
         const code = i_node.text
 %write_PML_source_code_HTML
     .
-    
+
     creator create kind:in_all
 .

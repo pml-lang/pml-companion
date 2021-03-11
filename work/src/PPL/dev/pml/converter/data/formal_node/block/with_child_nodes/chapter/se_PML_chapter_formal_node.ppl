@@ -6,13 +6,13 @@ service PML_chapter_formal_node
     att attributes formal_parameters<*>
         default
             const r = any_type_formal_parameters_builder.create
-            
+
             r.add_string_parameter (
                 ids = [# se_PML_attribute_ids.title ]
                 title = "Chapter Title"
                 examples = "title = Fundamental Concepts" )
             r.add_parameter ( se_formal_node_attributes.id )
-            
+
             return r.make_immutable
         .
     .
@@ -37,4 +37,3 @@ service PML_chapter_formal_node
     ]
 ]''' ) )
 .
-    

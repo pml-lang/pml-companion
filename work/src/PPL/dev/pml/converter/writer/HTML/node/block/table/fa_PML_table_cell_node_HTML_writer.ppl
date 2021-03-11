@@ -10,6 +10,6 @@ factory PML_table_cell_node_HTML_writer type:PML_node_HTML_writer<PML_table_cell
             HTML_tag_name = "td"
             CSS_class_name = "pml-table-body-cell" )
     .
-    
+
     creator create kind:in_all
 .

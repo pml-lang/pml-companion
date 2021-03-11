@@ -4,10 +4,10 @@
 factory PML_verbatim_text_node_creator type:PML_node_creator<PML_verbatim_text_node>
 
     function create_node
-        
+
         const text_node = i_context.require_single_text_child_node ( i_node_AST ) on_error: return_error
         return PML_verbatim_text_node.create ( text_node.text )
     .
-    
+
     creator create kind:in_all
 .

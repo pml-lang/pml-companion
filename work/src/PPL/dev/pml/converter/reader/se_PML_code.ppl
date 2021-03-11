@@ -9,7 +9,7 @@ service PML_code
     .///
 
     function unescape_text ( string ) -> string
-        
+
         return i_string \
             .replace_all (
                 to_replace = '''\['''
@@ -32,7 +32,7 @@ service PML_code
     .
 
     function unescape_attribute_value ( string ) -> string
-        
+
         return unescape_text ( i_string )
     .
 .

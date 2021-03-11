@@ -4,7 +4,6 @@
 factory PML_node_attribute_AST
 
     function to_string = """{{a_id.value}}={{a_value.value}}"""
-    
+
     creator create kind:in_all
 .
-    

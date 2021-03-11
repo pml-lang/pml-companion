@@ -6,7 +6,7 @@ type single_resource_PML_tokenizer
     inherit PML_tokenizer
 
     functions
-    
+
         current_position -> text_position
 
         is_at_string ( string ) -> yes_no

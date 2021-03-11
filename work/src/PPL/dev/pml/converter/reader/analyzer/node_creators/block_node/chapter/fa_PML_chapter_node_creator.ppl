@@ -4,24 +4,24 @@
 factory PML_chapter_node_creator type:PML_node_creator<PML_chapter_node>
 
     function create_node
-    
+
         const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error:return_error
-        
+
         const title = attributes.require_value<string> ( se_PML_attribute_ids.title )
 
         const node_id = attributes.require_value<string or null> ( se_PML_attribute_ids.id ) \
             if_null: i_context.get_auto_chapter_id ( title )
-        
+
         const level = i_context.current_chapter_level
-        
+
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
 
         i_context.increase_current_chapter_level
         const child_nodes = i_context.create_emptyable_child_block_nodes ( i_node_AST ) on_error: return_error
         i_context.decrease_current_chapter_level
-        
+
         return PML_chapter_node.create ( node_id, title, level, HTML_attributes, child_nodes )
     .
-    
+
     creator create kind:in_all
 .

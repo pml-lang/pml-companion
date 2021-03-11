@@ -4,9 +4,9 @@
 factory PML_document_writer
 
     attributes access:private
-        
+
         t_writer throwing_string_writer_wrapper
-        
+
         current_indent mutable_string default:mutable_string.create
         single_indent string default: "    "
     .
@@ -14,45 +14,45 @@ factory PML_document_writer
     // TD escape
 
     functions
-    
+
         // basics
 
         write
             t_writer.write ( string )
         .
-        
+
         write_line
             t_writer.write_line ( string )
         .
-        
+
         write_new_line
             t_writer.write_new_line
         .
-        
-        
+
+
         // indent
 
         increase_indent
             a_current_indent.append ( a_single_indent )
         .
-    
+
         decrease_indent
             a_current_indent.remove_last_n ( a_single_indent.size )
         .
-        
+
         write_indent
             if not a_current_indent.is_empty then
                 t_writer.write ( a_current_indent.to_string )
             .
         .
-        
+
         write_indented_line
             write_indent
             write_line ( i_string )
         .
-        
+
         write_indented_lines
-        
+
             multiline_string.create ( i_string ).for_each_line ( { line ->
                 if line is not null then
                     write_indented_line ( line )
@@ -61,15 +61,15 @@ factory PML_document_writer
                 .
             } )
         .
-        
-        
+
+
         // nodes
-        
+
         write_block_node_start
-        
-             write_node_start ( i_tag_name, i_attributes )
+
+            write_node_start ( i_tag_name, i_attributes )
         .
-        
+
         write_block_node_start_on_distinct_line
 
             write_indent
@@ -82,7 +82,7 @@ factory PML_document_writer
 
             write_node_end ( i_tag_name )
         .
-        
+
         write_HTML_block_tag_end_on_distinct_line
 
             decrease_indent
@@ -90,18 +90,18 @@ factory PML_document_writer
             write_HTML_block_tag_end ( i_tag_name )
             write_new_line
         .
-        
+
         write_inline_node_start
 
             write_node_start ( i_tag_name, i_attributes )
         .
-        
+
         write_inline_node_end
             write_node_end ( tag_name = null )
         .
 
         write_node_attributes
-        
+
             write_character ( se_PML_tokenizer_config_default_values.attributes_start_symbol )
 
             repeat for each id, value in attributes is_first:is_first
@@ -113,29 +113,29 @@ factory PML_document_writer
 
             write_character ( se_PML_tokenizer_config_default_values.attributes_end_symbol )
         .
-        
-        
+
+
         // specific nodes
-        
+
         start_document
-        
+
             const attributes = mutable_map<key:string value:string>.create
-            
+
             attributes.add ( key = se_PML_attribute_ids.title, value = i_title )
-            
+
             if i_authors is not null then
                 attributes.add ( key = "authors", value = i_authors )
             .
-            
+
             if i_date is not null then
                 attributes.add ( key = "date", value = i_date.format )
             .
-            
+
             write_block_node_start_on_distinct_line (
                 tag_name = se_PML_document_formal_node.node.standard_tag
                 attributes = attributes.make_immutable )
         .
-        
+
         end_document
             write_HTML_block_tag_end_on_distinct_line ( tag_name = null )
             t_writer.try_close
@@ -144,37 +144,37 @@ factory PML_document_writer
         start_chapter
 
             const attributes = mutable_map<key:string value:string>.create
-            
+
             attributes.add ( key = se_PML_attribute_ids.title, value = i_title )
-            
+
             if i_id is not null then
                 attributes.add ( key = se_PML_attribute_ids.id, value = i_id )
             .
-            
+
             write_block_node_start_on_distinct_line (
                 tag_name = se_PML_chapter_formal_node.node.standard_tag
                 attributes = attributes.make_immutable )
         .
-        
+
         end_chapter
             write_HTML_block_tag_end_on_distinct_line ( tag_name = null )
         .
-        
+
         write_escaped_paragraph
-        
+
 //            write_new_line
             write_indent
             write_line ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}p {{escape_HTML(i_string)}}{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" )
         .
-        
+
         write_non_escaped_paragraph
-        
+
 //            write_new_line
             write_indent
             write_line ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}p {{i_string}}{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" )
         .
 
-        // TD should be made faster        
+        // TD should be made faster
         escape_PML = i_string.replace_all (
             to_replace = se_PML_tokenizer_config_default_values.node_start_symbol.to_string
             replace_by = """\{{se_PML_tokenizer_config_default_values.node_start_symbol}}""" ).replace_all (
@@ -182,12 +182,12 @@ factory PML_document_writer
             replace_by = """\{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" ).replace_all (
             to_replace = "="
             replace_by = '''\=''' )
-            
+
         escape_HTML = se_HTML_utilities.escape_HTML ( i_string )
     .
 
     functions access:private
-    
+
         write_character ( character )
             write ( character.to_string )
         .
@@ -195,12 +195,12 @@ factory PML_document_writer
         write_node_start ( tag_name string, attributes map<key:string, value:string> or null )
 
             write ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}{{i_tag_name}} """ )
-        
+
             if i_attributes is not null then
                 write_node_attributes ( i_attributes )
             .
         .
-        
+
         write_node_end ( tag_name string or null )
 
             if i_tag_name is not null then
@@ -212,15 +212,15 @@ factory PML_document_writer
         escape_quote ( string ) -> string = i_string.replace_all (
             to_replace = '''"'''
             replace_by = '''\"''' )
-        
+
     .
-        
-    
+
+
     creator create kind:in_all
-        
+
         this.writer = i_writer
         this.t_writer = throwing_string_writer_wrapper.create ( i_writer )
-        
+
         return this
     .
 .

@@ -4,6 +4,6 @@
 factory PML_insert_source_code_node
 
     function tag = se_PML_standard_formal_nodes.insert_source_code.standard_tag
-    
+
     creator create kind:in_all
 .

@@ -1,7 +1,7 @@
 service PML_tokenizer_config_default_values
 
     attributes type:character
-        
+
 //        node_start_symbol = '{'
 //        node_end_symbol = '}'
         node_start_symbol = '['
@@ -13,7 +13,7 @@ service PML_tokenizer_config_default_values
     .
 
     attributes type:string
-        
+
 //        comment_start = "{-"
 //        comment_end   = "-}"
         comment_start = get_comment_start ( node_start_symbol )
@@ -28,12 +28,12 @@ service PML_tokenizer_config_default_values
 
 //        node_tag = regex.create ( "[^ \t\r\n{}:]+" )
         node_tag = get_node_tag_regex ( node_start_symbol, node_end_symbol )
-        
+
         attribute_id = regex.create ( '''[a-zA-Z][a-zA-Z0-9_]*''' )
         attribute_id_and_assignment_symbol = regex.create ( '''([a-zA-Z][a-zA-Z0-9_]*)[ \t]*=''' )
-        
+
         attribute_id_value_separator = regex.create ( '''[ \t]*=[ \t]*''' )
-        
+
         quoted_attribute_value = regex.create ( '''"[^\r\n]*?[^\\]"''' )
 //        unquoted_attribute_value = regex.create ( '''(\\\{|\\\}|\\\=|[^\r\n{}=])+[^\\\r\n{}=]''' )
         unquoted_attribute_value = get_unquoted_attribute_value_regex ( node_start_symbol, node_end_symbol )
@@ -43,18 +43,18 @@ service PML_tokenizer_config_default_values
 
 //        text_end = regex.create ( '''[^\\][\{\}]''' )
         text_end = get_text_end_regex ( node_start_symbol, node_end_symbol )
-    
+
 //        comment_snippet_end = regex.create ( '''(-\})|(\{-)''' )
         comment_snippet_end = get_comment_snippet_end_regex ( node_start_symbol, node_end_symbol )
 
         line_continuation = regex.create ( '''[ \t]*\\\r?\n''' )
-        
+
         whitespace = regex.create ( '''[ \t\r\n]+''' )
     .
 
     function get_comment_start ( node_start_symbol character ) -> string = \
         """{{i_node_start_symbol}}-"""
-    
+
     function get_comment_end ( node_end_symbol character ) -> string = \
         """-{{i_node_end_symbol}}"""
 

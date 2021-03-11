@@ -10,6 +10,6 @@ type PML_monospace_node
     .
 
     inherit PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
-    
+
 //    att keep_indent yes_no default:no
 .

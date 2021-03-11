@@ -4,22 +4,22 @@
 factory PML_admonition_node_HTML_writer type:PML_node_HTML_writer<PML_admonition_node>
 
     function write
-    
+
         context.write_block_node_start ( node, HTML_tag_name = "div" CSS_class_name = "pml-admonition" )
 
         context.increase_indent
-        
+
         context.write_HTML_tag_start ( write_indent = yes, HTML_tag_name = "div", CSS_class_name = "pml-admonition-label", append_new_line = no )
         context.write_escaped_HTML ( i_node.label )
         context.write_HTML_tag_end ( write_indent = no, HTML_tag_name = "div", append_new_line = yes )
-        
+
         context.write_HTML_block_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-admonition-content" )
         context.write_nodes ( nodes = i_node.child_nodes, increase_indent = yes )
         context.write_HTML_block_tag_end ( "div" )
-        
+
         context.decrease_indent
         context.write_HTML_block_tag_end ( "div" )
     .
-    
+
     creator create kind:in_all
 .

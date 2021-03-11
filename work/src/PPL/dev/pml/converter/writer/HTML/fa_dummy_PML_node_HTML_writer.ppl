@@ -6,6 +6,6 @@ factory dummy_PML_node_HTML_writer type:PML_node_HTML_writer<PML_node>
     function write
         throw "This should never be reached"
     .
-    
+
     creator create kind:in_all
 .

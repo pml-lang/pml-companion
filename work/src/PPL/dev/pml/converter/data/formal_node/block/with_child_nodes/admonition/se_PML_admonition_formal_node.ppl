@@ -6,13 +6,13 @@ service PML_admonition_formal_node
     att attributes formal_parameters<*>
         default
             const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
-            
+
             r.add_string_parameter (
                 ids = [# "label" ]
                 title = "Label"
                 description = "The admonition's label, such as 'Note', 'Tip', 'Warning', etc."
                 examples = "label = Warning" )
-            
+
             return r.make_immutable
         .
     .
@@ -32,4 +32,3 @@ service PML_admonition_formal_node
     We will have a look at some [i striking] examples later in the book.
 ]''' ) )
 .
-    

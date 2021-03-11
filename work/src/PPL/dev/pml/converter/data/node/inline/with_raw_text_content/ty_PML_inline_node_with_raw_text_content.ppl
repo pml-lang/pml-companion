@@ -4,6 +4,6 @@
 type PML_inline_node_with_raw_text_content
 
     inherit PML_inline_node
-    
+
     att text string
 .

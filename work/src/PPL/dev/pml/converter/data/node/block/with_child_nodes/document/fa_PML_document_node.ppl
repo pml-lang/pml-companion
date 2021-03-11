@@ -4,13 +4,13 @@
 factory PML_document_node
 
     function tag = se_PML_standard_formal_nodes.document.standard_tag
-    
+
     function chapters
-    
+
         if a_child_nodes is null then
             return null
         .
-        
+
         const r = mutable_list<PML_chapter_node>.create
         repeat for each child_node in a_child_nodes
             case type of child_node
@@ -22,6 +22,6 @@ factory PML_document_node
         .
         return r.make_immutable_or_null
     .
-    
+
     creator create kind:in_all
 .

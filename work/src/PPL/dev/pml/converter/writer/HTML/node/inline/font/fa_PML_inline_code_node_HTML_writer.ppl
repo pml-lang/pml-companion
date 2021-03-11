@@ -4,11 +4,11 @@
 factory PML_inline_code_node_HTML_writer type:PML_node_HTML_writer<PML_inline_code_node>
 
     function write
-    
+
         context.write_HTML_inline_tag_start ( HTML_tag_name = "code", CSS_class_name = "pml-inline-code" )
         context.write_escaped_HTML ( i_node.text )
         context.write_HTML_inline_tag_end ( "code" )
     .
-    
+
     creator create kind:in_all
 .

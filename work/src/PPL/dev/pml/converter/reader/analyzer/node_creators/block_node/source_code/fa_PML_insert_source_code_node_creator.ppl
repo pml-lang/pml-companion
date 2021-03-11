@@ -4,9 +4,9 @@
 factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_source_code_node>
 
     function create_node
-    
+
         const attributes = i_context.get_non_HTML_attributes ( i_node_AST ) on_error: return_error
-        
+
         se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
             const node_id = id
             const title = title )
@@ -14,7 +14,7 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
         const file_path = attributes.require_value<absolute_or_relative_file_path> ( se_PML_attribute_ids.file )
         const file = file.create_for_absolute_or_relative_path_in_working_directory ( file_path )
         const code = define_code ( file, i_node_AST, attributes, i_context ) on_error: return_error
-        
+
         const language = attributes.require_value<string> (
             se_PML_source_code_formal_node.language_parameter.standard_id.value )
 
@@ -26,30 +26,30 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
         return PML_insert_source_code_node.create (
             node_id, title, file, code, language, use_highlighter, HTML_attributes )
     .
-    
+
     functions access:private
-    
+
         function define_code -> string or anticipated_error
             in file file
             in node_AST PML_node_AST
             in attributes any_type_parameters
             in context PML_node_creator_context
-        
+
             const file_code = se_text_file_reader.try_read_non_empty_content ( file ) on_error: return_error
 
             const from_regex = attributes.require_value<regex or null> (
                 se_PML_insert_source_code_formal_node.from_regex_parameter_id )
             const to_regex = attributes.require_value<regex or null> (
                 se_PML_insert_source_code_formal_node.to_regex_parameter_id )
-            
+
             if from_regex =r null and to_regex =r null then
                 return file_code
             .
-            
+
             variable code = file_code
-            
+
             if from_regex is not null then
-            
+
                 const regex_match_result = code.find_first_regex ( from_regex )
                 if regex_match_result is null then
                     return PML_code_error.create_for_token (
@@ -58,7 +58,7 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
                             se_PML_insert_source_code_formal_node.from_regex_parameter )
                         resource = i_node_AST.resource )
                 .
-                
+
                 const include_from_regex = attributes.require_value<yes_no> (
                     se_PML_insert_source_code_formal_node.include_from_regex_parameter_id )
                 const start_index = \
@@ -72,10 +72,10 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
                             se_PML_insert_source_code_formal_node.from_regex_parameter )
                         resource = i_node_AST.resource )
                 .
-                
+
                 code = code.substring_from ( start_index )
             .
-            
+
             if to_regex is not null then
 
                 const regex_match_result = code.find_first_regex ( to_regex )
@@ -86,7 +86,7 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
                             se_PML_insert_source_code_formal_node.to_regex_parameter )
                         resource = i_node_AST.resource )
                 .
-                
+
                 const include_to_regex = attributes.require_value<yes_no> (
                     se_PML_insert_source_code_formal_node.include_to_regex_parameter_id )
                 const end_index = \
@@ -100,14 +100,14 @@ factory PML_insert_source_code_node_creator type:PML_node_creator<PML_insert_sou
                             se_PML_insert_source_code_formal_node.to_regex_parameter )
                         resource = i_node_AST.resource )
                 .
-                
+
                 code = code.substring_to ( end_index )
             .
-            
+
             return i_context.remove_smallest_indent_in_all_lines_of_text ( code )
         .
     .
-    
-    
+
+
     creator create kind:in_all
 .

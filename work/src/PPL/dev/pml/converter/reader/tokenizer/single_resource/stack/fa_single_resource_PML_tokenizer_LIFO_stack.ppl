@@ -13,7 +13,7 @@ factory single_resource_PML_tokenizer_LIFO_stack
     .
 
     function pop
-    
+
         if a_list.is_empty then
             return null
         else
@@ -22,6 +22,6 @@ factory single_resource_PML_tokenizer_LIFO_stack
             return r
         .
     .
-    
+
     creator create kind:in_all
 .

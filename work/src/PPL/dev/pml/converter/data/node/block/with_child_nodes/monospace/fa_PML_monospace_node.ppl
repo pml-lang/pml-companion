@@ -4,6 +4,6 @@
 factory PML_monospace_node
 
     function tag = se_PML_standard_formal_nodes.monospace.standard_tag
-    
+
     creator create kind:in_all
 .

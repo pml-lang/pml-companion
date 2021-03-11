@@ -24,18 +24,18 @@ service start
                 exit_system_on_window_close = yes )
         .
     .
-    
+
     functions access:private
-        
+
         function handle_success_result ( HTML_file file )
-            
+
             if se_OS_config.OS_is_Windows then
                 handle_success_result_on_Windows ( HTML_file )
             else
                 handle_success_result_on_non_Windows ( HTML_file )
             .
         .
-        
+
         function handle_success_result_on_Windows ( HTML_file file )
 
             const question = """The following file has been created:
@@ -45,7 +45,7 @@ Do you want to open it in your default browser?"""
                 title = "Success"
                 question
                 default_answer = yes )
-                
+
             if open_file is not null then
                 if open_file then
                     const open_error = se_desktop_utilities.open_file_in_default_browser ( file = HTML_file )
@@ -56,14 +56,14 @@ Do you want to open it in your default browser?"""
             .
         .
 
-        // se_desktop_utilities.open_file_in_default_browser freezes the application on Linux Mint and Fedora (2020-06-10)    
+        // se_desktop_utilities.open_file_in_default_browser freezes the application on Linux Mint and Fedora (2020-06-10)
         function handle_success_result_on_non_Windows ( HTML_file file )
 
             const info = """The following file has been created:
 {{HTML_file.to_string}}"""
             se_GUI_dialogs.show_info_and_continue ( title = "Success", info )
         .
-        
+
         function handle_error_result ( error anticipated_error )
 
             case type of error

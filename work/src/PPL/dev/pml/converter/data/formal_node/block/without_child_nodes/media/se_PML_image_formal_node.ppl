@@ -75,7 +75,7 @@ service PML_image_formal_node
                 examples = "link = http://www.example.com/path/image.png" )
 
             r.add_parameter ( se_formal_node_attributes.caption )
-            
+
             return r.make_immutable
         .
     .
@@ -95,4 +95,3 @@ service PML_image_formal_node
     title = Strawberries (Photo by Jacek Dylag on Unsplash) \
     link = https://unsplash.com/photos/kH3Sr9K8EBA]''' ) )
 .
-    

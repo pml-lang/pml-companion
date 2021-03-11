@@ -4,11 +4,10 @@
 type single_resource_PML_tokenizer_LIFO_stack
 
     functions
-        
+
         push ( tokenizer single_resource_PML_tokenizer )
-    
+
         pop -> single_resource_PML_tokenizer or null
     .
 .
 
-    

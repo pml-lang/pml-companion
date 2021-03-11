@@ -4,19 +4,19 @@
 type PML_node_creator_context
 
     functions
-    
+
         get_non_HTML_attributes ( node_AST PML_node_AST ) -> any_type_parameters or PML_code_error
-    
+
         get_HTML_attributes ( node_AST PML_node_AST ) -> map<key:string, value:string or null> or null
-    
+
         current_chapter_level -> pos_32
-        
+
         increase_current_chapter_level
-        
+
         decrease_current_chapter_level
 
         get_auto_chapter_id ( chapter_title string ) -> string
-        
+
         title_of_existing_node_id -> string or null or PML_code_error
             in node_id string
             in node_AST PML_node_AST
@@ -26,27 +26,27 @@ type PML_node_creator_context
         create_non_empty_child_block_nodes -> list<PML_block_node> or anticipated_error
             in node_AST PML_node_AST
         .
-        
+
         create_non_empty_child_inline_nodes -> list<PML_inline_node> or anticipated_error
             in node_AST PML_node_AST
         .
-        
+
         create_emptyable_child_block_nodes -> list<PML_block_node> or null or anticipated_error
             in node_AST PML_node_AST
         .
-        
+
         create_emptyable_child_inline_nodes -> list<PML_inline_node> or null or anticipated_error
             in node_AST PML_node_AST
         .
-        
+
         require_single_text_child_node ( node_AST PML_node_AST ) -> PML_text_node or anticipated_error
-        
+
         set_keep_whitespace_in_text ( value yes_no )
-        
+
         normalize_text_in_node_with_raw_text_content ( node_AST PML_node_AST ) -> string or PML_code_error
-        
+
         remove_smallest_indent_in_all_lines_of_text ( text string ) -> string
-        
+
 ///
         remove_smallest_indent_in_all_lines_of_text_node ( node_AST PML_node_AST ) -> string
 

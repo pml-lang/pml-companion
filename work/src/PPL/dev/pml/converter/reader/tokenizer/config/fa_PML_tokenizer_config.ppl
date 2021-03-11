@@ -13,7 +13,7 @@ factory PML_tokenizer_config
         this.attributes_start_symbol = se_PML_tokenizer_config_default_values.attributes_start_symbol
         this.attributes_end_symbol = se_PML_tokenizer_config_default_values.attributes_end_symbol
         this.attribute_assignment_symbol = se_PML_tokenizer_config_default_values.attribute_assignment_symbol
-        
+
         this.comment_start = se_PML_tokenizer_config_default_values.get_comment_start ( node_start_symbol )
         this.comment_end   = se_PML_tokenizer_config_default_values.get_comment_end   ( node_end_symbol )
 
@@ -21,13 +21,13 @@ factory PML_tokenizer_config
 
         this.node_tag = se_PML_tokenizer_config_default_values.get_node_tag_regex (
             node_start_symbol, node_end_symbol )
-        
+
         this.attribute_id = se_PML_tokenizer_config_default_values.attribute_id
         this.attribute_id_and_assignment_symbol = \
             se_PML_tokenizer_config_default_values.attribute_id_and_assignment_symbol
-        
+
         this.attribute_id_value_separator = se_PML_tokenizer_config_default_values.attribute_id_value_separator
-        
+
         this.quoted_attribute_value = se_PML_tokenizer_config_default_values.quoted_attribute_value
         this.unquoted_attribute_value = se_PML_tokenizer_config_default_values.get_unquoted_attribute_value_regex (
             node_start_symbol, node_end_symbol )
@@ -37,12 +37,12 @@ factory PML_tokenizer_config
 
         this.text_end = se_PML_tokenizer_config_default_values.get_text_end_regex (
             node_start_symbol, node_end_symbol )
-    
+
         this.comment_snippet_end = se_PML_tokenizer_config_default_values.get_comment_snippet_end_regex (
             node_start_symbol, node_end_symbol )
 
         this.line_continuation = se_PML_tokenizer_config_default_values.line_continuation
-        
+
         this.whitespace = se_PML_tokenizer_config_default_values.whitespace
 
         return this
@@ -59,7 +59,7 @@ factory PML_tokenizer_config
         this.attributes_start_symbol = se_PML_tokenizer_config_default_values.attributes_start_symbol
         this.attributes_end_symbol = se_PML_tokenizer_config_default_values.attributes_end_symbol
         this.attribute_assignment_symbol = se_PML_tokenizer_config_default_values.attribute_assignment_symbol
-        
+
         this.comment_start = se_PML_tokenizer_config_default_values.get_comment_start ( i_node_start_symbol )
         this.comment_end   = se_PML_tokenizer_config_default_values.get_comment_end   ( i_node_end_symbol )
 
@@ -67,13 +67,13 @@ factory PML_tokenizer_config
 
         this.node_tag = se_PML_tokenizer_config_default_values.get_node_tag_regex (
             i_node_start_symbol, i_node_end_symbol )
-        
+
         this.attribute_id = se_PML_tokenizer_config_default_values.attribute_id
         this.attribute_id_and_assignment_symbol = \
             se_PML_tokenizer_config_default_values.attribute_id_and_assignment_symbol
-        
+
         this.attribute_id_value_separator = se_PML_tokenizer_config_default_values.attribute_id_value_separator
-        
+
         this.quoted_attribute_value = se_PML_tokenizer_config_default_values.quoted_attribute_value
         this.unquoted_attribute_value = se_PML_tokenizer_config_default_values.get_unquoted_attribute_value_regex (
             node_start_symbol, node_end_symbol )
@@ -83,12 +83,12 @@ factory PML_tokenizer_config
 
         this.text_end = se_PML_tokenizer_config_default_values.get_text_end_regex (
             i_node_start_symbol, i_node_end_symbol )
-    
+
         this.comment_snippet_end = se_PML_tokenizer_config_default_values.get_comment_snippet_end_regex (
             node_start_symbol, node_end_symbol )
 
         this.line_continuation = se_PML_tokenizer_config_default_values.line_continuation
-        
+
         this.whitespace = se_PML_tokenizer_config_default_values.whitespace
 
         return this

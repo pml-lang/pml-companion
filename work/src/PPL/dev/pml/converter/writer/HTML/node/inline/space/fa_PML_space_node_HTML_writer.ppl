@@ -4,9 +4,9 @@
 factory PML_space_node_HTML_writer type:PML_node_HTML_writer<PML_space_node>
 
     function write
-    
+
         context.write ( "&nbsp;" )
     .
-    
+
     creator create kind:in_all
 .

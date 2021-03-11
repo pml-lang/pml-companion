@@ -6,7 +6,7 @@ service formal_node
     function is_block_node ( formal_node PML_formal_node<*> ) -> yes_no = not is_inline_node ( i_formal_node )
 
     function is_inline_node ( formal_node PML_formal_node<*> ) -> yes_no
-        
+
         case type of i_formal_node
             when PML_formal_inline_node<*>
                 return yes
@@ -16,7 +16,7 @@ service formal_node
     .
 
     function is_block_node_with_raw_text_content ( formal_node PML_formal_node<*> ) -> yes_no
-        
+
         case type of i_formal_node
             when PML_formal_block_node_with_raw_text_content<*>
                 return yes

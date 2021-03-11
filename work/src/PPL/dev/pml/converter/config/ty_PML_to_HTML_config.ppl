@@ -4,15 +4,15 @@
 type PML_to_HTML_config
 
     attributes
-        
+
         PML_input failable_string_supplier
-        
+
         resources_directory_path directory_path or null default: se_PML_default_values.resources_directory_path
-        
+
         output_directory_path directory_path default: se_PML_default_values.output_directory_path
-            
+
         HTML_output_file_name file_name
-            
+
         HTML_header failable_string_supplier or null \
             default: file_string_supplier.create ( se_PML_default_values.HTML_header_file )
 
@@ -28,7 +28,7 @@ type PML_to_HTML_config
 
         omit_CSS yes_no default:se_PML_default_values.omit_CSS
     .
-    
+
     attributes kind:variable
 
         document_TOC_position PML_TOC_position or null default:null
@@ -37,7 +37,7 @@ type PML_to_HTML_config
     .
 
     functions
-    
+
         HTML_output_file -> file
 
         TOC_position -> PML_TOC_position

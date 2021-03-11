@@ -4,6 +4,6 @@
 type PML_table_row_node
 
     inherit PML_block_node_with_child_nodes
-    
+
     inherit PML_has_HTML_attributes
 .

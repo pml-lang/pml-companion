@@ -4,13 +4,13 @@
 factory PML_span_node_creator type:PML_node_creator<PML_span_node>
 
     function create_node
-    
+
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
-    
+
         const child_nodes = i_context.create_non_empty_child_inline_nodes ( i_node_AST ) on_error: return_error
-        
+
         return PML_span_node.create ( HTML_attributes, child_nodes )
     .
-    
+
     creator create kind:in_all
 .

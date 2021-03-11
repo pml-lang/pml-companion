@@ -4,6 +4,6 @@
 factory PML_table_node
 
     function tag = se_PML_standard_formal_nodes.table.standard_tag
-    
+
     creator create kind:in_all
 .

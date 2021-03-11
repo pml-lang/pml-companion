@@ -4,7 +4,7 @@
 type PML_link_node
 
     inherit PML_inline_node_without_child_nodes, PML_has_HTML_attributes
-    
+
     attributes
         URL URL
         text string

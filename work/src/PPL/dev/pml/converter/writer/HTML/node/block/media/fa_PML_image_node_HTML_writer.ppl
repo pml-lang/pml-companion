@@ -4,13 +4,13 @@
 factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
 
     function write
-    
+
         // alignment
         context.write_indent_and_string ( "<figure" )
         context.write_node_id_attribute ( i_node )
         context.write_line ( """ style="text-align: {{i_node.alignment}}">""" )
         context.increase_indent
-        
+
         // title
         context.write_node_title ( i_node )
 
@@ -22,7 +22,7 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
 
         // image
         write_img ( i_node, context )
-        
+
         // close
 
         if i_node.link is not null then
@@ -32,12 +32,12 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
 
         context.decrease_indent
         context.write_indent_and_string_and_new_line ( "</figure>" )
-            
+
         context.write_node_caption ( i_node.caption )
     .
-    
+
     function write_img access:private ( node PML_image_node, context PML_HTML_writer_context )
-    
+
         variable CSS_class_name = "pml-image"
         if i_node.border then
             CSS_class_name = CSS_class_name & " pml-bordered"
@@ -45,10 +45,10 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
 
         context.write_indent_and_string ( "<img" )
         context.write_HTML_attributes_for_node ( node, CSS_class_name )
-        
+
         const Unix_path = se_directory_or_file_path.to_Unix_path ( i_node.source.to_string )
         context.write ( """ src="{{i_context.escape_HTML ( Unix_path )}}"""" )
-        
+
         if i_node.title as title is not null then
             context.write ( """ alt="{{i_context.escape_HTML ( title )}}"""" )
         .
@@ -60,9 +60,9 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
         if i_node.height as height is not null then
             context.write ( """ height="{{height}}"""" )
         .
-        
+
         context.write_line ( " />" )
     .
-    
+
     creator create kind:in_all
 .

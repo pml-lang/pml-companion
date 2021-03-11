@@ -4,6 +4,6 @@
 factory PML_paragraph_node
 
     function tag = se_PML_standard_formal_nodes.paragraph.standard_tag
-    
+
     creator create kind:in_all
 .

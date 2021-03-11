@@ -10,11 +10,11 @@ factory PML_HTML_code_node_creator type:PML_node_creator<PML_HTML_code_node>
         se_PML_node_creator_helper.get_node_id_and_title ( attributes ) (
             const node_id = id
             const title = title )
-            
+
         variable text = i_node_AST.raw_text_content?.value if_null: " "
-        
+
         return PML_HTML_code_node.create ( node_id, title, text )
     .
-    
+
     creator create kind:in_all
 .

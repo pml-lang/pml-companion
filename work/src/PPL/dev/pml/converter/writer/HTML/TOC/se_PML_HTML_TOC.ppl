@@ -7,7 +7,7 @@ service PML_HTML_TOC
         in document_node PML_document_node
         in context PML_HTML_writer_context
         in max_level pos_32 default:10
-        
+
         const chapters = i_document_node.chapters on_null: return
 
         write_TOC_start ( context, document_node )
@@ -20,7 +20,7 @@ service PML_HTML_TOC
     .
 
     functions access:private
-    
+
         function write_TOC_start ( context PML_HTML_writer_context, document_node PML_document_node )
 
             context.write_HTML_block_tag_start ( HTML_tag_name = "nav", CSS_class_name = "pml-toc" )
@@ -40,7 +40,7 @@ service PML_HTML_TOC
                 attributes = [ "id": "TOCTree" ], append_new_line = yes )
             context.increase_indent
         .
-    
+
         function write_TOC_end ( context PML_HTML_writer_context )
 
             context.decrease_indent
@@ -53,13 +53,13 @@ service PML_HTML_TOC
             in chapter PML_chapter_node
             in context PML_HTML_writer_context
             in max_level pos_32 default:10
-    
+
             const is_leaf = not chapter.has_sub_chapters or \
                 chapter.level >= max_level
-                
+
             const id = i_context.escape_HTML ( chapter.node_id )
             const title = i_context.escape_HTML ( chapter.title )
-                
+
             if is_leaf then
                 context.write_indent
                 context.write_HTML_inline_tag_start ( HTML_tag_name = "li", CSS_class_name = "pml-toc-leaf-node" )
@@ -102,13 +102,13 @@ service PML_HTML_TOC
                         write_TOC_chapter ( chapter = sub_chapter, i_context, i_max_level )
                     .
                 .
-                
+
                 context.decrease_indent
                 context.write_HTML_block_tag_end ( "ul" )
-                
+
                 context.decrease_indent
                 context.write_HTML_block_tag_end ( "details" )
-            
+
                 context.decrease_indent
                 context.write_HTML_block_tag_end ( "li" )
             .

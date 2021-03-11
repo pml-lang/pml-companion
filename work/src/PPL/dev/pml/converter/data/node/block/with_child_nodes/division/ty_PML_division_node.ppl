@@ -8,6 +8,6 @@ type PML_division_node
             att child_nodes list<PML_block_node>
         .
     .
- 
+
     inherit PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
 .

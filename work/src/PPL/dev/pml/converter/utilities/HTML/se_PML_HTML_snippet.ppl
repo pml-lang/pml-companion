@@ -4,7 +4,7 @@
 service PML_HTML_snippet
 
     function create_HTML_snippet ( PML_code string ) -> string or anticipated_error
-    
+
         const code = """{{se_PML_tokenizer_config_default_values.node_start_symbol}}doc title = Snippet
 {{PML_code}}
 {{se_PML_tokenizer_config_default_values.node_end_symbol}}"""
@@ -29,7 +29,7 @@ service PML_HTML_snippet
         assert result is not null
         return result
     .
-    
+
     tests
         const r string = create_HTML_snippet ( "This is [i important]." ) type_check:no
         verify r =v '''<p class="pml-paragraph">This is <i class="pml-italic">important</i>.</p>
