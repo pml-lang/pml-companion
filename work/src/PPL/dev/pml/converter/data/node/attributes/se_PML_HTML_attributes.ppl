@@ -1,0 +1,20 @@
+service PML_HTML_attributes
+
+    function get_HTML_attribute_or_null ( node PML_node, HTML_attribute_id string ) -> string or null
+
+        const any_node non_null = i_node
+        case type of any_node
+            when PML_has_HTML_attributes
+                if any_node.HTML_attributes as HTML_attributes is null then
+                    return null
+                else
+                    return HTML_attributes.get_or_null ( se_PML_attribute_ids.HTML_start & i_HTML_attribute_id )
+                .
+            otherwise
+                return null
+        .
+    .
+
+    function has_HTML_attribute ( node PML_node, HTML_attribute_id string ) -> yes_no =
+        get_HTML_attribute_or_null ( node, HTML_attribute_id ) #r null
+.

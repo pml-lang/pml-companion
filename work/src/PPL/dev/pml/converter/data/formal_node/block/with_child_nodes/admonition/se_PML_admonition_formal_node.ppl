@@ -19,7 +19,7 @@ service PML_admonition_formal_node
 
     att node PML_formal_block_node_with_child_nodes<PML_admonition_node> = \
         PML_formal_block_node_with_child_nodes<PML_admonition_node>.create (
-            tags = [# "admonition", "adm" ]
+            tags = [# "admon" ]
             attributes = a_attributes
 //            default_attribute_id = se_PML_attribute_ids.title
             HTML_attributes_allowed = yes
@@ -28,7 +28,7 @@ service PML_admonition_formal_node
             documentation = simple_documentation.create (
                 title = "Admonition"
                 description = "A labeled piece of advice, such as a note, tip, warning, etc."
-                examples = '''[adm label=Note
+                examples = '''[admon label=Note
     We will have a look at some [i striking] examples later in the book.
 ]''' ) )
 .

@@ -13,7 +13,7 @@ service PML_document_formal_node
                 examples = "title = A Blissful Experience" )
 
             r.add_string_or_null_parameter (
-                ids = [# "author", "authors" ]
+                ids = [# "authors" ]
                 default_value_supplier = { null }
                 title = "Document Author(s)"
                 description = "A comma-separated list of authors."
@@ -61,10 +61,10 @@ service PML_document_formal_node
                 },
                 title = "TOC Position",
                 description = "The position of the table of contents ('left', 'top', or 'none').",
-                examples = "top" )
+                examples = "TOC_position = top" )
 
             r.add<PML_source_code_highlighter or null> (
-                ids = [# "source_code_highlighter", "highlighter" ]
+                ids = [# "highlighter" ]
                 default_value_supplier = { null },
                 value_parser = { string ->
                     case value of string.to_lower_case
@@ -90,7 +90,7 @@ service PML_document_formal_node
 
     att node PML_formal_block_node_with_child_nodes<PML_document_node> = \
         PML_formal_block_node_with_child_nodes<PML_document_node>.create (
-            tags = [# "document", "doc", "==" ]
+            tags = [# "doc" ]
             attributes = a_attributes
             default_attribute_id = parameter_id.create ( se_PML_attribute_ids.title )
             HTML_attributes_allowed = yes
@@ -100,7 +100,7 @@ service PML_document_formal_node
                 title = "Document"
                 description = "Every PML document must start with a 'document' node. It is the root node of the document."
                 examples = '''[doc title = A Nice Surprise \
-    author = Giovanni Spiridigliotsky \
+    authors = Giovanni Spiridigliotsky \
     date = 2018-11-30
 
     blah blah blah

@@ -39,10 +39,15 @@ service PML_HTML_TOC
             context.write_HTML_tag_start ( write_indent = yes, HTML_tag_name = "div", CSS_class_name = "pml-toc-tree",
                 attributes = [ "id": "TOCTree" ], append_new_line = yes )
             context.increase_indent
+
+            context.write_HTML_block_tag_start ( HTML_tag_name = "ul", CSS_class_name = null )
+            context.increase_indent
         .
 
         function write_TOC_end ( context PML_HTML_writer_context )
 
+            context.decrease_indent
+            context.write_HTML_block_tag_end ( "ul" )
             context.decrease_indent
             context.write_HTML_block_tag_end ( "div" )
             context.decrease_indent

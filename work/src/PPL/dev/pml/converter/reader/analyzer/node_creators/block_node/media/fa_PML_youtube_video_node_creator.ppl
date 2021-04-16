@@ -11,7 +11,7 @@ factory PML_youtube_video_node_creator type:PML_node_creator<PML_youtube_video_n
             const node_id = id
             const title = title )
 
-        const youtube_video_id = attributes.require_value<string> ( "youtube_id" )
+        const youtube_video_id = attributes.require_value<string> ( "yid" )
         const width = attributes.require_value<pos_32 or null> ( "width" )
         const height = attributes.require_value<pos_32 or null> ( "height" )
 

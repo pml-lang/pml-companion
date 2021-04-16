@@ -220,9 +220,9 @@ factory PML_HTML_writer_context
         write_node_title
 
             if i_node.title as title is not null then
-                write ( "<div" )
+                write_indent_and_string ( "<p" )
                 write_HTML_class_attribute ( "pml-node-title" )
-                write_line ( """>{{escape_HTML ( title )}}</div>""" )
+                write_line ( """>{{escape_HTML ( title )}}</p>""" )
             .
         .
 

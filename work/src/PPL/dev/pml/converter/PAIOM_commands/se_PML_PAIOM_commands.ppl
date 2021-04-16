@@ -16,6 +16,7 @@ service PML_PAIOM_commands
             r.add_command ( se_PML_version_command.command )
             // r.add_command ( se_PML_start_GUI_command.command )
             r.add_command ( se_PML_create_reference_manual_command.command )
+            r.add_command ( se_PML_export_tags_command.command )
 
             return r.make_immutable
         .

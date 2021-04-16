@@ -4,7 +4,7 @@
 service PML_source_code_formal_node
 
     attribute language_parameter formal_parameter<string> = formal_parameter<string>.create (
-        ids = [# parameter_id.create ( "language" ), parameter_id.create ( "lang" ) ]
+        ids = [# parameter_id.create ( "lang" ) ]
         default_value_supplier = { () => "auto" }
         example_values = [ "auto", "text", "c", "java" ]
         documentation = simple_documentation.create (

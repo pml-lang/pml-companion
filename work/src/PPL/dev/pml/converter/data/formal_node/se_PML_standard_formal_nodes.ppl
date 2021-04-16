@@ -12,7 +12,7 @@ service PML_standard_formal_nodes
         division = se_PML_division_formal_node.node
 
         paragraph = PML_formal_block_node_with_child_nodes<PML_paragraph_node>.create (
-            tags = [# "paragraph", "p" ]
+            tags = [# "p" ]
             attributes = se_formal_node_attributes.optional_id_and_title_attributes
             HTML_attributes_allowed = yes
             node_creator = PML_paragraph_node_creator.create
@@ -43,7 +43,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 ]''' ) )
 
         list_element = PML_formal_block_node_with_child_nodes<PML_list_element_node>.create (
-            tags = [# "list_element", "el" ]
+            tags = [# "el" ]
             attributes = se_formal_node_attributes.optional_id_and_title_attributes
             HTML_attributes_allowed = yes
             node_creator = PML_list_element_node_creator.create
@@ -100,7 +100,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
         monospace = se_PML_monospace_formal_node.node
 
         HTML_code = PML_formal_block_node_with_raw_text_content<PML_HTML_code_node>.create (
-            tags = [# "HTML", "html" ]
+            tags = [# "html" ]
             attributes = se_formal_node_attributes.optional_id_and_title_attributes
             HTML_attributes_allowed = no
             node_creator = PML_HTML_code_node_creator.create
@@ -177,7 +177,7 @@ output]''' ) )
                 examples = '''This is a [span html_style="color:red;background-color:yellow" huge] advantage.''' ) )
 
         bold = PML_formal_inline_node_with_child_nodes<PML_bold_node>.create (
-            tags = [# "bold", "b", "*" ]
+            tags = [# "b" ]
             attributes = null
             HTML_attributes_allowed = no
             node_creator = PML_bold_node_creator.create
@@ -188,7 +188,7 @@ output]''' ) )
                 examples = '''This is a [b huge] advantage.''' ) )
 
         italic = PML_formal_inline_node_with_child_nodes<PML_italic_node>.create (
-            tags = [# "italic", "i", "_" ]
+            tags = [# "i" ]
             attributes = null
             HTML_attributes_allowed = no
             node_creator = PML_italic_node_creator.create
@@ -201,7 +201,7 @@ output]''' ) )
 This is a [b [i very] important] point.''' ) )
 
         inline_code = PML_formal_inline_node_with_raw_text_content<PML_inline_code_node>.create (
-            tags = [# "inline_code", "c", "`" ]
+            tags = [# "c" ]
             attributes = null
             HTML_attributes_allowed = no
             node_creator = PML_inline_code_node_creator.create
@@ -212,7 +212,7 @@ This is a [b [i very] important] point.''' ) )
                 examples = '''The assignment [c pi = 3.1415] means we are using [i four] decimals for [c pi].''' ) )
 
         verbatim_text = PML_formal_inline_node_with_raw_text_content<PML_verbatim_text_node>.create (
-            tags = [# "verbatim", "vm" ]
+            tags = [# "verbatim" ]
             attributes = null
             HTML_attributes_allowed = no
             node_creator = PML_verbatim_text_node_creator.create
@@ -227,7 +227,7 @@ This is a [b [i very] important] point.''' ) )
         xref = se_PML_xref_formal_node.node
 
         new_line = PML_formal_inline_node_without_child_nodes<PML_new_line_node>.create (
-            tags = [# "new_line", "nl" ]
+            tags = [# "nl" ]
             attributes = null
             HTML_attributes_allowed = no
             node_creator = PML_new_line_node_creator.create
@@ -238,7 +238,7 @@ This is a [b [i very] important] point.''' ) )
                 examples = "Line 1[nl][nl]Line 2" ) )
 
         space = PML_formal_inline_node_without_child_nodes<PML_space_node>.create (
-            tags = [# "space", "sp" ]
+            tags = [# "sp" ]
             attributes = null
             HTML_attributes_allowed = no
             node_creator = PML_space_node_creator.create
@@ -255,7 +255,7 @@ This is [sp]g[sp][sp]o[sp][sp]o[sp][sp]d[sp]!''' ) )
         insert = se_PML_insert_formal_node.node
 
         constant = PML_formal_block_node_without_child_nodes<PML_block_node_without_child_nodes>.create (
-            tags = [# "constant", "const" ]
+            tags = [# "const" ]
             attributes = null
             HTML_attributes_allowed = no
             node_creator = se_PML_node_creator_helper.dummy_block_node_without_child_nodes_creator

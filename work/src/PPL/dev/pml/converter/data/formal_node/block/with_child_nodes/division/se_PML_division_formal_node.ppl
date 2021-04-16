@@ -7,7 +7,7 @@ service PML_division_formal_node
 
     att node PML_formal_block_node_with_child_nodes<PML_division_node> = \
         PML_formal_block_node_with_child_nodes<PML_division_node>.create (
-            tags = [# "division", "div" ]
+            tags = [# "div" ]
             attributes = a_attributes
             default_attribute_id = null
             HTML_attributes_allowed = yes

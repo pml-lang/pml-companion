@@ -267,7 +267,7 @@ More text''' )
                 writer.increase_indent
 
                 // repeat for each formal_parameter in attributes.sorted_list
-                const list list<formal_parameter<*>> = attributes.sorted_list type_check:no
+                const list list<formal_parameter<*>> = attributes.sorted_list__first_is_default type_check:no
                 repeat for each formal_parameter in list
 
                     const title = writer.escape_PML (

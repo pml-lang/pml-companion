@@ -20,7 +20,7 @@ service PML_audio_formal_node
                 } )
             .///
             r.add<relative_file_path> (
-                ids = [# "source", "src" ]
+                ids = [# "source" ]
                 value_parser = { string => relative_file_path.try_parse ( string ) }
                 title = "Audio Source"
                 description = "The relative file path to the audio file. The path is relative to the target HTML file."

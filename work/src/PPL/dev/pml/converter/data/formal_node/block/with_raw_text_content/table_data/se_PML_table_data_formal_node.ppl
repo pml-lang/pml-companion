@@ -15,7 +15,7 @@ service PML_table_data_formal_node
 
     att node PML_formal_block_node_with_raw_text_content<PML_table_data_node> = \
         PML_formal_block_node_with_raw_text_content<PML_table_data_node>.create (
-            tags = [# "table_data", "tdata" ]
+            tags = [# "table_data" ]
             attributes = a_attributes
             HTML_attributes_allowed = yes
             node_creator = PML_table_data_node_creator.create
@@ -43,13 +43,13 @@ The following format rules apply:
     cell 2.1, cell 2.2
 table_data]
 
-[tdata halign="C,L,R" title="Table with header, footer, and column alignments"
+[table_data halign="C,L,R" title="Table with header, footer, and column alignments"
     Position, Product, Price
     -
     1, Organic food, 12.50
     2, Meditation lessons, 150.00
     -
     ,,Total: 162.50
-tdata]
+table_data]
 ''' ) )
 .

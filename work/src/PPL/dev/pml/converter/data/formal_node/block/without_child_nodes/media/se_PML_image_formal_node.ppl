@@ -20,7 +20,7 @@ service PML_image_formal_node
                 } )
             .///
             r.add<relative_file_path> (
-                ids = [# "source", "src" ]
+                ids = [# "source" ]
                 value_parser = { string => relative_file_path.try_parse ( string ) }
                 title = "Image Source"
                 description = "The relative file path to the image file. The path is relative to the target HTML file."
@@ -82,7 +82,7 @@ service PML_image_formal_node
 
     att node PML_formal_block_node_without_child_nodes<PML_image_node> = \
         PML_formal_block_node_without_child_nodes<PML_image_node>.create (
-            tags = [# "image", "img" ]
+            tags = [# "image" ]
             attributes = a_attributes
             default_attribute_id = parameter_id.create ( "source" )
             HTML_attributes_allowed = yes
@@ -90,8 +90,13 @@ service PML_image_formal_node
             HTML_writer = PML_image_node_HTML_writer.create
             documentation = simple_documentation.create (
                 title = "Image"
-                description = "An image, such as a .jpg or .png file."
+                description = '''An image, such as a .jpg or .png file.
+Note about the HTML 'alt' tag:
+Attribute 'html_alt' can be used to add an explicit 'alt' attribute in the resulting HTML (see example).
+If no explicit 'html_alt' is provided then the value of the 'title' attribute is used for the 'alt' attribute.
+If no 'title' attribute is provided then the value of the 'caption' attribute is used.'''
                 examples = '''[image source = images/strawberries.jpg \
     title = Strawberries (Photo by Jacek Dylag on Unsplash) \
-    link = https://unsplash.com/photos/kH3Sr9K8EBA]''' ) )
+    link = https://unsplash.com/photos/kH3Sr9K8EBA \
+    html_alt = Delicious strawberries]''' ) )
 .

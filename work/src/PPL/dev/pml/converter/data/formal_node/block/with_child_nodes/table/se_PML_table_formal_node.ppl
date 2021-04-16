@@ -4,7 +4,7 @@
 service PML_table_formal_node
 
     attribute horizontal_alignments_parameter formal_parameter<string or null> = formal_parameter<string or null>.create (
-        ids = [# parameter_id.create ( "horizontal_alignments" ), parameter_id.create ( "halign" ) ]
+        ids = [# parameter_id.create ( "halign" ) ]
         default_value_supplier = { () => null }
         value_parser = se_string_parser.instance
         documentation = simple_documentation.create (
@@ -18,7 +18,7 @@ For each column the following values can be specified:
 - {empty} (default alignment (usually left-aligned) will be used)
 The values are case-insensitive. Uppercase letters are allowed.'''
             examples = '''
-horizontal_alignments = "Left, Center, , Right"
+halign = "Left, Center, , Right"
 short from:
 halign = "L, C, , R"''' ) )
 
@@ -57,26 +57,26 @@ The table can optionally have a header and a footer.'''
                 examples = '''Simple table:
 
 [table
-    [table_row [table_cell C11] [table_cell C12]]
+    [tr [tc C11] [tc C12]]
     [tr [tc C21] [tc C22]]
 ]
 
 Table with header and footer:
 
 [table
-    [table_header
+    [theader
         [tr [tc Pos.] [tc Group] [tc Total invoiced]]
     ]
     [tr [tc 1] [tc [i Organic] food] [tc html_style="text-align:right;" 12,000.22]]
     [tr [tc 2] [tc Meditation lessons] [tc html_style="text-align:right;" 21,350.00]]
-    [table_footer
+    [tfooter
         [tr [tc] [tc html_style="text-align:right;" Sum:] [tc html_style="text-align:right;" 33,350.22]]
     ]
 ]''' ) )
 
     att table_header_node PML_formal_block_node_with_child_nodes<PML_table_header_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_header_node>.create (
-            tags = [# "table_header", "thead" ]
+            tags = [# "theader" ]
             attributes = null
             HTML_attributes_allowed = yes
             node_creator = PML_table_header_node_creator.create
@@ -87,7 +87,7 @@ Table with header and footer:
                 examples = '''Table with header:
 
 [table
-    [table_header
+    [theader
         [tr [tc Header 1] [tc Header 2] [tc Header 3]]
     ]
     [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
@@ -96,7 +96,7 @@ Table with header and footer:
 
     att table_footer_node PML_formal_block_node_with_child_nodes<PML_table_footer_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_footer_node>.create (
-            tags = [# "table_footer", "tfoot" ]
+            tags = [# "tfooter" ]
             attributes = null
             HTML_attributes_allowed = yes
             node_creator = PML_table_footer_node_creator.create
@@ -109,14 +109,14 @@ Table with header and footer:
 [table
     [tr [tc cell 1.1] [tc cell 1.2] [tc cell 1.3]]
     [tr [tc cell 2.1] [tc cell 2.2] [tc cell 2.3]]
-    [table_footer
+    [tfooter
         [tr [tc Footer 1] [tc Footer 2] [tc Footer 3]]
     ]
 ]''' ) )
 
     att table_row_node PML_formal_block_node_with_child_nodes<PML_table_row_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_row_node>.create (
-            tags = [# "table_row", "tr" ]
+            tags = [# "tr" ]
             attributes = null
             HTML_attributes_allowed = yes
             node_creator = PML_table_row_node_creator.create
@@ -133,7 +133,7 @@ Table with header and footer:
 
     att table_cell_node PML_formal_block_node_with_child_nodes<PML_table_cell_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_cell_node>.create (
-            tags = [# "table_cell", "tc" ]
+            tags = [# "tc" ]
             attributes = null
             HTML_attributes_allowed = yes
             node_creator = PML_table_cell_node_creator.create

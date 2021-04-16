@@ -8,10 +8,10 @@ service PML_youtube_video_formal_node
             const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
 
             r.add_string_parameter (
-                ids = [# "youtube_id", "yid" ]
+                ids = [# "yid" ]
                 title = "Youtube Video Id"
                 description = "The identifier of the Youtube video. This identifier is displayed in the video's URL on Youtube. Example: If the URL of the Youtube video is https://www.youtube.com/watch?v=NUDhA4hXdS8 then the identifier is NUDhA4hXdS8."
-                examples = "youtube_id = NUDhA4hXdS8" )
+                examples = "yid = NUDhA4hXdS8" )
 
             r.add<pos_32 or null> (
                 ids = [# "width" ]
@@ -40,7 +40,7 @@ service PML_youtube_video_formal_node
 
     att node PML_formal_block_node_without_child_nodes<PML_youtube_video_node> = \
         PML_formal_block_node_without_child_nodes<PML_youtube_video_node>.create (
-            tags = [# "youtube_video", "yvideo" ]
+            tags = [# "youtube_video" ]
             attributes = a_attributes
             HTML_attributes_allowed = yes
             node_creator = PML_youtube_video_node_creator.create
@@ -48,7 +48,7 @@ service PML_youtube_video_formal_node
             documentation = simple_documentation.create (
                 title = "Embedded Youtube Video"
                 description = "A Youtube video embedded in the document."
-                examples = '''[youtube_video youtube_id = qrcZqnICYbs \
+                examples = '''[youtube_video yid = qrcZqnICYbs \
     title = Hellzapoppin 1941 - Enjoy! \
     width = 600 \
     height = 400]''' ) )

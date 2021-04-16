@@ -1,4 +1,6 @@
 /*
+    PML version: 1.4.0
+    
     This is the default CSS style used for HTML files created with PML.
     
     If you want to change the presentation of your HTML document(s) created with PML, you can:
@@ -55,13 +57,15 @@ body {
 
 .pml-doc-left, .pml-doc-right {
     flex-grow: 1;
-    width: 10%;
+    flex-shrink: 1;
+    width: 15%;
 
     background-color: #fafafa;
 }
 
 .pml-doc-text {
     flex-grow: 0;
+    flex-shrink: 3;
     max-width: 800px;
 }
 
@@ -289,9 +293,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .pml-toc ul {
-    padding-left: 1.5em;
+    padding-left: 0em;
     margin-top: 0;
     margin-bottom: 0;
+}
+
+.pml-toc ul ul {
+    padding-left: 1.5em;
 }
 
 .pml-toc li {

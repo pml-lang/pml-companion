@@ -11,7 +11,7 @@ factory PML_document_node_creator type:PML_node_creator<PML_document_node>
 
         const title = attributes.require_value<string> ( se_PML_attribute_ids.title )
 
-        const authors_string = attributes.require_value<string or null> ( "author" )
+        const authors_string = attributes.require_value<string or null> ( "authors" )
         const authors list<string> or null = authors_string \
             ?.split_by_regex ( regex.create ( "[ \t]*[,;][ \t]*" ) ) \
             .stream.skip_nulls.to_list_or_null type_check:no
@@ -23,7 +23,7 @@ factory PML_document_node_creator type:PML_node_creator<PML_document_node>
 
         const TOC_position = attributes.require_value<PML_TOC_position> ( "TOC_position" )
 
-        const source_code_highlighter = attributes.require_value<PML_source_code_highlighter> ( "source_code_highlighter" )
+        const source_code_highlighter = attributes.require_value<PML_source_code_highlighter> ( "highlighter" )
 
         const HTML_attributes = i_context.get_HTML_attributes ( i_node_AST )
 

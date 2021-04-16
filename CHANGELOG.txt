@@ -1,3 +1,25 @@
+Version 1.4.0 2021-04-16
+========================
+
+- Backwards-incompatible changes:
+
+    - Each tag and each attribute have one single identifier. Alternative identifiers are no more supported.
+      This change makes PML documents look more uniform and reduces complexity for editor plugins, tools, etc.
+      Please consult PML's reference manual if you have PML documents created with a previous version and which use
+      identifiers that are no more valid anymore.
+
+- New features:
+    - Command 'export_tags' has been added.
+      This command creates a JSON file containing structured data about PML tags and attributes.
+      The JSON file can be used by editor plugins and tools that depend on PML tags and attributes.
+      For more information type 'pmlc command_info -command export_tags' in a terminal.
+      
+    - The PML user manual and reference manual are now deployed into directory 'docs' of the PML installation directory.
+
+- Bug fixes
+    - The table of contents is now displayed correctly on devices with small screens.
+
+
 Version 1.3.0 2021-03-09
 ========================
 
