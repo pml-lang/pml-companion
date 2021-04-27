@@ -246,7 +246,7 @@ This is a [b [i very] important] point.''' ) )
             documentation = simple_documentation.create (
                 title = "Space Character"
                 description = "An explicit space character inserted in the document. Whitespace composed of several characters (such as two spaces) is always converted into a single space (as in HTML). Hence, this node can be used to explicitly insert two or more spaces."
-                examples = '''This is  g  o  o  d !  [-- 2 spaces will result in ONE space --]
+                examples = '''This is  g  o  o  d !  [- 2 spaces will result in ONE space -]
 
 This is [sp]g[sp][sp]o[sp][sp]o[sp][sp]d[sp]!''' ) )
 
