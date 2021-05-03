@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_subscript_formal_node
+
+    att node PML_formal_inline_node_with_child_nodes<PML_subscript_node> = \
+        PML_formal_inline_node_with_child_nodes<PML_subscript_node>.create (
+            tags = [# "sub" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_subscript_node_creator.create
+            HTML_writer = PML_subscript_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Subscript Font"
+                description = null
+                examples = "Water: H[sub 2]O" ) )
+.
