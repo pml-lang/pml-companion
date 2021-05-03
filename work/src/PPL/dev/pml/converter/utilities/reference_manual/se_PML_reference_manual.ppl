@@ -174,6 +174,7 @@ service PML_reference_manual
                 write_node ( writer, node = se_PML_standard_formal_nodes.bold )
                 write_node ( writer, node = se_PML_standard_formal_nodes.italic )
                 write_node ( writer, node = se_PML_standard_formal_nodes.subscript )
+                write_node ( writer, node = se_PML_standard_formal_nodes.superscript )
                 write_node ( writer, node = se_PML_standard_formal_nodes.inline_code )
             writer.end_chapter
 

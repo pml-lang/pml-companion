@@ -11,7 +11,8 @@ service PML_subscript_formal_node
             node_creator = PML_subscript_node_creator.create
             HTML_writer = PML_subscript_node_HTML_writer.create
             documentation = simple_documentation.create (
-                title = "Subscript Font"
-                description = null
-                examples = "Water: H[sub 2]O" ) )
+                title = "Subscript Text"
+                description = "Subscript text is rendered in a smaller font below the normal text line."
+                examples = '''Water: H[sub 2]O
+This is [sub subscript], and this is [sup superscript]''' ) )
 .
