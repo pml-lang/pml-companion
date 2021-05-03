@@ -3,9 +3,10 @@ Version 1.5.0 2021-05-
 
 - New features:
 
-    - New tags:
+    - New inline nodes:
         - sub: Subscript text
         - sup: Superscript text
+        - strike: Strikethrough text
 
 
 Version 1.4.0 2021-04-16

@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_strikethrough_formal_node
+
+    att node PML_formal_inline_node_with_child_nodes<PML_strikethrough_node> = \
+        PML_formal_inline_node_with_child_nodes<PML_strikethrough_node>.create (
+            tags = [# "strike" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_strikethrough_node_creator.create
+            HTML_writer = PML_strikethrough_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Strikethrough Text"
+                description = "Strikethrough text is rendered with a line through it."
+                examples = '''[strike Only 50 tickets left]
+
+SOLD OUT!''' ) )
+.

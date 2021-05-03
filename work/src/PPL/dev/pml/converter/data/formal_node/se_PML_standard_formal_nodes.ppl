@@ -189,6 +189,7 @@ This is a [b [i very] important] point.''' ) )
 
         subscript = se_PML_subscript_formal_node.node
         superscript = se_PML_superscript_formal_node.node
+        strikethrough = se_PML_strikethrough_formal_node.node
 
         inline_code = PML_formal_inline_node_with_raw_text_content<PML_inline_code_node>.create (
             tags = [# "c" ]
@@ -298,6 +299,7 @@ Here are two examples:
         add_node_to_map ( map, only_standard_tag, node = a_italic )
         add_node_to_map ( map, only_standard_tag, node = a_subscript )
         add_node_to_map ( map, only_standard_tag, node = a_superscript )
+        add_node_to_map ( map, only_standard_tag, node = a_strikethrough )
         add_node_to_map ( map, only_standard_tag, node = a_inline_code )
         add_node_to_map ( map, only_standard_tag, node = a_verbatim_text )
         add_node_to_map ( map, only_standard_tag, node = a_link )
