@@ -239,6 +239,8 @@ More text''' )
 
             writer.write_new_line
             writer.write_indent
+
+///
             writer.write ( """[b {{if node.tags.size >= 2 then "Tags" else "Tag"}}:] [c """ )
             repeat for each tag in node.tags is_first:is_first
                 if not is_first then
@@ -247,6 +249,24 @@ More text''' )
                 writer.write ( tag )
             .
             writer.write_line ( "]" )
+.///
+            variable is_raw_text_block yes_no
+            case type of node
+                when PML_formal_block_node_with_raw_text_content<*>
+                    is_raw_text_block = yes
+                otherwise
+                    is_raw_text_block = no
+            .
+
+            assert node.tags.size =v 1
+            const tag = node.standard_tag
+
+            // [c \[doc] .. [c \]]
+            writer.write ( """[b Tag:] [c \[{{tag}}] .. [c """ )
+            if is_raw_text_block then
+                writer.write ( tag )
+            .
+            writer.write_line ( '''\]]''' )
         .
 
         function write_node_description ( writer PML_document_writer, node PML_formal_node<*> )

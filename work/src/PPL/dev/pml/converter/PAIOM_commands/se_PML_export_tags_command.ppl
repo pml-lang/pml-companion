@@ -86,8 +86,27 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
 
             write_string_member ( writer, name = "default_attribute_id",
                 value = formal_node.default_attribute_id?.value, is_last = no )
+
             write_yes_no_member ( writer, name = "HTML_attributes_allowed",
                 value = formal_node.HTML_attributes_allowed, is_last = no )
+
+            variable is_raw_text_block yes_no
+            variable closing_tag = PML_tokenizer_config_default_values.node_end_symbol.to_string
+            case type of formal_node
+                when PML_formal_block_node_with_raw_text_content<*>
+                    is_raw_text_block = yes
+                    closing_tag = formal_node.standard_tag & closing_tag
+                otherwise
+                    is_raw_text_block = no
+            .
+            write_yes_no_member ( writer, name = "is_raw_text_block", value = is_raw_text_block, is_last = no )
+
+            write_string_member ( writer, name = "opening_tag",
+                value = PML_tokenizer_config_default_values.node_start_symbol.to_string & formal_node.standard_tag,
+                is_last = no )
+
+            write_string_member ( writer, name = "closing_tag", value = closing_tag, is_last = no )
+
             write_string_member ( writer, name = "latest_doc_url",
                 value = """https://www.pml-lang.dev/docs/reference_manual/index.html#node_{{formal_node.standard_tag}}""",
                 is_last = yes )
@@ -137,7 +156,7 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
             assert documentation is not null
             write_string_member ( writer, name = "title", value = documentation.title, is_last = no )
             write_string_member ( writer, name = "description", value = documentation.description, is_last = no )
-            write_string_member ( writer, name = "examples", value = documentation.examples, is_last = no )
+            write_string_member ( writer, name = "examples", value = documentation.examples, is_last = yes )
 
 
             writer.decrease_indent.write_indent.write_map_end

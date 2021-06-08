@@ -127,7 +127,7 @@ service PML_parser_tests
         // raw text
 
         const document_AST_6 = parser.try_parse_code ( PML_code = '''
-[document
+[doc
     [code
         l1
         l2
@@ -138,7 +138,7 @@ service PML_parser_tests
         verify nodes_6.size =v 2
 
         const doc_node_6 = nodes_6.last
-        verify doc_node_6.tag.value =v "document"
+        verify doc_node_6.tag.value =v "doc"
 
         const child_nodes_6 = doc_node_6.child_nodes
         verify child_nodes_6 is not null
