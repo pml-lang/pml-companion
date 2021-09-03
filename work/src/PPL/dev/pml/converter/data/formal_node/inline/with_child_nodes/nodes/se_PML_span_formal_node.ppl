@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_span_formal_node
+
+    att node PML_formal_inline_node_with_child_nodes<PML_span_node> = \
+        PML_formal_inline_node_with_child_nodes<PML_span_node>.create (
+            tags = [# "span" ]
+            attributes = null
+            HTML_attributes_allowed = yes
+            node_creator = PML_span_node_creator.create
+            HTML_writer = PML_span_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Span"
+                description = "This inline node is typically used to render a HTML <span>...</span> inline element with a specific set of HTML attributes."
+                examples = '''This is a [span (html_style="color:red;background-color:yellow") huge] advantage.''' ) )
+.

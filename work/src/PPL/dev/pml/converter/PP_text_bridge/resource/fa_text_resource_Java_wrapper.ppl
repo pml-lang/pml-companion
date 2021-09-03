@@ -1,0 +1,90 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory text_resource_Java_wrapper type:text_resource
+
+    java_header
+        import dev.pp.text.resource.TextResource;
+
+        import org.ppl.core.java.wrapper.fa_Java_Object_wrapper;
+    end java_header
+
+	java
+		// private TextResource textResource;
+		protected TextResource textResource;
+
+		public TextResource getJavaTextResource() {
+/*
+            if ( textResource == null ) {
+
+                textResource = new TextResource (
+                    a_resource == null ? null : a_resource.getJavaTextResource(),
+                    a_line_number.getJavaLong(),
+                    a_column_number.getJavaLong(),
+                    a_parent_location == null ? null : a_parent_location.getJavaTextLocation() );
+            }
+*/
+            return textResource;
+        }
+
+        public static ty_text_resource createFromJava ( TextResource textResource ) {
+            // se_java_utilities.checkInputNotNull ( textResource, "textResource" );
+
+            fa_text_resource_Java_wrapper this_ = (fa_text_resource_Java_wrapper) fa_text_resource_Java_wrapper.create (
+                textResource.getResource() == null ? null : new fa_Java_Object_wrapper ( textResource.getResource() ),
+                new fa_string ( textResource.getName() ) );
+
+            this_.textResource = textResource;
+
+            return this_;
+        }
+
+        public static ty_text_resource createFromJavaNullable ( TextResource textResource ) {
+
+            if ( textResource == null ) return null;
+
+            return createFromJava ( textResource );
+        }
+ 	end java
+
+
+    functions native:yes
+
+        // TD error
+        try_get_text_line
+            java
+                try {
+                    String line = getJavaTextResource().getTextLine ( i_line_number.getJavaLong() );
+                    return fa_string.createOrNull ( line );
+                } catch ( Exception e ) {
+                    return null;
+                }
+            end java
+        .
+
+        /// TD error
+        try_get_text_line_with_inline_marker
+            java
+                try {
+                    String line = getJavaTextResource().getTextLineWithMarker (
+                        i_line_number.getJavaLong(),
+                        (int) i_position.getJavaLong(),
+                        i_marker.getJavaString() );
+                    return fa_string.createOrNull ( line );
+                } catch ( Exception e ) {
+                    return null;
+                }
+            end java
+        .
+        .///
+
+        to_string
+            java
+                return new fa_string ( getJavaTextResource().toString() );
+            end java
+        .
+    .
+
+
+    creator create access:private kind:in_all
+.

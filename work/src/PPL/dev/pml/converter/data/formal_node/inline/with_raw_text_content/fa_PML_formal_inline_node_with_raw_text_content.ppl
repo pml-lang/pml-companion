@@ -3,6 +3,22 @@
 
 factory PML_formal_inline_node_with_raw_text_content
 
+    java_header
+        import dev.pdml.core.data.formalNode.FormalNode;
+        import dev.pdml.core.data.formalNode.types.standard.TextBlockType;
+        import dev.pml.converter.data.formal_node.helper.se_formal_node;
+    end java_header
+
+    java
+        @SuppressWarnings ( "unchecked" )
+        public FormalNode getPMDLFormalNode() {
+
+            FormalNode formalNode = se_formal_node.createPMDLFormalNode ( this );
+            // formalNode.setType ( new TextBlockType() );
+            return formalNode;
+        }
+    end java
+
 %fa_PML_formal_node_functions
 
     creator create kind:in_all

@@ -5,23 +5,29 @@ service start
 
     function start
 
-        if se_OS_process.command_line_arguments is not null then
-            se_CLI_start.start
-        else
-            se_parameters_GUI.ask_parameters_and_consume (
-                formal_parameters = se_PML_convert_command.formal_input_parameters
-                window_title = "PML Converter"
-                form_title = "Convert PML document to HTML"
-                submit_text = "Convert"
-                parameters_consumer = { parameters ->
-                    case type of se_PML_convert_command.execute ( parameters )
-                        when file HTML_file
-                            handle_success_result ( HTML_file )
-                        when anticipated_error error
-                            handle_error_result ( error )
-                    .
-                },
-                exit_system_on_window_close = yes )
+        try
+            if se_OS_process.command_line_arguments is not null then
+                se_CLI_start.start
+            else
+                se_parameters_GUI.ask_parameters_and_consume (
+                    formal_parameters = se_PML_convert_command.formal_input_parameters
+                    window_title = "PML Converter"
+                    form_title = "Convert PML document to HTML"
+                    submit_text = "Convert"
+                    parameters_consumer = { parameters ->
+                        case type of se_PML_convert_command.execute ( parameters )
+                            when file HTML_file
+                                handle_success_result ( HTML_file )
+                            when anticipated_error error
+                                handle_error_result ( error )
+                        .
+                    },
+                    exit_system_on_window_close = yes )
+            .
+
+        catch_any unanticipated_error
+            log_to_file_unanticipated_error_handler.create.handle_error ( unanticipated_error )
+            se_OS_process.exit_with_error
         .
     .
 
@@ -67,13 +73,40 @@ Do you want to open it in your default browser?"""
         function handle_error_result ( error anticipated_error )
 
             case type of error
-                when PML_code_error PML_code_error then
+                when text_error text_error then
+///
                     se_error_GUI.show_text_error_in_new_window (
-                        error = PML_code_error
+                        error = text_error
+                        window_title = "PML Code Error" )
+.///
+                    show_text_error_in_new_window (
+                        text_error
                         window_title = "PML Code Error" )
                 otherwise
                     se_GUI_dialogs.show_error_and_wait ( error = error.info )
             .
         .
+
+        function show_text_error_in_new_window ( text_error, window_title string default: "Error" )
+
+            const form_builder = readonly_form_UI_builder.create
+
+            form_builder.add_string_field ( id = "error", value = text_error.info )
+
+            if text_error.id as id is not null then
+                form_builder.add_string_field ( id = "id", value = id )
+            .
+
+            if text_error.token?.location as location is not null then
+                form_builder.add_string_field ( id = "location", value = location.to_string )
+            .
+
+            se_object_GUI.show_in_new_window (
+                object = form_builder.create_form (
+                    title = i_window_title
+                    show_header = no )
+                title = window_title )
+        .
+
     .
 .

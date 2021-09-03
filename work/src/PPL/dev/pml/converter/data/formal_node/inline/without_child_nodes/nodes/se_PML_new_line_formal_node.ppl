@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_new_line_formal_node
+
+    att node PML_formal_inline_node_without_child_nodes<PML_new_line_node> = \
+        PML_formal_inline_node_without_child_nodes<PML_new_line_node>.create (
+            tags = [# "nl" ]
+            attributes = null
+            HTML_attributes_allowed = no
+            node_creator = PML_new_line_node_creator.create
+            HTML_writer = PML_new_line_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "New Line"
+                description = "An explicit new line (line break) inserted in the document."
+                examples = "Line 1[nl][nl]Line 2" ) )
+.

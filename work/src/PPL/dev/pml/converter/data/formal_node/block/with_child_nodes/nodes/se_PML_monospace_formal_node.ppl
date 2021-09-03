@@ -7,7 +7,7 @@ service PML_monospace_formal_node
 
     att attributes formal_parameters<*>
         default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id
 
 ///
             r.add_yes_no_parameter (
@@ -28,6 +28,7 @@ service PML_monospace_formal_node
             attributes = a_attributes
             default_attribute_id = null
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = yes
             node_creator = fa_PML_monospace_node_creator.create
             HTML_writer = fa_PML_monospace_node_HTML_writer.create
             documentation = simple_documentation.create (
@@ -37,7 +38,8 @@ The following rules apply to the text in a 'monospace' block:
 - The width of each character (letter, digit, symbol) is the same.
 - All spaces and line-breaks in the text are preserved and rendered in the final document.
 Inline nodes can be used within a 'monospace' block. Hence standard character escape rules are applied.'''
-                examples = '''[monospace title = "A Pascal Triangle"
+                examples = '''[header A Pascal Triangle]
+[monospace
       1
     1   1
   1   2   1

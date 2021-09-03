@@ -3,25 +3,24 @@
 
 service PML_xref_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = any_type_formal_parameters_builder.create
+    att node_id_parameter formal_parameter<string> default:se_formal_parameter_creator.string (
+        ids = [# "node_id" ]
+        title = "Node Id"
+        description = "The identifier of the target node that is referenced."
+        examples = "node_id = chapter_1" )
 
-            r.add_string_parameter (
-                ids = [# se_PML_attribute_ids.node_id ]
-                title = "Node Id"
-                description = "The identifier of the target node that is referenced."
-                examples = "node_id = chapter_1" )
-            r.add_string_or_null_parameter (
-                ids = [# se_PML_attribute_ids.text ]
-                default_value_supplier = { null }
-                title = "Text"
-                description = "The text to be displayed for the cross-reference. If this attribute is omitted, then the title of the target node is displayed. If the target node doesn't have a title, then the target node's identifier is displayed instead."
-                examples = "text = Hello World example" )
+    att text_parameter formal_parameter<string or null> default:se_formal_parameter_creator.string_or_null (
+        ids = [# se_PML_attribute_ids.text ]
+        default_value_supplier = { null }
+        title = "Text"
+        description = '''The text to be displayed for the cross-reference.
+If this attribute is omitted, then the title of the target node is displayed. If the target node doesn't have a title, then the target node's identifier is displayed instead.'''
+        examples = "text = Hello World example" )
 
-            return r.make_immutable
-        .
-    .
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( a_node_id_parameter )
+        .add_parameter ( a_text_parameter )
+        .make_immutable
 
     att node PML_formal_inline_node_without_child_nodes<PML_xref_node> = \
         PML_formal_inline_node_without_child_nodes<PML_xref_node>.create (
@@ -34,11 +33,11 @@ service PML_xref_formal_node
             documentation = simple_documentation.create (
                 title = "Cross-Reference"
                 description = "A cross-reference (link) to another node in the same document."
-                examples = '''[ch title=A Beautiful Solution id=solution
+                examples = '''[ch (id=solution) [title A Beautiful Solution]
     text text text
 ]
 
-[ch title = Conclusion
+[ch [title Conclusion]
     As we saw in chapter [xref node_id=solution], it is ...
 ]''' ) )
 .

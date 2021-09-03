@@ -1,0 +1,20 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_output_formal_node
+
+    att node PML_formal_block_node_with_raw_text_content<PML_output_node> = \
+        PML_formal_block_node_with_raw_text_content<PML_output_node>.create (
+            tags = [# "output" ]
+            attributes = se_formal_node_attributes.optional_id_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_output_node_creator.create
+            HTML_writer = PML_output_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Output"
+                description = "Any output created by a software application, such as a result written to the OS's standard output device."
+                examples = '''[output
+    Congratulations!
+    The new database has been created successfully.
+output]''' ) )
+.

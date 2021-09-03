@@ -1,0 +1,143 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory mutable_PDML_AST_node
+
+    functions
+
+        // get_location = a_name.location
+
+        append_child_node
+
+            ensure_has_children
+            assert a_child_nodes is not null
+            a_child_nodes.append ( fa_node__AST_node_child.create ( i_child_node ) )
+        .
+
+        append_text_child
+
+            ensure_has_children
+            assert a_child_nodes is not null
+            a_child_nodes.append ( fa_text__AST_node_child.create ( i_text ) )
+        .
+
+        direct_child_nodes__only_nodes
+
+            const child_nodes = a_child_nodes?.get_list on_null:return null
+
+            const r = mutable_list<mutable_PDML_AST_node>.create
+            repeat for each child_node in child_nodes
+                case type of child_node
+                    when node__AST_node_child
+                        r.append ( child_node.node )
+                    otherwise
+                        do nothing
+                .
+            .
+
+            return r.make_immutable_or_null
+        .
+
+        visit_children
+
+            visit_children_ (
+                parent_node = node__AST_node_child.create ( this )
+                include_parent_node = no
+                i_child_consumer )
+        .
+
+        visit_children_ access:private (
+            parent_node AST_node_child, include_parent_node yes_no, child_consumer object_consumer<AST_node_child> )
+
+            if i_include_parent_node then
+                i_child_consumer.consume ( i_parent_node )
+            .
+
+            case type of parent_node
+
+                when node__AST_node_child
+                    const child_nodes = i_parent_node.node.child_nodes?.get_list on_null:return
+                    repeat for each child_node in child_nodes
+                        visit_children_ ( parent_node = child_node, include_parent_node = yes, i_child_consumer )
+                    .
+
+                when text__AST_node_child
+                    do nothing
+            .
+        .
+
+        visit_tree__only_nodes
+
+            visit_tree__only_nodes_ (
+                parent_node = this
+                i_node_consumer
+                include_parent_node = i_include_this_node )
+        .
+
+        visit_tree__only_nodes_ access:private (
+            parent_node mutable_PDML_AST_node, node_consumer object_consumer<mutable_PDML_AST_node>, include_parent_node yes_no )
+
+            if i_include_parent_node then
+                i_node_consumer.consume ( i_parent_node )
+            .
+
+            const direct_child_nodes = i_parent_node.direct_child_nodes__only_nodes on_null:return
+            repeat for each direct_child_node in direct_child_nodes
+                visit_tree__only_nodes_ ( parent_node = direct_child_node, i_node_consumer, include_parent_node = yes )
+            .
+        .
+
+        concatenate_text_in_child_nodes
+
+            const ms = mutable_string.create
+
+            visit_children ( { child ->
+                case type of child
+                    when text__AST_node_child
+                        ms.append ( child.text.text )
+                    when node__AST_node_child
+                        do nothing
+                .
+            })
+
+            return ms.to_string_or_null
+        .
+
+        to_string
+
+            const r = mutable_string.create
+
+            r.append ( a_name.to_string )
+
+            if name.token?.location as location is not null
+                r.append ( " at " )
+                r.append ( location.to_string )
+            .
+
+            return r.to_string
+        .
+    .
+
+
+    functions access:private
+
+        ensure_has_children
+
+            if a_child_nodes is null
+                a_child_nodes = AST_node_children.create
+            .
+        .
+    .
+
+    creator create kind:in_all
+
+    creator create_for_name ( name AST_node_name ) -> mutable_PDML_AST_node
+
+        this.name = name
+        // TD this.declared_namespaces = null
+        this.attributes = null
+        this.child_nodes = null
+
+        return this
+    .
+.

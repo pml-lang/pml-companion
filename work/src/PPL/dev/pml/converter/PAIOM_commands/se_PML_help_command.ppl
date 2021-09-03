@@ -27,7 +27,7 @@ pmlc command_info -command [command_name]
     pmlc ci -c tag_info
 
 Online help is available at
-https://www.pml-lang.dev/help/help_menu.html'''
+https://www.pml-lang.dev/help/index.html'''
 
 
     // TD help, h, -help, --help, /?
@@ -41,7 +41,10 @@ https://www.pml-lang.dev/help/help_menu.html'''
             PAIOM_command_id.create ( "/?" )
         ]
         formal_input_parameters = null
-        executor = { input => a_help_text },
+        executor = { input ->
+            OS.out.write_line ( a_help_text )
+            return a_help_text
+        },
         documentation = simple_documentation.create (
             title = "Get Help"
             description = null

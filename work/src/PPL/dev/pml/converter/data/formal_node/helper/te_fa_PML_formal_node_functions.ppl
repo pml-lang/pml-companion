@@ -9,6 +9,8 @@ template fa_PML_formal_node_functions
         collection = tags
         join_string = ", " )
 
+    function has_attributes = a_attributes #r null or a_HTML_attributes_allowed
+
     function to_string = standard_tag
 
     function to_long_string

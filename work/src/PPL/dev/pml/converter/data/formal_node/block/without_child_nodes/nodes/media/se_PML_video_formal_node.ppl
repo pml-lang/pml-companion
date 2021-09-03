@@ -3,53 +3,40 @@
 
 service PML_video_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+    att source_parameter formal_parameter<relative_file_path> default:se_formal_parameter_creator.create<relative_file_path> (
+        ids = [# "source" ]
+        default_value_supplier = null,
+        value_parser = { string => relative_file_path.try_parse ( string ) }
+        title = "Video Source"
+        description = "The relative file path to the video file. The path is relative to the target HTML file. The path is relative to the 'resources_directory' command line argument (default is subdirectory 'resources' in the working directory)."
+        examples = "source = videos/happy_kids.mp4" )
 
-            /// TD
-            r.add<relative_file_path or URL> (
-                id = "source"
-                alternative_id = "src"
-                value_parser = { string ->
-                    if i_string.starts_with ( "http//" ) then
-                        return URL.try_parse ( string )
-                    else
-                        return relative_file_path.try_parse ( string )
-                    .
-                } )
-            .///
-            r.add<relative_file_path> (
-                ids = [# "source" ]
-                value_parser = { string => relative_file_path.try_parse ( string ) }
-                title = "Video Source"
-                description = "The relative file path to the video file. The path is relative to the target HTML file."
-                examples = "source = videos/happy_kids.mp4" )
+    att width_parameter formal_parameter<pos_32 or null> default:se_formal_parameter_creator.create<pos_32 or null> (
+        ids = [# "width" ]
+        default_value_supplier = { null }
+        value_parser = { string => pos_32.try_parse ( string ) }
+        title = "Video Width"
+        description = "The width of the video, expressed in pixels."
+        examples = "width = 600" )
 
-            r.add<pos_32 or null> (
-                ids = [# "width" ]
-                default_value_supplier = { null }
-                value_parser = { string => pos_32.try_parse ( string ) }
-                title = "Video Width"
-                description = "The width of the video, expressed in pixels."
-                examples = "width = 600" )
+    att height_parameter formal_parameter<pos_32 or null> default:se_formal_parameter_creator.create<pos_32 or null> (
+        ids = [# "height" ]
+        default_value_supplier = { null }
+        value_parser = { string => pos_32.try_parse ( string ) }
+        title = "Video Height"
+        description = "The height of the video, expressed in pixels."
+        examples = "height = 400" )
 
-            r.add<pos_32 or null> (
-                ids = [# "height" ]
-                default_value_supplier = { null }
-                value_parser = { string => pos_32.try_parse ( string ) }
-                title = "Video Height"
-                description = "The height of the video, expressed in pixels."
-                examples = "height = 400" )
+    // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
+    // TD add autoplay, controls, loop, muted, poster (see https://www.w3schools.com/tags/tag_video.asp)
 
-            r.add_parameter ( se_formal_node_attributes.caption )
-
-            // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
-            // TD add autoplay, controls, loop, muted, poster (see https://www.w3schools.com/tags/tag_video.asp)
-
-            return r.make_immutable
-        .
-    .
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( a_source_parameter )
+        .add_parameter ( a_width_parameter )
+        .add_parameter ( a_height_parameter )
+        .add_parameter ( se_formal_node_attributes.caption )
+        .add_parameter ( se_formal_node_attributes.id )
+        .make_immutable
 
     att node PML_formal_block_node_without_child_nodes<PML_video_node> = \
         PML_formal_block_node_without_child_nodes<PML_video_node>.create (
@@ -61,5 +48,6 @@ service PML_video_formal_node
             documentation = simple_documentation.create (
                 title = "Video"
                 description = "A video, such as an .mp4 or .webm file."
-                examples = '''[video source = videos/red_flower.mp4 title = Beautiful Nature]''' ) )
+                examples = '''[header Beautiful Nature]
+[video source = videos/red_flower.mp4]''' ) )
 .

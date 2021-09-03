@@ -3,82 +3,76 @@
 
 service PML_image_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+    att source_parameter formal_parameter<relative_file_path> default:se_formal_parameter_creator.create<relative_file_path> (
+        ids = [# "source" ],
+        default_value_supplier = null,
+        value_parser = { string => relative_file_path.try_parse ( string ) },
+        title = "Image Source"
+        description = "The relative file path to the image file. The path is relative to the 'resources_directory' command line argument (default is subdirectory 'resources' in the working directory)."
+        examples = "source = images/ball.png" )
 
-            /// TD
-            r.add<relative_file_path or URL> (
-                id = "source"
-                alternative_id = "src"
-                value_parser = { string ->
-                    if i_string.starts_with ( "http//" ) then
-                        return URL.try_parse ( string )
-                    else
-                        return relative_file_path.try_parse ( string )
-                    .
-                } )
-            .///
-            r.add<relative_file_path> (
-                ids = [# "source" ]
-                value_parser = { string => relative_file_path.try_parse ( string ) }
-                title = "Image Source"
-                description = "The relative file path to the image file. The path is relative to the target HTML file."
-                examples = "source = images/ball.png" )
-            r.add<pos_32 or null> (
-                ids = [# "width" ]
-                default_value_supplier = { null }
-                value_parser = { string => pos_32.try_parse ( string ) }
-                title = "Image Width"
-                description = "The width of the image, expressed in pixels."
-                examples = "width = 200" )
-            r.add<pos_32 or null> (
-                ids = [# "height" ]
-                default_value_supplier = { null }
-                value_parser = { string => pos_32.try_parse ( string ) }
-                title = "Image Height"
-                description = "The height of the image, expressed in pixels."
-                examples = "height = 150" )
-            r.add<horizontal_alignment> (
-                ids = [# "align" ],
-                default_value_supplier = { ty_PML_image_node.alignment.default },
-                value_parser = { string ->
-                    case value of string
-                        when "left"
-                            return horizontal_alignment.left
-                        when "center"
-                            return horizontal_alignment.center
-                        when "right"
-                            return horizontal_alignment.right
-                        otherwise
-                            return parse_object_error<horizontal_alignment>.create (
-                                info ="""'{{i_string}}' is an invalid value for image alignment. Valid values are: left, center, and right."""
-                                data = i_string )
-                    .
-                },
-                title = "Horizontal Alignment",
-                description = """The horizontal alignment of the picture. Valid values are: left, center, and right.""",
-                examples = "align = center" )
-            r.add<yes_no> (
-                ids = [# "border" ]
-                default_value_supplier = { ty_PML_image_node.border.default }
-                value_parser = { string => yes_no.try_parse ( string ) }
-                title = "Border"
-                description = "This parameter can be set to 'yes' to draw a border around the image."
-                examples = "border = yes" )
-            r.add<URL or null> (
-                ids = [# "link" ]
-                default_value_supplier = { null }
-                value_parser = { string => URL.try_parse ( string ) }
-                title = "URL link"
-                description = "An URL link to the image. If the user clicks on the image, the browser will head to the specified URL."
-                examples = "link = http://www.example.com/path/image.png" )
+    att width_parameter formal_parameter<pos_32 or null> default:se_formal_parameter_creator.create<pos_32 or null> (
+        ids = [# "width" ]
+        default_value_supplier = { null }
+        value_parser = { string => pos_32.try_parse ( string ) }
+        title = "Image Width"
+        description = "The width of the image, expressed in pixels."
+        examples = "width = 200" )
 
-            r.add_parameter ( se_formal_node_attributes.caption )
+    att height_parameter formal_parameter<pos_32 or null> default:se_formal_parameter_creator.create<pos_32 or null> (
+        ids = [# "height" ]
+        default_value_supplier = { null }
+        value_parser = { string => pos_32.try_parse ( string ) }
+        title = "Image Height"
+        description = "The height of the image, expressed in pixels."
+        examples = "height = 150" )
 
-            return r.make_immutable
-        .
-    .
+    att horizontal_alignment_parameter formal_parameter<horizontal_alignment> default:se_formal_parameter_creator.create<horizontal_alignment> (
+        ids = [# "align" ],
+        default_value_supplier = { ty_PML_image_node.alignment.default },
+        value_parser = { string ->
+            case value of string
+                when "left"
+                    return horizontal_alignment.left
+                when "center"
+                    return horizontal_alignment.center
+                when "right"
+                    return horizontal_alignment.right
+                otherwise
+                    return parse_object_error<horizontal_alignment>.create (
+                        info ="""'{{i_string}}' is an invalid value for image alignment. Valid values are: left, center, and right."""
+                        data = i_string )
+            .
+        },
+        title = "Horizontal Alignment",
+        description = """The horizontal alignment of the picture. Valid values are: left, center, and right.""",
+        examples = "align = center" )
+
+    att border_parameter formal_parameter<yes_no> default:se_formal_parameter_creator.yes_no (
+        ids = [# "border" ]
+        default_value_supplier = { ty_PML_image_node.border.default }
+        title = "Border"
+        description = "This parameter can be set to 'yes' to draw a border around the image."
+        examples = "border = yes" )
+
+    att link_parameter formal_parameter<URL or null> default:se_formal_parameter_creator.create<URL or null> (
+        ids = [# "link" ]
+        default_value_supplier = { null }
+        value_parser = { string => URL.try_parse ( string ) }
+        title = "URL link"
+        description = "An URL link to the image. If the user clicks on the image, the browser will head to the specified URL."
+        examples = "link = http://www.example.com/path/image.png" )
+
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( a_source_parameter )
+        .add_parameter ( a_width_parameter )
+        .add_parameter ( a_height_parameter )
+        .add_parameter ( a_horizontal_alignment_parameter )
+        .add_parameter ( a_border_parameter )
+        .add_parameter ( a_link_parameter )
+        .add_parameter ( se_formal_node_attributes.caption )
+        .add_parameter ( se_formal_node_attributes.id )
+        .make_immutable
 
     att node PML_formal_block_node_without_child_nodes<PML_image_node> = \
         PML_formal_block_node_without_child_nodes<PML_image_node>.create (
@@ -95,8 +89,8 @@ Note about the HTML 'alt' tag:
 Attribute 'html_alt' can be used to add an explicit 'alt' attribute in the resulting HTML (see example).
 If no explicit 'html_alt' is provided then the value of the 'title' attribute is used for the 'alt' attribute.
 If no 'title' attribute is provided then the value of the 'caption' attribute is used.'''
-                examples = '''[image source = images/strawberries.jpg \
-    title = Strawberries (Photo by Jacek Dylag on Unsplash) \
-    link = https://unsplash.com/photos/kH3Sr9K8EBA \
-    html_alt = Delicious strawberries]''' ) )
+                examples = '''[header Strawberries (Photo by Jacek Dylag on Unsplash)]
+[image ( source = images/strawberries.jpg
+    link = https://unsplash.com/photos/kH3Sr9K8EBA
+    html_alt = "Delicious strawberries" ) ]''' ) )
 .

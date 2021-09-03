@@ -1,5 +1,5 @@
 /*
-    PML version: 1.5.0
+    PML version: 2.0.0
     
     This is the default CSS style used for HTML files created with PML.
     
@@ -79,27 +79,6 @@ body {
 }
 
 
-/* document */
-
-.pml-doc-title-wrapper {
-    border-bottom: 1px solid lightgrey;
-    padding-bottom: 0.5em;
-}
-
-.pml-doc-title {
-    font-size: 2.2em;
-    margin-top: 0.2em;
-}
-
-.pml-doc-authors::before {
-    content: "Written by ";
-}
-
-.pml-doc-date-time::before {
-    content: "Published ";
-}
-
-
 /* titles */
 
 h1, h2, h3, h4, h5, h6 {
@@ -110,16 +89,24 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 0px;
 }
 
-.pml-node-title {
+.pml-doc-title {
+    font-size: 2.2em;
+    margin-top: 0.2em;
+}
+
+.pml-chapter-title {
+}
+
+.pml-chapter-subtitle {
+    margin-top: 0;
+}
+
+.pml-header {
     font-weight: bold;
-    /* margin-bottom: 0.5em; */
 }
 
 .pml-caption {
     font-style: italic;
-    /* color: darkgreen;
-    font-size: 1.05em;  
-    margin-top: 0.5em; */
 }
 
 

@@ -3,7 +3,7 @@
 
 type PML_insert_source_code_node
 
-    inherit PML_block_node_without_child_nodes, PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    inherit PML_block_node_without_child_nodes, PML_has_HTML_attributes
 
     att file file
     att code string

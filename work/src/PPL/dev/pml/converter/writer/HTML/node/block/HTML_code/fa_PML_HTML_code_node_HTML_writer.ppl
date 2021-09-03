@@ -5,10 +5,10 @@ factory PML_HTML_code_node_HTML_writer type:PML_node_HTML_writer<PML_HTML_code_n
 
     function write
 
-        if i_node.node_id #r null or i_node.title #r null then
-            context.write_node_id_and_title ( node, HTML_tag_name = "div" )
-            context.write ( ">" )
-            context.write_HTML_inline_tag_end ( "div" )
+        if i_node.node_id is not null then
+            context.write_indent_and_string ( "<div" )
+            context.write_node_id ( i_node )
+            context.write ( "></div>" )
             context.write_new_line
         .
 

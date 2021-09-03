@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type text_error_or_warning
+
+    inherit anticipated_error
+
+    att id string or null
+
+    att token text_token or null
+
+    functions
+///
+        token_text -> string or null
+
+        location -> text_location or null
+.///
+
+        to_log_string -> string
+    .
+.

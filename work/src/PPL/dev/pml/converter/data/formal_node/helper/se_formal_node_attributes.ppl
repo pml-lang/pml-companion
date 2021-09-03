@@ -13,15 +13,6 @@ service formal_node_attributes
 An identifier must start with a letter and can be followed by any number of letters, digits, and underscores. Note for programmers: The regex of an identifier is: [a-zA-Z][a-zA-Z0-9_]*. Identifiers are case-sensitive. The following identifiers are all different: name, Name, and NAME.'''
             examples = "id = basic_concept" ) )
 
-    att title formal_parameter<string or null> = formal_parameter<string or null>.create (
-        ids = [# parameter_id.create ( se_PML_attribute_ids.title ) ]
-        default_value_supplier = { null }
-        value_parser = se_string_parser.instance
-        documentation = simple_documentation.create (
-            title = "Node Title"
-            description = "An optional small title, typically displayed above the node."
-            examples = "title = A beautiful idea" ) )
-
     att caption formal_parameter<string or null> = formal_parameter<string or null>.create (
         ids = [# parameter_id.create ( se_PML_attribute_ids.caption ) ]
         default_value_supplier = { null }
@@ -31,19 +22,18 @@ An identifier must start with a letter and can be followed by any number of lett
             description = "An optional caption (small text) associated with the node. The caption is typically displayed below the node."
             examples = '''caption = "Better health through exercise!"''' ) )
 
+    function optional_id_attributes -> formal_parameters<*>
 
-    function optional_id_and_title_attributes -> formal_parameters<*>
-
-        return formal_parameters_builder_with_optional_id_and_title.make_immutable
+        return formal_parameters_builder_with_optional_id.make_immutable
     .
 
-    function formal_parameters_builder_with_optional_id_and_title -> any_type_formal_parameters_builder
+    function formal_parameters_builder_with_optional_id -> any_type_formal_parameters_builder
 
         const r = any_type_formal_parameters_builder.create
 
         r.add_parameter ( a_id )
-        r.add_parameter ( a_title )
 
         return r
     .
+
 .

@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type text_location
+
+    java_header
+        import dev.pp.text.location.TextLocation;
+    end java_header
+
+    java
+        public TextLocation getJavaTextLocation();
+    end java
+
+    attributes
+        resource text_resource or null
+        line_number pos_64
+        column_number pos_64
+        parent_location text_location or null
+    .
+
+    functions
+        try_get_text_line -> string or null or runtime_error
+
+        try_get_text_line_with_inline_marker ( marker string default: " ==> " ) -> string or null or runtime_error
+
+        to_log_string -> string
+    .
+.

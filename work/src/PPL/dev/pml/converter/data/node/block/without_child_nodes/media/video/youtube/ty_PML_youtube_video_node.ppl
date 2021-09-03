@@ -3,7 +3,7 @@
 
 type PML_youtube_video_node
 
-    inherit PML_block_node_without_child_nodes, PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    inherit PML_block_node_without_child_nodes, PML_has_HTML_attributes
 
     attributes
 

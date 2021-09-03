@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_source_code_node_creator type:PML_node_creator<PML_source_code_node>
+
+    function create_node = PML_source_code_node.create (
+        node_id = i_context.get_id_or_null
+        HTML_attributes = i_context.HTML_attributes
+        text = i_context.non_null_raw_text_content
+        language = i_context.get_string_attribute ( se_PML_source_code_formal_node.language_parameter.standard_id )
+        use_highlighter = i_context.get_yes_no_attribute (
+            se_PML_source_code_formal_node.use_highlighter_parameter.standard_id ) )
+
+    creator create kind:in_all
+.

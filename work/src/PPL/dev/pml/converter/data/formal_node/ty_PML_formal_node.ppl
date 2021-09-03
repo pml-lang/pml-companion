@@ -3,6 +3,14 @@
 
 type PML_formal_node <node child_of:PML_node usage:in_out> factories:none
 
+    java_header
+        import dev.pdml.core.data.formalNode.FormalNode;
+    end java_header
+
+    java
+        public FormalNode getPMDLFormalNode();
+    end java
+
     inherit has_to_long_string
 
     attributes
@@ -45,5 +53,7 @@ type PML_formal_node <node child_of:PML_node usage:in_out> factories:none
         standard_tag -> string
 
         tags_as_string -> string
+
+        has_attributes -> yes_no
     .
 .

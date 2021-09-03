@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_input_formal_node
+
+    att node PML_formal_block_node_with_raw_text_content<PML_input_node> = \
+        PML_formal_block_node_with_raw_text_content<PML_input_node>.create (
+            tags = [# "input" ]
+            attributes = se_formal_node_attributes.optional_id_attributes
+            HTML_attributes_allowed = yes
+            node_creator = PML_input_node_creator.create
+            HTML_writer = PML_input_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Input"
+                description = "Any input provided to a software application, such as a command typed in a terminal, text contained in a config file, etc."
+                examples = '''[input
+    pmlc create_reference_manual -output_directory path/to/dir
+input]''' ) )
+.

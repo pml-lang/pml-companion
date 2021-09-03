@@ -4,4 +4,6 @@
 type PML_block_node
 
     inherit PML_node
+
+    att node_id string or null // TD restrict value
 .

@@ -80,11 +80,7 @@ type PML_HTML_writer_context
 
         write_HTML_attributes_for_node ( node PML_has_HTML_attributes, CSS_class_name string or null )
 
-        write_node_id_attribute ( node PML_has_optional_id_and_title_attributes )
-
-        write_node_title ( node PML_has_optional_id_and_title_attributes )
-
-        write_node_id_and_title ( node PML_has_optional_id_and_title_attributes, HTML_tag_name string )
+        write_node_id ( node PML_block_node )
 
         write_node_caption ( caption string or null )
 
@@ -92,7 +88,7 @@ type PML_HTML_writer_context
         // block_node
 
         write_block_node_start
-            in node PML_node
+            in node PML_block_node
             in HTML_tag_name string
             in CSS_class_name string
             in append_new_line yes_no default:yes

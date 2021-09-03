@@ -3,19 +3,16 @@
 
 service PML_admonition_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+    att label_parameter formal_parameter<string> default:se_formal_parameter_creator.string (
+        ids = [# "label" ]
+        title = "Label"
+        description = "The admonition's label, such as 'Note', 'Tip', 'Warning', etc."
+        examples = "label = Warning" )
 
-            r.add_string_parameter (
-                ids = [# "label" ]
-                title = "Label"
-                description = "The admonition's label, such as 'Note', 'Tip', 'Warning', etc."
-                examples = "label = Warning" )
-
-            return r.make_immutable
-        .
-    .
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( se_formal_node_attributes.id )
+        .add_parameter ( a_label_parameter )
+        .make_immutable
 
     att node PML_formal_block_node_with_child_nodes<PML_admonition_node> = \
         PML_formal_block_node_with_child_nodes<PML_admonition_node>.create (
@@ -23,12 +20,13 @@ service PML_admonition_formal_node
             attributes = a_attributes
 //            default_attribute_id = se_PML_attribute_ids.title
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = PML_admonition_node_creator.create
             HTML_writer = PML_admonition_node_HTML_writer.create
             documentation = simple_documentation.create (
                 title = "Admonition"
                 description = "A labeled piece of advice, such as a note, tip, warning, etc."
-                examples = '''[admon label=Note
+                examples = '''[admon (label=Tip)
     We will have a look at some [i striking] examples later in the book.
 ]''' ) )
 .

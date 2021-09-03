@@ -1,0 +1,86 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory text_token
+
+    java_header
+        import dev.pp.text.location.TextLocation;
+        import dev.pp.text.token.TextToken;
+
+        import dev.pml.converter.PP_text_bridge.location.fa_text_location;
+    end java_header
+
+	java
+		protected TextToken textToken;
+
+		public TextToken getJavaTextToken() {
+
+            if ( textToken == null ) {
+                textToken = new TextToken (
+                    a_text.getJavaString(),
+                    a_location.getJavaTextLocation() );
+            }
+
+            return textToken;
+        }
+
+        public static ty_text_token createFromJava ( TextToken textToken ) {
+            // se_java_utilities.checkInputNotNull ( textToken, "textToken" );
+
+            fa_text_token this_ = (fa_text_token) fa_text_token.create (
+                new fa_string ( textToken.getText() ),
+                fa_text_location.createFromJavaNullable ( textToken.getLocation() ) );
+
+            this_.textToken = textToken;
+
+            return this_;
+        }
+
+        public static ty_text_token createFromJavaNullable ( TextToken textToken ) {
+
+            if ( textToken != null ) {
+                return createFromJava ( textToken );
+            } else {
+                return null;
+            }
+        }
+ 	end java
+
+    functions native:yes
+
+        to_string
+            java
+                return new fa_string ( getJavaTextToken().toString() );
+            end java
+        .
+    .
+
+
+    creator create kind:in_all
+
+
+    tests
+
+        const location = text_location.create (
+            resource = null, line_number = 1L, column_number = 11L, parent_location = null )
+        const token = text_token.create ( text = "foo", location )
+        token.to_string // avoid "not used" error
+
+        variable token_copy text_token
+        java
+            TextToken token = c_token.getJavaTextToken();
+            v_token_copy = fa_text_token.createFromJava ( token );
+        end java
+
+        assert token_copy is not null
+        verify token_copy.text =v "foo"
+        const location_ = token_copy.location
+        assert location_ is not null
+        verify location_.line_number =v 1L
+        verify location_.column_number =v 11L
+        verify location_.parent_location is null
+
+        write_new_line
+        write_line ( token_copy.to_string )
+    .
+.

@@ -5,9 +5,10 @@ type PML_paragraph_node
 
     inherit PML_block_node_with_child_nodes
         redefine
-            att child_nodes list<PML_inline_node>
+            // att child_nodes list<PML_inline_node>
+            att child_nodes list<PML_inline_node> or null
         .
     .
 
-    inherit PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    inherit PML_has_HTML_attributes
 .

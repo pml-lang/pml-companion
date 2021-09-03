@@ -4,10 +4,6 @@
 type PML_list_node
 
     inherit PML_block_node_with_child_nodes
-        redefine
-            att child_nodes list<PML_list_element_node>
-        .
-    .
 
-    inherit PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    inherit PML_has_HTML_attributes
 .

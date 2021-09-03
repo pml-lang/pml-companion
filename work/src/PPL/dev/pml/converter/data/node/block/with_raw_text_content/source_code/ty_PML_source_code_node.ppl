@@ -3,7 +3,7 @@
 
 type PML_source_code_node
 
-    inherit PML_block_node_with_raw_text_content, PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    inherit PML_block_node_with_raw_text_content, PML_has_HTML_attributes
 
     att language string
     att use_highlighter yes_no default:yes

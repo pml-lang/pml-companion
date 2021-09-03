@@ -75,6 +75,7 @@ If a relative path is specified then it is relative to the current working direc
 If the value is empty then no footer is written to the HTML output file.'''
                 examples = "--HTML_footer headers/my_HTML_footer.txt" ) )
 
+///
     att tag_start_stop_symbols_parameter formal_parameter<string> = se_formal_parameter_creator.string (
         ids = [# "tag_start_stop_symbols", "tss" ]
         default_value_supplier = { ty_PML_to_HTML_config.tag_start_stop_symbols.default }
@@ -90,6 +91,7 @@ If the value is empty then no footer is written to the HTML output file.'''
         title = "Tag Start Stop Symbols",
         description = "The pair of characters that are used as symbols to start and stop a tag (e.g. '[]' or '{}').",
         examples = '''--tag_start_stop_symbols "{}"''' )
+.///
 
     att omit_CSS_parameter formal_parameter<yes_no> = \
         formal_parameter<yes_no>.create (
@@ -105,14 +107,40 @@ If the value is empty then no footer is written to the HTML output file.'''
 By default this parameter is set to 'no'.'''
                 examples = "--omit_CSS yes" ) )
 
+    att open_file_cmd formal_parameter<string or null> default:se_formal_parameter_creator.string_or_null (
+        ids = [# "open_file_cmd", "ofc" ]
+        default_value_supplier = { null }
+        title = "Open File OS Command"
+        description = '''This parameter specifies an OS command template to open an editor for the first file in which an error was detected.
+The following placeholders can be used:
+[[file]]
+    the full path of the file in which the error was detected
+[[line]]
+    the line number of the error (first line = 1)
+[[column]]
+    the column number of the error (first column = 1)
+
+Note:
+Be careful to correctly quote file paths that include spaces.
+Different OS environments have different rules. Please consult your OS documentation for further information.
+'''
+        examples = '''// open VSCode in Windows:
+--open_file_cmd "cmd.exe /c code --goto \"[[file]]:[[line]]:[[column]]\""
+// alternative (replace {username} with the name on your machine):
+--open_file_cmd "\"C:\Users\{username}\AppData\Local\Programs\Microsoft VS Code\Code.exe\" --goto \"[[file]]:[[line]]:[[column]]\""
+
+// open Sublime Text in Windows (subl must be on the OS path)
+--open_file_cmd "cmd.exe /c subl \"[[file]]:[[line]]:[[column]]\""
+''' )
+
     att formal_input_parameters formal_parameters<*> = any_type_formal_parameters_builder.create
         .add_parameter ( a_input_file_parameter )
         .add_parameter ( a_resources_directory_parameter )
         .add_parameter ( a_output_directory_parameter )
         .add_parameter ( a_HTML_header_file_parameter )
         .add_parameter ( a_HTML_footer_file_parameter )
-        .add_parameter ( a_tag_start_stop_symbols_parameter )
         .add_parameter ( a_omit_CSS_parameter )
+        .add_parameter ( a_open_file_cmd )
         .make_immutable
 
     att command explicit_paiom_command<file or anticipated_error> = \
@@ -129,44 +157,35 @@ pmlc convert --input_file input/index.pml --output_directory output/HTML --resou
 
     function execute ( input any_type_parameters or null ) -> file or anticipated_error
 
-        try
-            assert i_input is not null
+        assert i_input is not null
 
-            const PML_input_path = i_input.get_value<absolute_or_relative_file_path> ( a_input_file_parameter.standard_id )
+        const PML_input_path = i_input.get_value<absolute_or_relative_file_path> ( a_input_file_parameter.standard_id )
 
-            const resources_directory_path = \
-                i_input.get_value<absolute_or_relative_directory_path or null> ( a_resources_directory_parameter.standard_id )
-            const output_directory_path = \
-                i_input.get_value<absolute_or_relative_directory_path> ( a_output_directory_parameter.standard_id )
+        const resources_directory_path = \
+            i_input.get_value<absolute_or_relative_directory_path or null> ( a_resources_directory_parameter.standard_id )
+        const output_directory_path = \
+            i_input.get_value<absolute_or_relative_directory_path> ( a_output_directory_parameter.standard_id )
 
-            const HTML_header_file_path = \
-                i_input.get_value<absolute_or_relative_file_path or null> ( a_HTML_header_file_parameter.standard_id )
-            const HTML_footer_file_path = \
-                i_input.get_value<absolute_or_relative_file_path or null> ( a_HTML_footer_file_parameter.standard_id )
+        const HTML_header_file_path = \
+            i_input.get_value<absolute_or_relative_file_path or null> ( a_HTML_header_file_parameter.standard_id )
+        const HTML_footer_file_path = \
+            i_input.get_value<absolute_or_relative_file_path or null> ( a_HTML_footer_file_parameter.standard_id )
 
-            const tag_start_stop_symbols = i_input.get_string ( a_tag_start_stop_symbols_parameter.standard_id )
+        const omit_CSS = i_input.get_value<yes_no> ( a_omit_CSS_parameter.standard_id )
 
-            const omit_CSS = i_input.get_value<yes_no> ( a_omit_CSS_parameter.standard_id )
+        const open_file_cmd = i_input.get_value<string or null> ( a_open_file_cmd.standard_id )
 
-            const config = PML_to_HTML_config.create_for_paths (
-                root_directory_for_relative_path = se_OS_directories.current_working_directory_path
-                PML_input_path,
-                resources_directory_path,
-                output_directory_path,
-                HTML_header_file_path,
-                HTML_footer_file_path,
-                tag_start_stop_symbols
-                omit_CSS )
+        const config = PML_to_HTML_config.create_for_paths (
+            root_directory_for_relative_path = se_OS_directories.current_working_directory_path
+            PML_input_path,
+            resources_directory_path,
+            output_directory_path,
+            HTML_header_file_path,
+            HTML_footer_file_path,
+            omit_CSS,
+            open_file_cmd )
 
-            const HTML_file = se_PML_to_HTML_Converter.try_convert ( config ) on_error: return_error
-
-            // return se_PML_to_HTML_Converter.success_message ( HTML_file )
-            return HTML_file
-
-        catch_any unanticipated_error
-            log_to_file_unanticipated_error_handler.create.handle_error ( unanticipated_error )
-            return se_unanticipated_error.to_runtime_error ( unanticipated_error )
-        .
+        return se_PML_to_HTML_Converter.try_convert ( config )
     .
 
     functions access:private

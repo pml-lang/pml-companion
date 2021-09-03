@@ -1,0 +1,14 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_chapter_title_node_creator type:PML_node_creator<PML_chapter_title_node>
+
+    function create_node = PML_chapter_title_node.create (
+        node_id = i_context.get_id_or_null
+        chapter_level = i_context.current_chapter_level
+        HTML_attributes = i_context.HTML_attributes
+        child_nodes = i_context.inline_child_nodes
+        text = i_context.pXML_node.concatenate_text_in_child_nodes )
+
+    creator create kind:in_all
+.

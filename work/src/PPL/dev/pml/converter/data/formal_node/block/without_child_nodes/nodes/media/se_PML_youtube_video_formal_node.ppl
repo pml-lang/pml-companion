@@ -3,40 +3,22 @@
 
 service PML_youtube_video_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+    att youtube_id_parameter formal_parameter<string> default:se_formal_parameter_creator.string (
+        ids = [# "yid" ]
+        title = "Youtube Video Id"
+        description = "The identifier of the Youtube video. This identifier is displayed in the video's URL on Youtube. Example: If the URL of the Youtube video is https://www.youtube.com/watch?v=NUDhA4hXdS8 then the identifier is NUDhA4hXdS8."
+        examples = "yid = NUDhA4hXdS8" )
 
-            r.add_string_parameter (
-                ids = [# "yid" ]
-                title = "Youtube Video Id"
-                description = "The identifier of the Youtube video. This identifier is displayed in the video's URL on Youtube. Example: If the URL of the Youtube video is https://www.youtube.com/watch?v=NUDhA4hXdS8 then the identifier is NUDhA4hXdS8."
-                examples = "yid = NUDhA4hXdS8" )
+    // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
+    // TD add other Youtube parameters
 
-            r.add<pos_32 or null> (
-                ids = [# "width" ]
-                default_value_supplier = { null }
-                value_parser = { string => pos_32.try_parse ( string ) }
-                title = "Video Width"
-                description = "The width of the video, expressed in pixels."
-                examples = "width = 600" )
-
-            r.add<pos_32 or null> (
-                ids = [# "height" ]
-                default_value_supplier = { null }
-                value_parser = { string => pos_32.try_parse ( string ) }
-                title = "Video Height"
-                description = "The height of the video, expressed in pixels."
-                examples = "height = 400" )
-
-            r.add_parameter ( se_formal_node_attributes.caption )
-
-            // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
-            // TD add other Youtube parameters
-
-            return r.make_immutable
-        .
-    .
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( a_youtube_id_parameter )
+        .add_parameter ( se_PML_video_formal_node.width_parameter )
+        .add_parameter ( se_PML_video_formal_node.height_parameter )
+        .add_parameter ( se_formal_node_attributes.caption )
+        .add_parameter ( se_formal_node_attributes.id )
+        .make_immutable
 
     att node PML_formal_block_node_without_child_nodes<PML_youtube_video_node> = \
         PML_formal_block_node_without_child_nodes<PML_youtube_video_node>.create (
@@ -48,8 +30,9 @@ service PML_youtube_video_formal_node
             documentation = simple_documentation.create (
                 title = "Embedded Youtube Video"
                 description = "A Youtube video embedded in the document."
-                examples = '''[youtube_video yid = qrcZqnICYbs \
-    title = Hellzapoppin 1941 - Enjoy! \
-    width = 600 \
-    height = 400]''' ) )
+                examples = '''[header Hellzapoppin 1941 - [i Enjoy!]]
+[youtube_video (
+    yid = qrcZqnICYbs
+    width = 600
+    height = 400 ) ]''' ) )
 .

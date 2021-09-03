@@ -21,7 +21,7 @@ service PML_source_code_formal_node
 
     att attributes formal_parameters<*>
         default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id
 
             r.add_parameter ( language_parameter )
             r.add_parameter ( use_highlighter_parameter )

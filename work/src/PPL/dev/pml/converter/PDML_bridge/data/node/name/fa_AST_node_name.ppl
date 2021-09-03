@@ -1,0 +1,50 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory AST_node_name
+
+    java_header
+        import dev.pdml.core.data.AST.name.ASTNodeName;
+
+        import org.ppl.core.java.se_java_utilities;
+
+        import dev.pml.converter.PP_text_bridge.token.fa_text_token;
+    end java_header
+
+	java
+        /*
+		private ASTNodeName nodeName;
+
+		public ASTNodeName getJavaNodeName() {
+		    return nodeName;
+        }
+        */
+
+		public static ty_AST_node_name createFromJava ( ASTNodeName nodeName ) {
+            se_java_utilities.checkInputNotNull ( nodeName, "nodeName" );
+
+            return create ( fa_text_token.createFromJava ( nodeName.getLocalName() ) );
+		}
+ 	end java
+
+    functions
+
+        // location = a_local_name.location
+
+        token = a_local_name
+
+        full_name = a_local_name.text
+        ///
+        full_name native:yes
+            java
+                return new fa_string ( nodeName.fullName() );
+            end java
+        .
+        .///
+
+        to_string = full_name
+    .
+
+
+    creator create kind:in_all
+.

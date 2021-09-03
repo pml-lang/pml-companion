@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
 service PML_HTML_attributes
 
     function get_HTML_attribute_or_null ( node PML_node, HTML_attribute_id string ) -> string or null

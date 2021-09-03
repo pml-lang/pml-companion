@@ -3,20 +3,17 @@
 
 service PML_quote_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+    att source_parameter formal_parameter<string or null> default:se_formal_parameter_creator.string_or_null (
+        ids = [# "source" ]
+        default_value_supplier = { null }
+        title = "Source of Quote"
+        description = "The source of the quote, such as the name of a person, the title of an article, etc."
+        examples = "source = Dalai Lama" )
 
-            r.add_string_or_null_parameter (
-                ids = [# "source" ]
-                default_value_supplier = { null }
-                title = "Source of Quote"
-                description = "The source of the quote, such as the name of a person, the title of an article, etc."
-                examples = "source = Dalai Lama" )
-
-            return r.make_immutable
-        .
-    .
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( se_formal_node_attributes.id )
+        .add_parameter ( a_source_parameter )
+        .make_immutable
 
     att node PML_formal_block_node_with_child_nodes<PML_quote_node> = \
         PML_formal_block_node_with_child_nodes<PML_quote_node>.create (
@@ -24,12 +21,13 @@ service PML_quote_formal_node
             attributes = a_attributes
     //        default_attribute_id = se_PML_attribute_ids.title
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = PML_quote_node_creator.create
             HTML_writer = PML_quote_node_HTML_writer.create
             documentation = simple_documentation.create (
                 title = "Quote"
                 description = "A piece of text said or written by somebody else."
-                examples = '''[quote source=Albert Einstein, physicist
+                examples = '''[quote (source="Albert Einstein, physicist")
     Everything should be as simple as possible, but not simpler.
 ]''' ) )
 .

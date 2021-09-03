@@ -11,7 +11,7 @@ service PML_HTML_page_writer
 
         const context = PML_HTML_writer_context.create ( writer, config )
 
-        write_HTML_page_header ( context, config, document_title = document_node.title ) on_error:return_error
+        write_HTML_page_header ( context, config, document_title = document_node.title_text ) on_error:return_error
 
         write_HTML_body_start ( context, document_node, config )
 
@@ -30,7 +30,7 @@ service PML_HTML_page_writer
         function write_HTML_page_header -> runtime_error or null
             in context PML_HTML_writer_context
             in config PML_to_HTML_config
-            in document_title string
+            in document_title string or null
 
             if i_config.HTML_header as HTML_header is not null then
                 const header_template = HTML_header.get on_error: return_error
@@ -47,12 +47,21 @@ service PML_HTML_page_writer
             in header_template string
             in context PML_HTML_writer_context
             in config PML_to_HTML_config
-            in document_title string
+            in document_title string or null
 
-            const title = i_context.escape_HTML ( i_document_title )
-            variable r = header_template.replace_first (
-                to_replace = "[[=title]]"
-                replace_by = title )
+            variable r = header_template
+
+            const to_replace = "[[=title]]"
+            if document_title is not null then
+                const title = i_context.escape_HTML ( i_document_title )
+                r = r.replace_first (
+                    to_replace,
+                    replace_by = title )
+            else
+                const t = r.remove_all_substrings ( to_replace )
+                assert t is not null
+                r = t
+            .
 
             r = r.replace_first (
                 to_replace = "[[=PML_version]]"
@@ -66,7 +75,7 @@ service PML_HTML_page_writer
                 case enum of i_config.source_code_highlighter
                     when highlightjs
                         head_end.append_line (
-                            '''        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/default.min.css">''' )
+                            '''        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css">''' )
                     when prism
                         head_end.append_line (
                             '''        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.23.0/themes/prism.min.css">''' )
@@ -90,8 +99,8 @@ service PML_HTML_page_writer
 
                 when highlightjs
                     body_start.append_line (
-                        '''        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script>''' )
+                        '''        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script>''' )
 
                 when prism
                     body_start.append_line (

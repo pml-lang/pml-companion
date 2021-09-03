@@ -11,6 +11,7 @@ factory PML_chapter_node_HTML_writer type:PML_node_HTML_writer<PML_chapter_node>
         context.write_line ( ">" )
         context.increase_indent
 
+///
         variable h_level = i_node.level + 1 // level 1 -> h2
         if h_level ># 6 then
             h_level = 6
@@ -22,6 +23,7 @@ factory PML_chapter_node_HTML_writer type:PML_node_HTML_writer<PML_chapter_node>
         context.write_escaped_HTML ( i_node.title )
         context.write_HTML_inline_tag_end ( h_tag )
         context.write_new_line
+.///
 
         context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
 

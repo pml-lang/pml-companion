@@ -3,6 +3,16 @@
 
 service PML_default_values
 
+    attributes type:character
+
+        node_start_symbol = '['
+        node_end_symbol = ']'
+
+        attributes_start_symbol = '('
+        attributes_end_symbol = ')'
+        attribute_assignment_symbol = '='
+    .
+
     attributes
         PML_file_name_extension file_name_extension = file_name_extension.create ( "pml" )
         PML_file_name_end string = se_file_name_extension.separator & a_PML_file_name_extension.value

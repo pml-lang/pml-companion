@@ -5,5 +5,6 @@ type PML_inline_node_with_child_nodes
 
     inherit PML_inline_node
 
-    att child_nodes list<PML_inline_node>
+    // att child_nodes list<PML_inline_node>
+    att child_nodes list<PML_inline_node> or null
 .

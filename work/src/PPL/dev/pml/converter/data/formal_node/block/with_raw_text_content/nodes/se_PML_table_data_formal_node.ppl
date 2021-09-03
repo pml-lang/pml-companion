@@ -5,7 +5,7 @@ service PML_table_data_formal_node
 
     att attributes formal_parameters<*>
         default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id
 
             r.add_parameter ( se_PML_table_formal_node.horizontal_alignments_parameter )
 
@@ -37,13 +37,14 @@ The following format rules apply:
 - If the second-last line is a dash (-) then the last line is a footer.
 '''
                 examples = '''Simple table:
-
 [table_data
     cell 1.1, cell 1.2
     cell 2.1, cell 2.2
 table_data]
 
-[table_data halign="C,L,R" title="Table with header, footer, and column alignments"
+Table with header, footer, and column alignments:
+
+[table_data (halign="C,L,R")
     Position, Product, Price
     -
     1, Organic food, 12.50

@@ -15,7 +15,7 @@ The default file created is 'pml_tags.json' in the current working directory.
 If the file exists already it will be overwritten.''',
             examples = "--file tags.json" )
 
-    att command explicit_paiom_command<string> = explicit_paiom_command<string>.create (
+    att command explicit_paiom_command<file> = explicit_paiom_command<file>.create (
         ids = [# PAIOM_command_id.create ( "export_tags" ) ]
         formal_input_parameters = any_type_formal_parameters_builder.create
             .add_parameter ( a_output_file_parameter )
@@ -30,7 +30,7 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
 
     functions access:private
 
-        function execute ( input any_type_parameters or null ) -> string
+        function execute ( input any_type_parameters or null ) -> file
 
             assert i_input is not null
 
@@ -45,9 +45,11 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
             JSON_writer.write ( """{
     "pml_tags":{
         "pml_version":"{{se_PML_to_HTML_Converter.version}}",
-        "date_time_created":"{{date_time.now.format ( "YYYY-MM-dd'T'HH:mmZ" )}}",
+        "pml_release_date":"{{se_PML_to_HTML_Converter.version_date.to_string}}",
         "tags":[
 """ ).increase_indent.increase_indent.increase_indent
+
+        // "date_time_created":"{{date_time.now.format ( "YYYY-MM-dd'T'HH:mmZ" )}}",
 
             repeat for each formal_node in se_PML_formal_node_registry.sorted_formal_nodes is_last:is_last_node
                 write_formal_node ( writer = JSON_writer, formal_node, is_last_node )
@@ -59,7 +61,9 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
 
             JSON_writer.close
 
-            return """File {{output_file.to_string}} has been created."""
+            OS.out.write_line ( """File {{output_file.to_string}} has been created.""" )
+
+            return output_file
         .
 
         function write_formal_node ( writer PDL_writer, formal_node PML_formal_node<*>, is_last_node yes_no )
@@ -91,7 +95,7 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
                 value = formal_node.HTML_attributes_allowed, is_last = no )
 
             variable is_raw_text_block yes_no
-            variable closing_tag = PML_tokenizer_config_default_values.node_end_symbol.to_string
+            variable closing_tag = PML_default_values.node_end_symbol.to_string
             case type of formal_node
                 when PML_formal_block_node_with_raw_text_content<*>
                     is_raw_text_block = yes
@@ -102,7 +106,7 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
             write_yes_no_member ( writer, name = "is_raw_text_block", value = is_raw_text_block, is_last = no )
 
             write_string_member ( writer, name = "opening_tag",
-                value = PML_tokenizer_config_default_values.node_start_symbol.to_string & formal_node.standard_tag,
+                value = PML_default_values.node_start_symbol.to_string & formal_node.standard_tag,
                 is_last = no )
 
             write_string_member ( writer, name = "closing_tag", value = closing_tag, is_last = no )

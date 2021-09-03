@@ -37,11 +37,11 @@ type PML_document_writer
 
         // specific nodes
 
-        start_document ( title string, authors string or null, date local_date or null )
+        start_document ( title string or null, authors string or null, date local_date or null )
         // TD? end_document ( check_no_indent yes_no )
         end_document
 
-        start_chapter ( title string, id string or null default:null )
+        start_chapter ( title string or null, id string or null default:null )
         end_chapter
 
         // escaping

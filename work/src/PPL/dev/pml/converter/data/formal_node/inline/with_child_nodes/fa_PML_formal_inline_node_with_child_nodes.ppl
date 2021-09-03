@@ -3,6 +3,19 @@
 
 factory PML_formal_inline_node_with_child_nodes
 
+    java_header
+        import dev.pdml.core.data.formalNode.FormalNode;
+        import dev.pml.converter.data.formal_node.helper.se_formal_node;
+    end java_header
+
+    java
+        public FormalNode getPMDLFormalNode() {
+
+            FormalNode formalNode = se_formal_node.createPMDLFormalNode ( this );
+            return formalNode;
+        }
+    end java
+
 %fa_PML_formal_node_functions
 
     creator create kind:in_all

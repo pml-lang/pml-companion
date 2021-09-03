@@ -8,11 +8,26 @@ service PML_attribute_ids
         HTML_start = "html_"
         HTML_class = a_HTML_start & "class"
         id = "id"
-        node_id = "node_id"
+//        node_id = "node_id"
         text = "text"
         title = "title"
         caption = "caption"
     .
 
+    attributes type:parameter_id
+        id_parameter_id = parameter_id.create ( a_id )
+        title_parameter_id = parameter_id.create ( a_title )
+        file_parameter_id = parameter_id.create ( a_file )
+    .
+
     att HTML_start_size pos_32 = a_HTML_start.size
+
+    function is_HTML_attribute_name ( attribute_name string ) -> yes_no
+
+        if attribute_name.size <= a_HTML_start_size then
+            return no
+        .
+
+        return attribute_name.starts_with ( HTML_start )
+    .
 .

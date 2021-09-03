@@ -8,7 +8,7 @@ service PML_reference_manual
         PML_file_name file_name = file_name.create ( "index.pml" )
     .
 
-    function create_manual_for_path -> string or anticipated_error
+    function create_manual_for_path -> file or anticipated_error
         in temp_directory_path absolute_or_relative_directory_path
         in output_directory_path absolute_or_relative_directory_path
 
@@ -20,15 +20,12 @@ service PML_reference_manual
         return create_manual ( temp_directory, output_directory )
     .
 
-    function create_manual -> string or anticipated_error
+    function create_manual -> file or anticipated_error
         in temp_directory directory
         in output_directory directory
 
         const PML_file = create_PML_file ( temp_directory ) on_error:return_error
-        const HTM_file = create_HTML_file ( output_directory, PML_file ) on_error:return_error
-
-        return """Ok. The manual has been created in file
-{{HTM_file.to_string}}"""
+        return create_HTML_file ( output_directory, PML_file )
     .
 
     functions access:private
@@ -87,10 +84,13 @@ service PML_reference_manual
                 authors = "Christian Neumanns"
                 date = local_date.today )
 
+//            writer.write_non_escaped_paragraph ( "Author: Christian Neumanns" )
+//            writer.write_non_escaped_paragraph ( "Date: " & local_date.today.to_string )
+
             chapter_introduction ( writer )
             chapter_block_nodes ( writer )
             chapter_inline_nodes ( writer )
-            chapter_text_processing_nodes ( writer )
+//            chapter_text_processing_nodes ( writer )
 
             writer.end_document
         .
@@ -99,9 +99,9 @@ service PML_reference_manual
 
             writer.start_chapter ( title = "Introduction" )
 
-            writer.write_non_escaped_paragraph ( "This document describes all standard PML nodes. For each type of node, its tags and attributes are listed, and an example demonstrates how to use it." )
+            writer.write_non_escaped_paragraph ( "This document describes all standard [link url=https://www.pml-lang.dev/ text=PML] nodes. For each type of node, its tag and attributes are listed, and an example demonstrates how to use it." )
 
-            writer.write_non_escaped_paragraph ( '''If you have questions or suggestions then please send an email to contact {at} pml-lang {dot} dev. Thank you.''' )
+            writer.write_non_escaped_paragraph ( '''If you have questions or suggestions then please send an email to contact {at} pml-lang {dot} dev.''' )
 
             writer.end_chapter
         .
@@ -110,14 +110,15 @@ service PML_reference_manual
 
             writer.start_chapter ( title = "Block Nodes" )
 
-            writer.write_non_escaped_paragraph ( "A [i block] node represents a section that starts at a given line in the document and ends at a subsequent line." )
+            writer.write_non_escaped_paragraph ( "A [i block] node is a section that starts at a given line in the document and ends at a subsequent line." )
 
-            writer.write_non_escaped_paragraph ( "For example, the [c chapter] node is a [i block] node. It starts at a given line of the document, and ends at a subsequent line." )
+            writer.write_non_escaped_paragraph ( "For example, a [i chapter], a [i paragraph], and a [i list] are all [i block] nodes." )
 
             writer.start_chapter ( title = "Fundamental Nodes" )
                 write_node ( writer, node = se_PML_standard_formal_nodes.document )
                 write_node ( writer, node = se_PML_standard_formal_nodes.paragraph )
                 write_node ( writer, node = se_PML_standard_formal_nodes.chapter )
+                write_node ( writer, node = se_PML_standard_formal_nodes.chapter_title )
             writer.end_chapter
 
             writer.start_chapter ( title = "Common Nodes" )
@@ -189,6 +190,7 @@ service PML_reference_manual
             writer.end_chapter
         .
 
+///
         function chapter_text_processing_nodes ( writer PML_document_writer )
 
             writer.start_chapter ( title = "Text Processing Nodes" )
@@ -199,6 +201,7 @@ service PML_reference_manual
 
             writer.end_chapter
         .
+.///
 
         function chapter_comments ( writer PML_document_writer )
 
@@ -206,7 +209,7 @@ service PML_reference_manual
 
             writer.write_non_escaped_paragraph ( '''A comment starts with [c \[-] and ends with [c -\]]. Comments can appear anywhere and they can be nested to any level. Text within comments is ignored.''' )
 
-            write_node_examples ( writer, examples = '''This is [- good -] awesome.
+            write_node_examples ( writer, examples = '''This is [- good -]awesome.
 [- TODO: explain why -]
 
 Text
@@ -297,7 +300,8 @@ More text''' )
                         formal_parameter.documentation?.title
                         if_null: se_string_utilities.convert_id_to_title ( formal_parameter.standard_id.value ) )
                     writer.write_indent
-                    writer.write ( """[el title={{title}}""" )
+//                    writer.write ( """[el title={{title}}""" )
+                    writer.write ( """[el [header {{title}}]""" )
 
                     if node.default_attribute_id as default_attribute_id is not null then
                         if formal_parameter.standard_id.value =v default_attribute_id.value then

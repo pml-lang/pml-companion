@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type text_error
+
+    java_header
+        import dev.pp.text.error.TextError;
+    end java_header
+
+    java
+        public TextError getJavaTextError();
+    end java
+
+    inherit text_error_or_warning
+.

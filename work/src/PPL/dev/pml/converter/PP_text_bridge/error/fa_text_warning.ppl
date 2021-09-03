@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory text_warning
+
+    java_header
+        import dev.pp.text.error.TextWarning;
+    end java_header
+
+    java
+        TextWarning textWarning;
+
+        public TextWarning getJavaTextWarning() {
+
+            if ( textWarning == null ) {
+                textWarning = new TextWarning (
+                    a_id == null ? null : a_id.getJavaString(),
+                    a_info.getJavaString(),
+                    a_token == null ? null : a_token.getJavaTextToken() );
+            }
+
+            return textWarning;
+        }
+
+        // public static TextWarning createFromJava ( TextWarning textWarning )
+    end java
+
+    functions
+///
+        token_text -> string or null
+
+        location -> text_location or null
+.///
+
+        to_string native:yes
+
+            java
+                return new fa_string ( getJavaTextWarning().toString() );
+            end java
+        .
+
+        to_log_string native:yes
+
+            java
+                return new fa_string ( getJavaTextWarning().toLogString() );
+            end java
+        .
+    .
+
+    creator create kind:in_all
+.

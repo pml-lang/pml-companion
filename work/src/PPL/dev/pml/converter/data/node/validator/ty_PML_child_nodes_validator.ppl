@@ -3,5 +3,6 @@
 
 type PML_child_nodes_validator
 
-    function check_child_nodes ( child_nodes list<PML_node> or null ) -> list<PML_child_node_error> or null
+    // function check_child_nodes ( child_nodes list<PML_node> or null ) -> list<PML_child_node_error> or null
+    function check_child_nodes ( child_nodes list<PML_node> or null ) -> list<text_error> or null
 .

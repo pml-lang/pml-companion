@@ -3,7 +3,7 @@
 
 type PML_table_data_node
 
-    inherit PML_block_node_with_raw_text_content, PML_has_optional_id_and_title_attributes, PML_has_HTML_attributes
+    inherit PML_block_node_with_raw_text_content, PML_has_HTML_attributes
 
     attributes
         header_row list<string or null> or null

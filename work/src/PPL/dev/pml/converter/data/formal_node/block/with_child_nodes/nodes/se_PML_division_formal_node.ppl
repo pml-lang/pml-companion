@@ -3,7 +3,7 @@
 
 service PML_division_formal_node
 
-    att attributes formal_parameters<*> = se_formal_node_attributes.optional_id_and_title_attributes
+    att attributes formal_parameters<*> = se_formal_node_attributes.optional_id_attributes
 
     att node PML_formal_block_node_with_child_nodes<PML_division_node> = \
         PML_formal_block_node_with_child_nodes<PML_division_node>.create (
@@ -11,12 +11,13 @@ service PML_division_formal_node
             attributes = a_attributes
             default_attribute_id = null
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = fa_PML_division_node_creator.create
             HTML_writer = fa_PML_division_node_HTML_writer.create
             documentation = simple_documentation.create (
                 title = "Division"
                 description = "A division or section in the document. This node is typically used to render a HTML <div>...</div> block with a specific set of HTML attributes."
-            examples = '''[div html_class=syntax-block
+            examples = '''[div (html_class=syntax-block)
     text text text
 ]''' ) )
 .

@@ -24,7 +24,7 @@ halign = "L, C, , R"''' ) )
 
     att attributes formal_parameters<*>
         default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id
 
 ///
             r.add_yes_no_parameter (
@@ -45,6 +45,7 @@ halign = "L, C, , R"''' ) )
             tags = [# "table" ]
             attributes = a_attributes
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = PML_table_node_creator.create
             HTML_writer = PML_table_node_HTML_writer.create
             documentation = simple_documentation.create (
@@ -67,18 +68,19 @@ Table with header and footer:
     [theader
         [tr [tc Pos.] [tc Group] [tc Total invoiced]]
     ]
-    [tr [tc 1] [tc [i Organic] food] [tc html_style="text-align:right;" 12,000.22]]
-    [tr [tc 2] [tc Meditation lessons] [tc html_style="text-align:right;" 21,350.00]]
+    [tr [tc 1] [tc [i Organic] food] [tc (html_style="text-align:right;") 12,000.22]]
+    [tr [tc 2] [tc Meditation lessons] [tc (html_style="text-align:right;") 21,350.00]]
     [tfooter
-        [tr [tc] [tc html_style="text-align:right;" Sum:] [tc html_style="text-align:right;" 33,350.22]]
+        [tr [tc] [tc (html_style="text-align:right;") Sum:] [tc (html_style="text-align:right;") 33,350.22]]
     ]
 ]''' ) )
 
     att table_header_node PML_formal_block_node_with_child_nodes<PML_table_header_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_header_node>.create (
             tags = [# "theader" ]
-            attributes = null
+            attributes = se_formal_node_attributes.optional_id_attributes
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = PML_table_header_node_creator.create
             HTML_writer = PML_table_header_node_HTML_writer.create
             documentation = simple_documentation.create (
@@ -97,8 +99,9 @@ Table with header and footer:
     att table_footer_node PML_formal_block_node_with_child_nodes<PML_table_footer_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_footer_node>.create (
             tags = [# "tfooter" ]
-            attributes = null
+            attributes = se_formal_node_attributes.optional_id_attributes
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = PML_table_footer_node_creator.create
             HTML_writer = PML_table_footer_node_HTML_writer.create
             documentation = simple_documentation.create (
@@ -117,8 +120,9 @@ Table with header and footer:
     att table_row_node PML_formal_block_node_with_child_nodes<PML_table_row_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_row_node>.create (
             tags = [# "tr" ]
-            attributes = null
+            attributes = se_formal_node_attributes.optional_id_attributes
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = PML_table_row_node_creator.create
             HTML_writer = PML_table_row_node_HTML_writer.create
             documentation = simple_documentation.create (
@@ -134,8 +138,9 @@ Table with header and footer:
     att table_cell_node PML_formal_block_node_with_child_nodes<PML_table_cell_node> = \
         PML_formal_block_node_with_child_nodes<PML_table_cell_node>.create (
             tags = [# "tc" ]
-            attributes = null
+            attributes = se_formal_node_attributes.optional_id_attributes
             HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = no
             node_creator = PML_table_cell_node_creator.create
             HTML_writer = PML_table_cell_node_HTML_writer.create
             documentation = simple_documentation.create (

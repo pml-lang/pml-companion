@@ -102,16 +102,16 @@ factory PML_document_writer
 
         write_node_attributes
 
-            write_character ( se_PML_tokenizer_config_default_values.attributes_start_symbol )
+            write_character ( se_PML_default_values.attributes_start_symbol )
 
             repeat for each id, value in attributes is_first:is_first
                 if not is_first then
                     write ( " " )
                 .
-                write ( """{{id}}{{se_PML_tokenizer_config_default_values.attribute_assignment_symbol}}"{{escape_quote(value)}}"""" )
+                write ( """{{id}}{{se_PML_default_values.attribute_assignment_symbol}}"{{escape_quote(value)}}"""" )
             .
 
-            write_character ( se_PML_tokenizer_config_default_values.attributes_end_symbol )
+            write_character ( se_PML_default_values.attributes_end_symbol )
         .
 
 
@@ -119,21 +119,29 @@ factory PML_document_writer
 
         start_document
 
-            const attributes = mutable_map<key:string value:string>.create
+            write_indent
+            write_block_node_start (
+                tag_name = se_PML_document_formal_node.node.standard_tag
+                attributes = null )
 
-            attributes.add ( key = se_PML_attribute_ids.title, value = i_title )
+            if i_title is not null then
+                write_block_node_start (
+                    tag_name = se_PML_chapter_title_formal_node.node.standard_tag
+                    attributes = null )
+                write ( escape_HTML ( i_title ) )
+                write_HTML_block_tag_end ( tag_name = null )
+            .
+
+            write_new_line
+            increase_indent
 
             if i_authors is not null then
-                attributes.add ( key = "authors", value = i_authors )
+                write_escaped_paragraph ( """Author: {{i_authors}}""" )
             .
 
             if i_date is not null then
-                attributes.add ( key = "date", value = i_date.format )
+                write_escaped_paragraph ( """Date: {{local_date.today.to_string}}""" )
             .
-
-            write_block_node_start_on_distinct_line (
-                tag_name = se_PML_document_formal_node.node.standard_tag
-                attributes = attributes.make_immutable )
         .
 
         end_document
@@ -142,18 +150,28 @@ factory PML_document_writer
         .
 
         start_chapter
-
-            const attributes = mutable_map<key:string value:string>.create
-
-            attributes.add ( key = se_PML_attribute_ids.title, value = i_title )
+            variable attributes map<key:string value:string> or null = null
 
             if i_id is not null then
-                attributes.add ( key = se_PML_attribute_ids.id, value = i_id )
+                attributes = map<key:string value:string>.create_singleton (
+                    key = se_PML_attribute_ids.id, value = i_id )
             .
 
-            write_block_node_start_on_distinct_line (
+            write_indent
+            write_block_node_start (
                 tag_name = se_PML_chapter_formal_node.node.standard_tag
-                attributes = attributes.make_immutable )
+                attributes )
+
+            if i_title is not null then
+                write_block_node_start (
+                    tag_name = se_PML_chapter_title_formal_node.node.standard_tag
+                    attributes = null )
+                write ( escape_HTML ( i_title ) )
+                write_HTML_block_tag_end ( tag_name = null )
+            .
+
+            write_new_line
+            increase_indent
         .
 
         end_chapter
@@ -164,22 +182,22 @@ factory PML_document_writer
 
 //            write_new_line
             write_indent
-            write_line ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}p {{escape_HTML(i_string)}}{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" )
+            write_line ( """{{se_PML_default_values.node_start_symbol}}p {{escape_HTML(i_string)}}{{se_PML_default_values.node_end_symbol}}""" )
         .
 
         write_non_escaped_paragraph
 
 //            write_new_line
             write_indent
-            write_line ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}p {{i_string}}{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" )
+            write_line ( """{{se_PML_default_values.node_start_symbol}}p {{i_string}}{{se_PML_default_values.node_end_symbol}}""" )
         .
 
         // TD should be made faster
         escape_PML = i_string.replace_all (
-            to_replace = se_PML_tokenizer_config_default_values.node_start_symbol.to_string
-            replace_by = """\{{se_PML_tokenizer_config_default_values.node_start_symbol}}""" ).replace_all (
-            to_replace = se_PML_tokenizer_config_default_values.node_end_symbol.to_string
-            replace_by = """\{{se_PML_tokenizer_config_default_values.node_end_symbol}}""" ).replace_all (
+            to_replace = se_PML_default_values.node_start_symbol.to_string
+            replace_by = """\{{se_PML_default_values.node_start_symbol}}""" ).replace_all (
+            to_replace = se_PML_default_values.node_end_symbol.to_string
+            replace_by = """\{{se_PML_default_values.node_end_symbol}}""" ).replace_all (
             to_replace = "="
             replace_by = '''\=''' )
 
@@ -194,7 +212,7 @@ factory PML_document_writer
 
         write_node_start ( tag_name string, attributes map<key:string, value:string> or null )
 
-            write ( """{{se_PML_tokenizer_config_default_values.node_start_symbol}}{{i_tag_name}} """ )
+            write ( """{{se_PML_default_values.node_start_symbol}}{{i_tag_name}} """ )
 
             if i_attributes is not null then
                 write_node_attributes ( i_attributes )
@@ -206,7 +224,7 @@ factory PML_document_writer
             if i_tag_name is not null then
                 write ( i_tag_name )
             .
-            write_character ( se_PML_tokenizer_config_default_values.node_end_symbol )
+            write_character ( se_PML_default_values.node_end_symbol )
         .
 
         escape_quote ( string ) -> string = i_string.replace_all (

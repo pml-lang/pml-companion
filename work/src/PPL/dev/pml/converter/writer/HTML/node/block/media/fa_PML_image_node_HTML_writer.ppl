@@ -7,12 +7,9 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
 
         // alignment
         context.write_indent_and_string ( "<figure" )
-        context.write_node_id_attribute ( i_node )
+        context.write_node_id ( i_node )
         context.write_line ( """ style="text-align: {{i_node.alignment}}">""" )
         context.increase_indent
-
-        // title
-        context.write_node_title ( i_node )
 
         // link
         if i_node.link as link is not null then
@@ -49,12 +46,14 @@ factory PML_image_node_HTML_writer type:PML_node_HTML_writer<PML_image_node>
         const Unix_path = se_directory_or_file_path.to_Unix_path ( i_node.source.to_string )
         context.write ( """ src="{{i_context.escape_HTML ( Unix_path )}}"""" )
 
+///
         if not se_PML_HTML_attributes.has_HTML_attribute ( i_node, HTML_attribute_id = "alt" ) then
             const alt_value = i_node.title if_null: i_node.caption
             if alt_value is not null then
                 context.write ( """ alt="{{i_context.escape_HTML ( alt_value )}}"""" )
             .
         .
+.///
 
         if i_node.width as width is not null then
             context.write ( """ width="{{width}}"""" )

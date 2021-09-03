@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_HTML_code_formal_node
+
+    att node PML_formal_block_node_with_raw_text_content<PML_HTML_code_node> = \
+        PML_formal_block_node_with_raw_text_content<PML_HTML_code_node>.create (
+            tags = [# "html" ]
+            attributes = se_formal_node_attributes.optional_id_attributes
+            HTML_attributes_allowed = no
+            node_creator = PML_HTML_code_node_creator.create
+            HTML_writer = PML_HTML_code_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "HTML Code"
+                description = "A node that contains HTML code. The HTML code is not processed in any way by the PML converter. It is passed as is to the resulting HTML document. This allows you to embed arbitrary HTML code in your final document."
+                examples = '''[html
+    <p>This is pure <b>HTML</b> code.</p>
+html]''' ) )
+.

@@ -1,0 +1,10 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_space_node_creator type:PML_node_creator<PML_space_node>
+
+    // TD should use cached object
+    function create_node = PML_space_node.create
+
+    creator create kind:in_all
+.

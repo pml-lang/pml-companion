@@ -1,0 +1,22 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_chapter_subtitle_node_HTML_writer type:PML_node_HTML_writer<PML_chapter_subtitle_node>
+
+    function write
+
+        variable h_level = i_node.chapter_level
+        if h_level ># 6 then
+            h_level = 6
+        .
+        const h_tag = "h" & h_level.to_string
+
+        context.write_indent
+        context.write_HTML_inline_tag_start ( HTML_tag_name = h_tag, CSS_class_name = "pml-chapter-subtitle" )
+        context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
+        context.write_HTML_inline_tag_end ( h_tag )
+        context.write_new_line
+    .
+
+    creator create kind:in_all
+.

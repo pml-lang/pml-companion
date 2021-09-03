@@ -5,23 +5,9 @@ factory PML_document_node
 
     function tag = se_PML_standard_formal_nodes.document.standard_tag
 
-    function chapters
+    function title_text = se_PML_chapter_node.title_text ( a_child_nodes )
 
-        if a_child_nodes is null then
-            return null
-        .
-
-        const r = mutable_list<PML_chapter_node>.create
-        repeat for each child_node in a_child_nodes
-            case type of child_node
-                when PML_chapter_node chapter_node
-                    r.append ( chapter_node )
-                otherwise
-                    next repeat
-            .
-        .
-        return r.make_immutable_or_null
-    .
+    function direct_sub_chapters = se_PML_chapter_node.direct_sub_chapters ( a_child_nodes )
 
     creator create kind:in_all
 .

@@ -5,22 +5,17 @@ type PML_chapter_node
 
     inherit PML_block_node_with_child_nodes
         redefine
-            att child_nodes list<PML_block_node> or null
+            att node_id string // null not allowed
         .
     .
 
     inherit PML_has_HTML_attributes
 
-    inherit PML_has_optional_id_and_title_attributes
-        redefine
-            att node_id string // non-null
-            att title string // non-null
-        .
-    .
-
     att level pos_32
+
+    function title_text -> string or null
 
     function has_sub_chapters -> yes_no
 
-    function sub_chapters -> list<PML_chapter_node> or null
+    function direct_sub_chapters -> list<PML_chapter_node> or null
 .

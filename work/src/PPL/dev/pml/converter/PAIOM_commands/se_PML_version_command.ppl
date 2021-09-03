@@ -11,7 +11,11 @@ service PML_version_command
             PAIOM_command_id.create ( "/version" )
         ]
         formal_input_parameters = null
-        executor = { input => """PML version: {{se_PML_to_HTML_Converter.version}} {{se_PML_to_HTML_Converter.version_date.to_string}}""" },
+        executor = { input ->
+            const info = """PML version: {{se_PML_to_HTML_Converter.version}} {{se_PML_to_HTML_Converter.version_date.to_string}}"""
+            OS.out.write_line ( info )
+            return info
+        },
         documentation = simple_documentation.create (
             title = "Get PML's Version Number"
             description = null

@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory text_error
+
+    java_header
+        import dev.pp.text.error.TextError;
+
+        import dev.pml.converter.PP_text_bridge.token.fa_text_token;
+    end java_header
+
+    java
+        TextError textError;
+
+        public TextError getJavaTextError() {
+
+            if ( textError == null ) {
+                textError = new TextError (
+                    a_id == null ? null : a_id.getJavaString(),
+                    a_info.getJavaString(),
+                    a_token == null ? null : a_token.getJavaTextToken() );
+            }
+
+            return textError;
+        }
+
+        public static ty_text_error createFromJava ( TextError textError ) {
+
+            return create_from_data (
+                textError.getId() == null ? null : new fa_string ( textError.getId() ),
+                new fa_string ( textError.getMessage() ),
+                fa_text_token.createFromJavaNullable ( textError.getToken() ) );
+        }
+
+        public static ty_text_error createFromJavaNullable ( TextError textError ) {
+
+            if ( textError == null ) {
+                return null;
+            } else {
+                return createFromJava ( textError );
+            }
+        }
+    end java
+
+    functions
+///
+        token_text -> string or null
+
+        location -> text_location or null
+.///
+
+        to_string native:yes
+
+            java
+                return new fa_string ( getJavaTextError().toString() );
+            end java
+        .
+
+        to_log_string native:yes
+
+            java
+                return new fa_string ( getJavaTextError().toLogString() );
+            end java
+        .
+    .
+
+    creator create kind:in_all
+
+    creator create_from_data access:private -> text_error
+        in id string or null
+        in info string
+        in token text_token or null
+
+        return create ( id, info, token )
+    .
+.

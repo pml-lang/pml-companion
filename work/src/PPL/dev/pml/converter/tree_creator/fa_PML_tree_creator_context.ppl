@@ -1,0 +1,90 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_tree_creator_context
+
+    attributes access:private
+        variable att chapter_counter pos_32 default: 1
+
+        variable att nodes_with_id_attribute mutable_map<key:string value:mutable_PDML_AST_node> \
+            default:mutable_map<key:string value:mutable_PDML_AST_node>.create
+    .
+
+    functions
+
+        get_chapter_auto_id
+
+            const id = """ch__{{a_chapter_counter}}"""
+            // TD check is unique
+
+            a_chapter_counter = a_chapter_counter + 1
+
+            return id
+        .
+
+        // TD a_nodes_with_id_attribute should be created during parsing, in the parser's event handler
+        define_nodes_with_id_attribute
+
+            a_nodes_with_id_attribute = mutable_map<key:string value:mutable_PDML_AST_node>.create
+
+            i_root_node.visit_tree__only_nodes (
+                node_consumer = { node -> add_node_with_id_attribute ( node ) },
+                include_this_node = yes )
+        .
+
+        function add_node_with_id_attribute access:private ( node mutable_PDML_AST_node )
+
+            const id_attribute = i_node.attributes?.get_or_null ( se_PML_attribute_ids.id ) on_null:return
+            const id = id_attribute.value.text.to_string
+
+            const existing_node = a_nodes_with_id_attribute.get_or_null ( id )
+            if existing_node is null then
+                a_nodes_with_id_attribute.add ( key = id, value = i_node )
+            else
+                const existing_attribute = existing_node.attributes?.get_or_null ( se_PML_attribute_ids.id )
+                assert existing_attribute is not null
+                non_canceling_error (
+                    id = "IDENTIFIER_NOT_UNIQUE"
+                    info = """Id '{{id}}' has already been defined at
+{{existing_attribute.value.location?.to_string if_null: "a previous location"}}
+"""
+                    token = id_attribute.value )
+            .
+        .
+
+        try_get_node_by_id
+
+            const id = i_node_id_attribute.value.text.to_string
+            const node = a_nodes_with_id_attribute.get_or_null ( id )
+            if node is null then
+                non_canceling_error (
+                    id = "IDENTIFIER_DOES_NOT_EXIST"
+                    info = """A node with id '{{id}}' does not exist."""
+                    token = i_node_id_attribute.value )
+            .
+
+            return node
+        .
+
+
+        // error handling
+
+        canceling_error
+
+            const error = text_error.create ( id, info, token )
+            a_error_handler.handle_error ( error )
+            return error
+        .
+
+        non_canceling_error
+            a_error_handler.handle_error_data ( id, info, token )
+        .
+
+        warning
+            a_error_handler.handle_warning_data ( id, info, token )
+        .
+    .
+
+    creator create kind:in_all
+
+.

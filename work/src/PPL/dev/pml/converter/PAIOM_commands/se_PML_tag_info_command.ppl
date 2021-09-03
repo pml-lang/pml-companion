@@ -24,37 +24,44 @@ service PML_tag_info_command
 
     function execute ( input any_type_parameters or null ) -> string
 
-        assert i_input is not null
-
-        const tag = i_input.require_value<string or null> ( "tag" )
-
-        const verbosity = i_input.require_value<string or null> ( "verbosity" ) \
-            if_null: if tag =r null then "min" else "max"
-
-        if tag is null then
-            // all tags
-            if verbosity =v "max" then
-                return formal_nodes_info
-            else
-                return formal_nodes_summary_info
-            .
-        else
-            const formal_node = se_PML_formal_node_registry.get_by_any_tag_or_null ( tag )
-            if formal_node is null then
-                return """Tag '{{tag}}' doesn't exist.
-The following tags exist: {{se_PML_formal_node_registry.sorted_any_tag_list.to_long_string}}"""
-            .
-
-            if verbosity =v "min" then
-                return """{{formal_node.standard_tag}}, {{formal_node.documentation.title}}"""
-            else
-                return """
-{{formal_node.to_long_string}}"""
-            .
-        .
+        const info = create_info ( i_input )
+        OS.out.write_line ( info )
+        return info
     .
 
     functions access:private
+
+        function create_info ( input any_type_parameters or null ) -> string
+
+            assert i_input is not null
+
+            const tag = i_input.require_value<string or null> ( "tag" )
+
+            const verbosity = i_input.require_value<string or null> ( "verbosity" ) \
+                if_null: if tag =r null then "min" else "max"
+
+            if tag is null then
+                // all tags
+                if verbosity =v "max" then
+                    return formal_nodes_info
+                else
+                    return formal_nodes_summary_info
+                .
+            else
+                const formal_node = se_PML_formal_node_registry.get_by_any_tag_or_null ( tag )
+                if formal_node is null then
+                    return """Tag '{{tag}}' doesn't exist.
+    The following tags exist: {{se_PML_formal_node_registry.sorted_any_tag_list.to_long_string}}"""
+                .
+
+                if verbosity =v "min" then
+                    return """{{formal_node.standard_tag}}, {{formal_node.documentation.title}}"""
+                else
+                    return """
+    {{formal_node.to_long_string}}"""
+                .
+            .
+        .
 
         function formal_nodes_summary_info -> string
 

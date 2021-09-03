@@ -3,7 +3,8 @@
 
 template write_PML_source_code_HTML
 
-        context.write_node_id_and_title ( node, HTML_tag_name = "pre" )
+        context.write_indent_and_string ( "<pre" )
+        context.write_node_id ( i_node )
 
         variable pre_class_name string or null
         variable code_class_name string or null

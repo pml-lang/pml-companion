@@ -3,26 +3,25 @@
 
 service PML_link_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = any_type_formal_parameters_builder.create
+    att URL_parameter formal_parameter<URL> default:se_formal_parameter_creator.create<URL> (
+        ids = [# "url" ]
+        default_value_supplier = null
+        value_parser = { string => URL.try_parse ( string ) }
+        title = "URL"
+        description = "The Uniform Resource Locator (URL) of the link."
+        examples = '''url = https://www.ppl-lang.dev''' )
 
-            r.add<URL> (
-                ids = [# "url" ]
-                value_parser = { string => URL.try_parse ( string ) }
-                title = "URL"
-                description = "The Uniform Resource Locator (URL) of the link."
-                examples = '''url = https://www.ppl-lang.dev''' )
-            r.add_string_or_null_parameter (
-                ids = [# se_PML_attribute_ids.text ]
-                default_value_supplier = { null }
-                title = "URL text"
-                description = "The text to be displayed instead of the URL. If no text is specified then the URL itself is displayed."
-                examples = '''text = our website''' )
+    att text_parameter formal_parameter<string or null> default:se_formal_parameter_creator.string_or_null (
+        ids = [# se_PML_attribute_ids.text ]
+        default_value_supplier = { null }
+        title = "URL text"
+        description = "The text to be displayed instead of the URL. If no text is specified then the URL itself is displayed."
+        examples = '''text = our website''' )
 
-            return r.make_immutable
-        .
-    .
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( a_URL_parameter )
+        .add_parameter ( a_text_parameter )
+        .make_immutable
 
     att node PML_formal_inline_node_without_child_nodes<PML_link_node> = \
         PML_formal_inline_node_without_child_nodes<PML_link_node>.create (
@@ -35,5 +34,5 @@ service PML_link_formal_node
             documentation = simple_documentation.create (
                 title = "URL Link"
                 description = "A URL link to a resource, such as a website or a file to download."
-                examples = '''Please have a look at [link url=http://www.example.com/articles/123 text=this article] for more information.''' ) )
+                examples = '''Please have a look at [link url=http://www.example.com/articles/123 text="this article"] for more information.''' ) )
 .

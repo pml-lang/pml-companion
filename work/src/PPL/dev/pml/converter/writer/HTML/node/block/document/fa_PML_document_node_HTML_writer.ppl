@@ -10,10 +10,11 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
         context.write_line ( ">" )
         context.increase_indent
 
+///
         context.write_HTML_block_tag_start ( HTML_tag_name = "div", CSS_class_name = "pml-doc-title-wrapper" )
         context.increase_indent
 
-        write_title ( title = i_node.title, context )
+//        write_title ( title = i_node.title, context )
 
         if i_node.authors as authors is not null then
             write_authors ( authors, context )
@@ -25,6 +26,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
 
         context.decrease_indent
         context.write_HTML_block_tag_end ( "div" )
+.///
 
         if i_config.TOC_position =r PML_TOC_position.top then
             se_PML_HTML_TOC.write_TOC ( document_node = i_node, context, max_level = 10 )
@@ -38,6 +40,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
 
     functions access:private
 
+///
         function write_title ( title string, context PML_HTML_writer_context )
 
             context.write_indent
@@ -101,6 +104,7 @@ factory PML_document_node_HTML_writer type:PML_node_HTML_writer<PML_document_nod
                 context.write ( time.format ( i_time_format ) )
             .
         .
+.///
     .
 
     creator create kind:in_all

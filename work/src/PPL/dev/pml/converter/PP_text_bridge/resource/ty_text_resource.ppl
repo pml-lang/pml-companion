@@ -1,0 +1,25 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+type text_resource
+
+    java_header
+        import dev.pp.text.resource.TextResource;
+    end java_header
+
+    java
+        public TextResource getJavaTextResource();
+    end java
+
+    attributes
+        resource non_error or null
+        name string
+    .
+
+    functions
+
+        try_get_text_line ( line_number pos_64 ) -> string or null or runtime_error
+
+        // try_get_text_line_with_inline_marker ( line_number pos_64, position pos_64, marker string ) -> string or null or runtime_error
+    .
+.

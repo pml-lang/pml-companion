@@ -8,7 +8,7 @@ service PML_HTML_TOC
         in context PML_HTML_writer_context
         in max_level pos_32 default:10
 
-        const chapters = i_document_node.chapters on_null: return
+        const chapters = i_document_node.direct_sub_chapters on_null: return
 
         write_TOC_start ( context, document_node )
 
@@ -63,7 +63,7 @@ service PML_HTML_TOC
                 chapter.level >= max_level
 
             const id = i_context.escape_HTML ( chapter.node_id )
-            const title = i_context.escape_HTML ( chapter.title )
+            const title = i_context.escape_HTML ( chapter.title_text if_null: "MISSING TITLE" )
 
             if is_leaf then
                 context.write_indent
@@ -102,7 +102,7 @@ service PML_HTML_TOC
                 context.write_HTML_block_tag_start ( HTML_tag_name = "ul", CSS_class_name = null )
                 context.increase_indent
 
-                if chapter.sub_chapters as sub_chapters is not null then
+                if chapter.direct_sub_chapters as sub_chapters is not null then
                     repeat for each sub_chapter in sub_chapters
                         write_TOC_chapter ( chapter = sub_chapter, i_context, i_max_level )
                     .

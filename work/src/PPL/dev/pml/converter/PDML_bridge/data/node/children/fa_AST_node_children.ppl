@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory AST_node_children
+
+
+    attributes access:private
+        list mutable_list<AST_node_child>
+    .
+
+    functions
+
+        // queries
+
+        is_empty = a_list.is_empty
+
+        get_list = list.make_immutable_or_null
+
+        first_child = a_list.first
+
+        first_child_or_null = if not list.is_empty then a_list.first else null
+
+        get_single_text_content_or_null
+
+            if a_list.size #v 1 then
+                return null
+            .
+
+            case type of first_child
+                when text__AST_node_child node_text
+                    return node_text.text.text
+                otherwise
+                    return null
+            .
+        .
+
+
+        // mutations
+
+        append
+            a_list.append ( child )
+        .
+
+
+        to_string
+
+            const size = list.size
+            return size.to_string & if size =v 1 then " child" else " children"
+        .
+    .
+
+    creator create kind:in_all
+
+        this.list = mutable_list<AST_node_child>.create
+
+        return this
+    .
+.

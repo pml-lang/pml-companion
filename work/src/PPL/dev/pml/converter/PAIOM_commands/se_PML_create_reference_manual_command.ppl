@@ -27,8 +27,8 @@ By default directory '{{se_OS_directories.temporary_files_directory_path}}' is u
 The temporary directory can manually be deleted after the PML Reference Manual has been created."""
                 examples = "ref_manual/temp" ) )
 
-    att command explicit_paiom_command<string or anticipated_error> = \
-        explicit_paiom_command<string or anticipated_error>.create (
+    att command explicit_paiom_command<file or anticipated_error> = \
+        explicit_paiom_command<file or anticipated_error>.create (
 
         ids = [# PAIOM_command_id.create ( "create_reference_manual" ), PAIOM_command_id.create ( "crm" ) ]
         formal_input_parameters = any_type_formal_parameters_builder.create
@@ -41,7 +41,7 @@ The temporary directory can manually be deleted after the PML Reference Manual h
             description = "This command creates the PML reference manual."
             examples = null ) )
 
-    function execute ( input any_type_parameters or null ) -> string or anticipated_error
+    function execute ( input any_type_parameters or null ) -> file or anticipated_error
 
         assert i_input is not null
 

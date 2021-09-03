@@ -14,5 +14,6 @@ service PML_subscript_formal_node
                 title = "Subscript Text"
                 description = "Subscript text is rendered in a smaller font below the normal text line."
                 examples = '''Water: H[sub 2]O
+
 This is [sub subscript], and this is [sup superscript]''' ) )
 .

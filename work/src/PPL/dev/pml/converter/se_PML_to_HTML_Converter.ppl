@@ -3,8 +3,17 @@
 
 service PML_to_HTML_Converter
 
-    att version string = "1.5.0"
-    att version_date local_date = local_date.parse_or_throw ( "2021-06-08" )
+    att version string = "2.0.0"
+    att version_date local_date = local_date.parse_or_throw ( "2021-09-03" )
+
+    function try_convert_PML_file_path_string -> file or anticipated_error
+        in absolute_or_relative_PML_file_path string
+
+        const PML_file_path = absolute_or_relative_file_path_parser.create.try_parse (
+            i_absolute_or_relative_PML_file_path ) on_error: return_error
+
+        return try_convert ( PML_to_HTML_config.create_for_PML_file_path ( PML_file_path ) )
+    .
 
     function try_convert ( config PML_to_HTML_config ) -> file or anticipated_error
 
@@ -15,7 +24,13 @@ service PML_to_HTML_Converter
 
         se_PML_to_HTML_checker.check_parameters ( resources_directory, output_directory ) on_error:return_error
 
-        create_HTML_file ( i_config ) on_error:return_error
+        const error = try_create_HTML_file ( i_config )
+        if error is not null then
+            const first_error = i_config.error_handler.first_error
+            assert first_error is not null
+            se_editor.open_editor_for_error ( error = first_error, i_config )
+            return error
+        .
 
         try_copy_CSS_files ( output_directory ) on_error:return_error
 
@@ -28,26 +43,16 @@ service PML_to_HTML_Converter
             .
         .///
 
+        OS.out.write_line ( """File {{i_config.HTML_output_file.to_string}} has been created.""" )
+
         return i_config.HTML_output_file
     .
 
-    function try_convert_PML_file_path_string -> file or anticipated_error
-        in absolute_or_relative_PML_file_path string
-
-        const PML_file_path = absolute_or_relative_file_path_parser.create.try_parse (
-            i_absolute_or_relative_PML_file_path ) on_error: return_error
-
-        return try_convert ( PML_to_HTML_config.create_for_PML_file_path ( PML_file_path ) )
-    .
-
-    function success_message ( HTML_file file ) -> string
-
-        return """File {{HTML_file.to_string}} has been created."""
-    .
 
     functions access:private
 
-        function create_HTML_file ( config PML_to_HTML_config ) -> anticipated_error or null
+///
+        function try_create_HTML_file ( config PML_to_HTML_config ) -> anticipated_error or null
 
             const display_times = no // TD make parameter
 
@@ -85,6 +90,27 @@ service PML_to_HTML_Converter
 
             return null
         .
+.///
+        function try_create_HTML_file ( config PML_to_HTML_config ) -> anticipated_error or null
+
+            const pXML_root_node = se_pXML_parser.try_parse ( i_config ) on_error:return_error
+
+            const error_handler = i_config.error_handler
+            const document_node = PML_tree_creator.create.try_create_tree (
+                root_node = pXML_root_node
+                context = PML_tree_creator_context.create ( error_handler ) ) on_error:return_error
+            if error_handler.first_error as first_non_canceling_error is not null then
+                return first_non_canceling_error
+            .
+
+            i_config.document_TOC_position = document_node.TOC_position
+            i_config.document_source_code_highlighter = document_node.source_code_highlighter
+
+            se_PML_HTML_page_writer.write_page ( document_node, config ) on_error:return_error
+
+            return null
+        .
+
 
         function try_copy_CSS_files ( output_directory directory ) -> runtime_error or null
 

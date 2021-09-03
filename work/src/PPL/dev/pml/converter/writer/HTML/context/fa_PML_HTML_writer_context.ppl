@@ -210,35 +210,10 @@ factory PML_HTML_writer_context
             .
         .
 
-        write_node_id_attribute
+        write_node_id
 
             if i_node.node_id as id is not null then
                 write ( """ id="{{escape_HTML ( id )}}"""" )
-            .
-        .
-
-        write_node_title
-
-            if i_node.title as title is not null then
-                write_indent_and_string ( "<p" )
-                write_HTML_class_attribute ( "pml-node-title" )
-                write_line ( """>{{escape_HTML ( title )}}</p>""" )
-            .
-        .
-
-        write_node_id_and_title
-
-            if i_node.title as title is not null then
-                write_indent_and_string ( "<p" )
-                write_node_id_attribute ( i_node )
-                write_HTML_class_attribute ( "pml-node-title" )
-                write_line ( """>{{escape_HTML ( title )}}</p>""" )
-            .
-
-            write_indent_and_string ( """<{{i_HTML_tag_name}}""" )
-
-            if i_node.title is null then
-                write_node_id_attribute ( i_node )
             .
         .
 
@@ -258,14 +233,10 @@ factory PML_HTML_writer_context
 
         write_block_node_start
 
-            const non_null non_null = i_node
-            case type of non_null
-                when PML_has_optional_id_and_title_attributes
-                    write_node_id_and_title ( node = non_null, HTML_tag_name )
-                otherwise
-                    write_indent_and_string ( """<{{i_HTML_tag_name}}""" )
-            .
+            write_indent_and_string ( """<{{i_HTML_tag_name}}""" )
+            write_node_id ( i_node )
 
+            const non_null non_null = i_node
             case type of non_null
                 when PML_has_HTML_attributes
                     write_HTML_attributes_for_node ( node = non_null, i_CSS_class_name )

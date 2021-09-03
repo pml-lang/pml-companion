@@ -5,7 +5,8 @@ factory PML_youtube_video_node_HTML_writer type:PML_node_HTML_writer<PML_youtube
 
     function write
 
-        context.write_node_id_and_title ( i_node, HTML_tag_name = "div" )
+        context.write_indent_and_string ( "<div" )
+        context.write_node_id ( i_node )
         context.write_line ( ">" )
         context.increase_indent
 

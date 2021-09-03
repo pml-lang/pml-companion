@@ -1,9 +1,0 @@
-// SPDX-License-Identifier: GPL-2.0-only
-// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
-
-factory PML_node_attribute_AST
-
-    function to_string = """{{a_id.value}}={{a_value.value}}"""
-
-    creator create kind:in_all
-.

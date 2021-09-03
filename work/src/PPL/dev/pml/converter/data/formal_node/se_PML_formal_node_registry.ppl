@@ -40,6 +40,13 @@ service PML_formal_node_registry
     function get_by_standard_tag ( tag string ) -> PML_formal_node<*> = \
         a_standard_tag_map.get ( tag )
 
+    function get_list -> list<PML_formal_node<*>>
+
+        const r = a_standard_tag_map.value_stream.to_list_or_null
+        assert r is not null
+        return r
+    .
+
     function sorted_formal_nodes -> list<PML_formal_node<*>>
 
         const r = a_standard_tag_map.value_stream.sort_by_key (

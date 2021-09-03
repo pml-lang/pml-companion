@@ -1,0 +1,21 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service PML_chapter_subtitle_formal_node
+
+    att node PML_formal_block_node_with_child_nodes<PML_chapter_subtitle_node> = \
+        PML_formal_block_node_with_child_nodes<PML_chapter_subtitle_node>.create (
+            tags = [# "subtitle" ]
+            attributes = se_formal_node_attributes.optional_id_attributes
+            HTML_attributes_allowed = yes
+            child_nodes_are_inline_nodes = yes
+            node_creator = PML_chapter_subtitle_node_creator.create
+            HTML_writer = PML_chapter_subtitle_node_HTML_writer.create
+            documentation = simple_documentation.create (
+                title = "Chapter Subtitle"
+                description = "A subtitle for a chapter, displayed on a separate line after a chapter's title. If present, this node must follow a 'title' (chapter title) node. The subtitle is not displayed in the table of contents."
+                examples = '''[ch [title My Life as a Gardener]
+    [subtitle Why I Left the Corporate World]
+    ...
+]''' ) )
+.

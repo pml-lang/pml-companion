@@ -3,37 +3,22 @@
 
 service PML_audio_formal_node
 
-    att attributes formal_parameters<*>
-        default
-            const r = se_formal_node_attributes.formal_parameters_builder_with_optional_id_and_title
+    att source_parameter formal_parameter<relative_file_path> default:se_formal_parameter_creator.create<relative_file_path> (
+        ids = [# "source" ],
+        default_value_supplier = null,
+        value_parser = { string => relative_file_path.try_parse ( string ) },
+        title = "Audio Source",
+        description = "The relative file path to the audio file. The path is relative to the 'resources_directory' command line argument (default is subdirectory 'resources' in the working directory).",
+        examples = "source = audios/violin.mp3" )
 
-            /// TD
-            r.add<relative_file_path or URL> (
-                id = "source"
-                alternative_id = "src"
-                value_parser = { string ->
-                    if i_string.starts_with ( "http//" ) then
-                        return URL.try_parse ( string )
-                    else
-                        return relative_file_path.try_parse ( string )
-                    .
-                } )
-            .///
-            r.add<relative_file_path> (
-                ids = [# "source" ]
-                value_parser = { string => relative_file_path.try_parse ( string ) }
-                title = "Audio Source"
-                description = "The relative file path to the audio file. The path is relative to the target HTML file."
-                examples = "source = audios/violin.mp3" )
+    // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
+    // TD add autoplay, controls, loop, muted (see https://www.w3schools.com/tags/tag_audio.asp)
 
-            r.add_parameter ( se_formal_node_attributes.caption )
-
-            // TD add horizontal_alignment, border, link (see se_PML_image_formal_node.ppl)
-            // TD add autoplay, controls, loop, muted (see https://www.w3schools.com/tags/tag_audio.asp)
-
-            return r.make_immutable
-        .
-    .
+    att attributes formal_parameters<*> default:any_type_formal_parameters_builder.create
+        .add_parameter ( a_source_parameter )
+        .add_parameter ( se_formal_node_attributes.caption )
+        .add_parameter ( se_formal_node_attributes.id )
+        .make_immutable
 
     att node PML_formal_block_node_without_child_nodes<PML_audio_node> = \
         PML_formal_block_node_without_child_nodes<PML_audio_node>.create (
@@ -45,5 +30,6 @@ service PML_audio_formal_node
             documentation = simple_documentation.create (
                 title = "Audio (Sound)"
                 description = "An audio stream (sound), such as an .mp3 or .wav file."
-                examples = '''[audio title="Bird talk" source=audios/bird_talk.mp3]''' ) )
+                examples = '''[header Bird talk]
+[audio source=audios/bird_talk.mp3]''' ) )
 .
