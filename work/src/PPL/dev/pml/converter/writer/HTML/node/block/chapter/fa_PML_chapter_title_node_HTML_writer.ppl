@@ -5,18 +5,16 @@ factory PML_chapter_title_node_HTML_writer type:PML_node_HTML_writer<PML_chapter
 
     function write
 
-        variable h_level = i_node.chapter_level //  + 1 // level 1 -> h2
+        variable h_level = i_node.chapter_level // level 1 -> h2
         if h_level ># 6 then
             h_level = 6
         .
-        const h_tag = "h" & h_level.to_string
 
-        context.write_indent
-        const class_name = if h_level =v 1 then "pml-doc-title" else "pml-chapter-title"
-        context.write_HTML_inline_tag_start ( HTML_tag_name = h_tag, CSS_class_name = class_name )
-        context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
-        context.write_HTML_inline_tag_end ( h_tag )
-        context.write_new_line
+        context.write_block_node_with_child_nodes (
+            i_node,
+            HTML_tag_name = "h" & h_level.to_string
+            CSS_class_name = if h_level =v 1 then "pml-doc-title" else "pml-chapter-title"
+            append_new_line_for_tag = no )
     .
 
     creator create kind:in_all

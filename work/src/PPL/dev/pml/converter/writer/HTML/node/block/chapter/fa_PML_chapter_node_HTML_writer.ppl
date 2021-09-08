@@ -11,20 +11,6 @@ factory PML_chapter_node_HTML_writer type:PML_node_HTML_writer<PML_chapter_node>
         context.write_line ( ">" )
         context.increase_indent
 
-///
-        variable h_level = i_node.level + 1 // level 1 -> h2
-        if h_level ># 6 then
-            h_level = 6
-        .
-        const h_tag = "h" & h_level.to_string
-
-        context.write_indent
-        context.write_HTML_inline_tag_start ( HTML_tag_name = h_tag, CSS_class_name = "pml-chapter-title" )
-        context.write_escaped_HTML ( i_node.title )
-        context.write_HTML_inline_tag_end ( h_tag )
-        context.write_new_line
-.///
-
         context.write_nodes ( nodes = i_node.child_nodes, increase_indent = no )
 
         context.decrease_indent
