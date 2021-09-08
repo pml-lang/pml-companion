@@ -38,6 +38,12 @@ examples:
         case type of result
 
             when error e
+                case type of e
+                    when text_error
+                        // already handled by error_handler
+                    otherwise
+                        OS.err.write_line ( e.to_string )
+                .
                 se_OS_process.exit_with_error
 
             otherwise
