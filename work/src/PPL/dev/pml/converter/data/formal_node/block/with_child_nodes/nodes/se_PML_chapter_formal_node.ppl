@@ -30,7 +30,7 @@ service PML_chapter_formal_node
             HTML_writer = fa_PML_chapter_node_HTML_writer.create
             documentation = simple_documentation.create (
                 title = "Chapter"
-                description = "A chapter or sub-chapter of the document. A chapter can have any number of sub-chapters. Chapters can be nested to any level."
+                description = '''A chapter or sub-chapter of the document. A chapter can have any number of sub-chapters. Chapters can be nested to any level.'''
                 examples = '''[ch (id=intro) [title Introduction]
     [ch [title What is This About?]
         blah blah blah
