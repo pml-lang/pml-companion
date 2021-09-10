@@ -3,8 +3,8 @@
 
 service PML_to_HTML_Converter
 
-    att version string = "2.0.0"
-    att version_date local_date = local_date.parse_or_throw ( "2021-09-03" )
+    att version string = "2.1.0"
+    att version_date local_date = local_date.parse_or_throw ( "2021-09-09" )
 
     function try_convert_PML_file_path_string -> file or anticipated_error
         in absolute_or_relative_PML_file_path string
