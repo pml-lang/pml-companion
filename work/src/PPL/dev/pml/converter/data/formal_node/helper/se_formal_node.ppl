@@ -33,7 +33,7 @@ service formal_node
         case type of i_formal_node
             when PML_formal_inline_node<*>
                 return yes
-            when PML_formal_block_node<*>
+            otherwise
                 return no
         .
     .
@@ -52,6 +52,16 @@ service formal_node
 
         case type of i_formal_node
             when PML_formal_block_node_with_raw_text_content<*>,  PML_formal_inline_node_with_raw_text_content<*>
+                return yes
+            otherwise
+                return no
+        .
+    .
+
+    function child_nodes_allowed ( formal_node PML_formal_node<*> ) -> yes_no
+
+        case type of i_formal_node
+            when PML_formal_block_node_with_child_nodes<*>,  PML_formal_inline_node_with_child_nodes<*>
                 return yes
             otherwise
                 return no

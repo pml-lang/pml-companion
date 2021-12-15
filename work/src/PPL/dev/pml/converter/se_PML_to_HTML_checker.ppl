@@ -45,6 +45,19 @@ service PML_to_HTML_checker
         .
     .
 
+    function check_is_existing_directories_or_null ( paths list<absolute_or_relative_directory_path> or null ) \
+        -> directory_inexistent_error or null
+
+        if i_paths is null then
+            return null
+        .
+
+        repeat for each path in i_paths
+            check_is_existing_directory_or_null ( path ) on_error:return_error
+        .
+        return null
+    .
+
     // try_get_existing
 
 ///

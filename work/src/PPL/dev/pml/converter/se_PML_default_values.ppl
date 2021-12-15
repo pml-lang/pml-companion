@@ -16,25 +16,35 @@ service PML_default_values
     attributes
         PML_file_name_extension file_name_extension = file_name_extension.create ( "pml" )
         PML_file_name_end string = se_file_name_extension.separator & a_PML_file_name_extension.value
+    .
 
-        resources_directory_name directory_name = directory_name.create ( "resources" )
-        output_directory_name directory_name = directory_name.create ( "output" )
-        CSS_directory_name directory_name = directory_name.create ( "css" )
+    attributes type:directory_name
+        config_directory_name = directory_name.create ( "config" )
+        resources_directory_name = directory_name.create ( "resources" )
+        user_defined_nodes_directory_name = directory_name.create ( "nodes" )
+        output_directory_name = directory_name.create ( "output" )
+        CSS_directory_name = directory_name.create ( "css" )
+    .
 
 //        HTML_output_file_name file_name = file_name.create ( "result.html" )
 
-        CSS_file file = se_current_application_directories.resource_file (
+    attributes type:file
+        CSS_file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/css/pml-default.css" ) )
-        CSS_print_file file = se_current_application_directories.resource_file (
+        CSS_print_file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/css/pml-print-default.css" ) )
 
-        HTML_header_file file = se_current_application_directories.resource_file (
+        HTML_header_file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/html/default_html_header.txt" ) )
-        HTML_footer_file file = se_current_application_directories.resource_file (
+        HTML_footer_file = se_current_application_directories.resource_file (
             relative_file_path.create ( "resources/html/default_html_footer.txt" ) )
-
-        omit_CSS yes_no = no
     .
+
+    attributes type:relative_directory_path
+        user_defined_nodes_directory_path = relative_directory_path.create ( """{{a_config_directory_name}}/{{a_user_defined_nodes_directory_name}}""" )
+    .
+
+    att omit_CSS yes_no = no
 
     function relative_input_file_path -> relative_file_path or null
 
@@ -79,6 +89,9 @@ service PML_default_values
     function HTML_output_file_name_for_input_file_name ( input_file_name file_name ) -> file_name = \
         input_file_name.change_extension ( file_name_extension.create ( "html" ) )
 
+
+    // resources_directory
+
     function resources_directory -> directory or null
 
         const r = se_OS_directories.current_working_directory.append_name ( a_resources_directory_name )
@@ -94,6 +107,20 @@ service PML_default_values
     function relative_resources_directory_path -> relative_directory_path or null = \
         resources_directory_path?.make_relative ( se_OS_directories.current_working_directory_path )
 
+
+    function existing_user_defined_nodes_directory_paths -> list<absolute_or_relative_directory_path> or null
+
+        const directory = se_OS_directories.current_working_directory.append_path ( a_user_defined_nodes_directory_path )
+        if directory.exists then
+            return list<absolute_or_relative_directory_path>.create_singleton ( a_user_defined_nodes_directory_path )
+        else
+            return null
+        .
+    .
+
+
+    // output_directory
+
     function output_directory -> directory =
         se_OS_directories.current_working_directory.append_name ( a_output_directory_name )
 
@@ -101,6 +128,7 @@ service PML_default_values
 
     function relative_output_directory_path -> relative_directory_path = \
         output_directory_path.make_relative ( se_OS_directories.current_working_directory_path )
+
 
     function output_CSS_directory ( output_directory directory ) -> directory = \
         i_output_directory.append_name ( a_CSS_directory_name )

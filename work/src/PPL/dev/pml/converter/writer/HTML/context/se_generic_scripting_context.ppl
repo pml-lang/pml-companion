@@ -1,0 +1,88 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+service generic_scripting_context
+
+    java_header
+        import org.ppl.core.basics.base_types.ty_non_null;
+        import org.ppl.core.basics.scalar.string.fa_string;
+        import org.ppl.core.basics.scalar.yes_no.fa_yes_no;
+        import org.ppl.ext.parameters.parameter.identifier.fa_parameter_id;
+//        import org.ppl.ext.parameters.parameter.map.ty_any_type_parameters;
+
+        import dev.pdml.ext.scripting.ScriptingContext;
+
+        import dev.pml.converter.data.node.inline.generic.ty_PML_generic_inline_node;
+    end java_header
+
+    java
+        public static class GenericScriptingContext implements ScriptingContext {
+
+            private final ty_PML_HTML_writer_context PMLWriterContext;
+            private final ty_PML_generic_inline_node node;
+//            private final ty_any_type_parameters nonHTMLAttributes;
+//            private final ty_list<ty_PML_node> childNodes;
+
+/*
+            public GenericScriptingContext (
+                ty_PML_HTML_writer_context PMLWriterContext,
+                ty_any_type_parameters nonHTMLAttributes ) {
+
+                this.PMLWriterContext = PMLWriterContext;
+                this.nonHTMLAttributes = nonHTMLAttributes;
+            }
+*/
+            public GenericScriptingContext (
+                ty_PML_HTML_writer_context PMLWriterContext,
+                ty_PML_generic_inline_node node ) {
+
+                this.PMLWriterContext = PMLWriterContext;
+                this.node = node;
+            }
+
+            public void write ( String string ) {
+                PMLWriterContext.write ( new fa_string ( string ) );
+            }
+
+            public void writeLine ( String string ) {
+                PMLWriterContext.write_line ( new fa_string ( string ) );
+            }
+
+            public void writeNewLine() {
+                PMLWriterContext.write_new_line();
+            }
+
+            public void writeChildNodes() {
+
+                writeChildNodes ( false );
+            }
+
+            public void writeChildNodes ( boolean increaseIndent) {
+
+                PMLWriterContext.write_nodes ( node.getChild_nodes(), fa_yes_no.of ( increaseIndent ) );
+            }
+
+/*
+            public String getAtt ( String name ) {
+
+                if ( nonHTMLAttributes == null ) return null;
+
+                ty_non_null value = (ty_non_null) nonHTMLAttributes.get_any ( fa_parameter_id.create ( new fa_string ( name ) ) );
+                if ( value == null ) return null;
+
+                return value.to_string().getJavaString();
+            }
+*/
+
+            public String getAtt ( String name ) {
+
+                if ( node.getNon_HTML_attributes() == null ) return null;
+
+                ty_non_null value = (ty_non_null) node.getNon_HTML_attributes().get_any ( fa_parameter_id.create ( new fa_string ( name ) ) );
+                if ( value == null ) return null;
+
+                return value.to_string().getJavaString();
+            }
+        }
+    end java
+.

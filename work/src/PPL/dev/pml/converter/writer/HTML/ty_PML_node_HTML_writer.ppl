@@ -3,5 +3,7 @@
 
 type PML_node_HTML_writer<node child_of:PML_node usage:in>
 
+    // TD? remove i_config because i_config is already available in i_context
+
     function write ( node t_node, context PML_HTML_writer_context, config PML_to_HTML_config )
 .

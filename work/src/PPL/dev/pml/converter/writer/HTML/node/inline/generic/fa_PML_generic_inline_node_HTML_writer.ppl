@@ -1,0 +1,92 @@
+// SPDX-License-Identifier: GPL-2.0-only
+// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
+
+factory PML_generic_inline_node_HTML_writer type:PML_node_HTML_writer<PML_generic_inline_node>
+
+    java_header
+        import java.util.Map;
+        import java.util.HashMap;
+
+//        import org.graalvm.polyglot.PolyglotException;
+
+        import org.ppl.core.basics.base_types.ty_non_null;
+
+        import dev.pml.converter.writer.HTML.context.se_generic_scripting_context.GenericScriptingContext;
+
+        import dev.pdml.ext.scripting.ScriptingUtils;
+
+    end java_header
+
+    attributes access:private
+        script_code string
+    .
+
+    function write
+
+        // context.write ( ":-)" )
+
+//        const script_code = i_node.script_code
+
+        java
+            Map<String, String> attributes = new HashMap<>();
+        end java
+
+        const map = i_node.non_HTML_attributes?.map
+        if map is not null then
+            repeat for each parameter in map
+                java
+                    String name = c_parameter.getId().getValue().getJavaString();
+                    String value = null;
+                    if ( c_parameter.getValue() != null ) {
+                        value = ((ty_non_null) c_parameter.getValue()).to_string().getJavaString();
+                    }
+                    attributes.put ( name, value );
+                    // System.out.println ( name + " / " + value);
+                end java
+            .
+        .
+
+        java
+            GenericScriptingContext scriptingContext = new GenericScriptingContext ( i_context, i_node );
+
+//            ScriptingUtils.executeJavascriptWithContext ( "context.write ( ':-) 2' );", scriptingContext );
+//            ScriptingUtils.executeJavascriptWithContext ( a_script_code.getJavaString(), scriptingContext );
+
+/*
+            ScriptingUtils.executeJavascriptWithBindings (
+                a_script_code.getJavaString(),
+                Map.of (
+                    "context", scriptingContext,
+                    "attributes", attributes
+                ),
+                i_config.getError_handler().getJavaTextErrorHandler() );
+*/
+
+
+            try {
+                ScriptingUtils.executeJavascriptWithBindings (
+                    a_script_code.getJavaString(),
+                    Map.of (
+                        "context", scriptingContext,
+                        "attributes", attributes
+                    ),
+                    true );
+            // } catch ( PolyglotException | IllegalStateException | IllegalArgumentException e ) {
+            } catch ( Exception e ) {
+                i_config.getError_handler().getJavaTextErrorHandler().handleError (
+                    "SCRIPTING_ERROR",
+                    "The following error occurred when a script was executed for node '" + i_node.tag().getJavaString() + "': " + e.getMessage(),
+                    null );
+                throw e;
+            }
+        end java
+    .
+
+    creator create -> PML_node_HTML_writer<PML_generic_inline_node>
+        in script_code string
+
+        this.script_code = i_script_code
+
+        return this
+    .
+.

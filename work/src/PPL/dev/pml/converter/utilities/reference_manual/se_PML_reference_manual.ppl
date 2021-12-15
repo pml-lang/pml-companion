@@ -119,6 +119,7 @@ service PML_reference_manual
                 write_node ( writer, node = se_PML_standard_formal_nodes.paragraph )
                 write_node ( writer, node = se_PML_standard_formal_nodes.chapter )
                 write_node ( writer, node = se_PML_standard_formal_nodes.chapter_title )
+                write_node ( writer, node = se_PML_standard_formal_nodes.chapter_subtitle )
             writer.end_chapter
 
             writer.start_chapter ( title = "Common Nodes" )
@@ -137,6 +138,7 @@ service PML_reference_manual
                     write_node ( writer, node = se_PML_standard_formal_nodes.table_cell )
                 writer.end_chapter
 
+                write_node ( writer, node = se_PML_standard_formal_nodes.header )
                 write_node ( writer, node = se_PML_standard_formal_nodes.admonition )
                 write_node ( writer, node = se_PML_standard_formal_nodes.note )
                 write_node ( writer, node = se_PML_standard_formal_nodes.quote )

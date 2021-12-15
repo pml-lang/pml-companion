@@ -32,6 +32,24 @@ If a relative path is specified then it is relative to the current working direc
 By default, sub-directory '{{se_PML_default_values.resources_directory_name}}' of the current working directory is used, but only if such a directory exists."""
                 examples = "--resources_directory input/media" ) )
 
+    att user_defined_nodes_directory_parameter formal_parameter<list<absolute_or_relative_directory_path> or null> = \
+        formal_parameter<list<absolute_or_relative_directory_path> or null>.create (
+            ids = [# parameter_id.create ( "user_defined_nodes_directories" ), parameter_id.create ( "udnd" ) ]
+            default_value_supplier = { se_PML_default_values.existing_user_defined_nodes_directory_paths }
+            value_parser = fa_absolute_or_relative_directory_paths_parser.create
+            validator = { paths => se_PML_to_HTML_checker.check_is_existing_directories_or_null ( paths ) }
+            documentation = simple_documentation.create (
+                title = "Directories of user defined nodes"
+                description = """Optional list of directories with files that define user defined nodes.
+On Windows, the list of directories is separated by a ';'.
+On Linux/Unix, the list of directories is separated by a ':'.
+If a relative directory path is specified then it is relative to the current working directory.
+Files in sub-directories of the specified directories are included.
+Only files with extension 'pdml' (e.g. my_node.pdml) are considered. Other files are ignored.
+Files whose name starts with '---' (e.g. ---test.pdml) are ignored.
+By default, sub-directory '{{se_PML_default_values.user_defined_nodes_directory_path}}' of the current working directory is used, but only if such a directory exists."""
+                examples = "--user_defined_nodes_directories config/nodes;../../shared/nodes" ) )
+
     att output_directory_parameter formal_parameter<absolute_or_relative_directory_path> = \
         formal_parameter<absolute_or_relative_directory_path>.create (
             ids = [# parameter_id.create ( "output_directory" ), parameter_id.create ( "od" ) ]
@@ -137,6 +155,7 @@ Different OS environments have different rules. Please consult your OS documenta
         .add_parameter ( a_input_file_parameter )
         .add_parameter ( a_resources_directory_parameter )
         .add_parameter ( a_output_directory_parameter )
+        .add_parameter ( a_user_defined_nodes_directory_parameter )
         .add_parameter ( a_HTML_header_file_parameter )
         .add_parameter ( a_HTML_footer_file_parameter )
         .add_parameter ( a_omit_CSS_parameter )
@@ -165,6 +184,8 @@ pmlc convert --input_file input/index.pml --output_directory output/HTML --resou
             i_input.get_value<absolute_or_relative_directory_path or null> ( a_resources_directory_parameter.standard_id )
         const output_directory_path = \
             i_input.get_value<absolute_or_relative_directory_path> ( a_output_directory_parameter.standard_id )
+        const user_defined_nodes_directory_paths = \
+            i_input.get_value<list<absolute_or_relative_directory_path> or null> ( a_user_defined_nodes_directory_parameter.standard_id )
 
         const HTML_header_file_path = \
             i_input.get_value<absolute_or_relative_file_path or null> ( a_HTML_header_file_parameter.standard_id )
@@ -179,6 +200,7 @@ pmlc convert --input_file input/index.pml --output_directory output/HTML --resou
             root_directory_for_relative_path = se_OS_directories.current_working_directory_path
             PML_input_path,
             resources_directory_path,
+            user_defined_nodes_directory_paths
             output_directory_path,
             HTML_header_file_path,
             HTML_footer_file_path,

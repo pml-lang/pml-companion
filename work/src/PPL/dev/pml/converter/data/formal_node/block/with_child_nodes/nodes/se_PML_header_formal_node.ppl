@@ -12,8 +12,8 @@ service PML_header_formal_node
             node_creator = PML_header_node_creator.create
             HTML_writer = PML_header_node_HTML_writer.create
             documentation = simple_documentation.create (
-                title = "Text Header"
-                description = "A text header (small title) displayed on a separate line. A header is not included in the table of contents. Headers can be inserted anywhere in a document."
+                title = "Header"
+                description = "A header (small title) displayed on a separate line. A header is not included in the table of contents. Headers can be inserted anywhere in a document."
                 examples = '''[ch [title Advantages]
     [header Advantage 1]
     text text

@@ -105,6 +105,10 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
             .
             write_yes_no_member ( writer, name = "is_raw_text_block", value = is_raw_text_block, is_last = no )
 
+            write_yes_no_member ( writer,
+                name = "child_nodes_allowed",
+                value = se_formal_node.child_nodes_allowed ( formal_node ), is_last = no )
+
             write_string_member ( writer, name = "opening_tag",
                 value = PML_default_values.node_start_symbol.to_string & formal_node.standard_tag,
                 is_last = no )

@@ -20,19 +20,8 @@ service PML_formal_node_registry
         .
     .
 
-    // allow nodes to be added/removed
 
-    function register ( formal_node PML_formal_node<*> )
-
-        repeat for each tag in formal_node.tags
-            a_any_tag_map.add ( key = tag, value = formal_node )
-        .
-
-        a_standard_tag_map.add ( key = formal_node.standard_tag, value = formal_node )
-    .
-
-    // function register_and_replace ( formal_node )
-    // function remove_formal_node ( tag string )
+    // queries
 
     function get_by_any_tag_or_null ( tag string ) -> PML_formal_node<*> or null = \
         a_any_tag_map.get_or_null ( tag )
@@ -72,4 +61,48 @@ service PML_formal_node_registry
         return r
     .
     .///
+
+
+    // add/remove nodes
+
+///
+    function register_user_defined_nodes
+
+// TD temporary
+        const formal_node = PML_generic_inline_formal_node.create_for_tag ( "smiley" )
+
+        register ( formal_node )
+    .
+.///
+
+    function register_user_defined_nodes ( config PML_to_HTML_config ) -> invalid_string_data_error or null
+
+        const list = i_config.user_defined_nodes?.value_stream.to_non_null_list on_null:return null
+
+        repeat for each UDN in list
+            if a_any_tag_map.contains_key ( UDN.tag_name ) then
+                return invalid_string_data_error.create (
+                    info = """User-defined node '{{UDN.tag_name}}' cannot be defined more than once. Each node name must be unique."""
+                    data = UDN.tag_name )
+            .
+
+            register ( UDN.to_formal_node )
+        .
+        return null
+    .
+
+
+
+    function register ( formal_node PML_formal_node<*> )
+
+        repeat for each tag in formal_node.tags
+            a_any_tag_map.add ( key = tag, value = formal_node )
+        .
+
+        a_standard_tag_map.add ( key = formal_node.standard_tag, value = formal_node )
+    .
+
+    // function register_and_replace ( formal_node )
+    // function remove_formal_node ( tag string )
+
 .

@@ -33,6 +33,9 @@ type PML_to_HTML_config
         open_file_cmd string or null default:null
 
         error_handler text_error_handler default:write_form_to_OS_err__text_error_handler.create
+
+        // key is tag_name
+        user_defined_nodes map<key:string value:user_defined_node> or null default:null
     .
 
     attributes kind:variable
