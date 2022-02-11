@@ -23,7 +23,7 @@ service PML_chapter_formal_node
         PML_formal_block_node_with_child_nodes<PML_chapter_node>.create (
             tags = [# "ch" ]
             attributes = a_attributes
-            default_attribute_id = parameter_id.create ( se_PML_attribute_ids.title )
+            default_attribute_id = null
             HTML_attributes_allowed = yes
             child_nodes_are_inline_nodes = no
             node_creator = fa_PML_chapter_node_creator.create

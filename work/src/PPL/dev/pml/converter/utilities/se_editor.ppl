@@ -6,7 +6,7 @@ service editor
     java_header
         import java.io.File;
 
-        import dev.pp.text.utilities.OSProcess;
+        import dev.pp.basics.utilities.os.process.OSCommand;
     end java_header
 
     function open_editor_for_error ( error anticipated_error, config PML_to_HTML_config )
@@ -50,7 +50,7 @@ service editor
         assert OS_command_ is not null // avoid "not used" compiler error
 
         java
-            OSProcess.startOSCommandAndContinue ( c_OS_command_.getJavaString() );
+            OSCommand.startAndContinue ( c_OS_command_.getJavaString() );
         end java
     .
 .

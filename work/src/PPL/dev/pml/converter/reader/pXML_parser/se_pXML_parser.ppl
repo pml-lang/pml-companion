@@ -9,28 +9,31 @@ service pXML_parser
 
         import org.ppl.core.collections.java.se_Java_collection_utilities;
 
-        import dev.pp.text.annotations.NotNull;
-        import dev.pp.text.reader.exception.TextReaderException;
+        import dev.pp.basics.annotations.NotNull;
+
+        import dev.pp.text.reader.exception.InvalidTextException;
         import dev.pp.text.token.TextToken;
+
+        import dev.pp.scripting.env.ScriptingEnvironmentImpl;;
 
         import dev.pdml.core.data.AST.attribute.ASTNodeAttribute;
         import dev.pdml.core.data.AST.attribute.ASTNodeAttributes;
         import dev.pdml.core.data.formalNode.FormalNode;
         import dev.pdml.core.data.formalNode.FormalNodes;
-        import dev.pdml.core.data.formalNode.types.PDMLType;
-        import dev.pdml.core.data.formalNode.types.standard.TextBlockType;
+        import dev.pdml.core.data.formalNode.PDMLType;
+        import dev.pdml.ext.extensions.types.TextBlockType;
         import dev.pdml.core.data.node.name.NodeName;
-        import dev.pdml.core.reader.parser.eventHandler.NodeEndEvent;
-        import dev.pdml.core.reader.parser.eventHandler.NodeStartEvent;
-        import dev.pdml.core.reader.parser.eventHandler.ParserEventHandler;
-        import dev.pdml.core.reader.parser.EventStreamParserBuilder;
-        import dev.pdml.core.reader.reader.extensions.PXMLExtensionsHandler;
+        import dev.pdml.core.parser.eventHandler.NodeEndEvent;
+        import dev.pdml.core.parser.eventHandler.NodeStartEvent;
+        import dev.pdml.core.parser.eventHandler.PDMLParserEventHandler;
+        import dev.pdml.ext.utilities.parser.PDMLParserBuilder;
+        import dev.pdml.core.reader.extensions.PDMLExtensionsHandler;
 
-        import dev.pdml.ext.extensions.DefaultPXMLExtensionsHandler;
-        import dev.pdml.ext.extensions.node.PXMLExtensionHandler;
-        import dev.pdml.ext.extensions.node.standard.ConstantDeclaration_ExtensionHandler;
-        import dev.pdml.ext.extensions.node.standard.InsertConstant_ExtensionHandler;
-        import dev.pdml.ext.extensions.node.standard.InsertFile_ExtensionHandler;
+        import dev.pdml.ext.extensions.PDMLExtensionsHandlerImpl;
+        // import dev.pdml.ext.extensions.node.PDMLExtensionNodeHandler;
+        // import dev.pdml.ext.extensions.utilities.SetConstant_ExtensionHandler;
+        // import dev.pdml.ext.extensions.utilities.GetConstant_ExtensionHandler;
+        // import dev.pdml.ext.extensions.utilities.InsertFile_ExtensionHandler;
 
         import dev.pml.converter.data.formal_node.block.with_raw_text_content.nodes.se_PML_HTML_code_formal_node;
         import dev.pml.converter.data.formal_node.block.with_raw_text_content.nodes.se_PML_input_formal_node;
@@ -50,13 +53,13 @@ service pXML_parser
     end java_header
 
     java
-        static class CreateTree_ParserEventHandler implements ParserEventHandler<ty_mutable_PDML_AST_node, ty_mutable_PDML_AST_node> {
+        static class CreateTree_PDMLParserEventHandler implements PDMLParserEventHandler<ty_mutable_PDML_AST_node, ty_mutable_PDML_AST_node> {
 
 
             private ty_mutable_PDML_AST_node rootNode;
 
 
-            public CreateTree_ParserEventHandler() {}
+            public CreateTree_PDMLParserEventHandler() {}
 
 
             public void onStart() {}
@@ -125,11 +128,11 @@ service pXML_parser
             return formalNodes;
         }
 
-        private static PXMLExtensionsHandler createExtensionsHandler() {
+        private static PDMLExtensionsHandler createExtensionsHandler() {
 
             /* disabled, because PML uses PDML's syntax
 
-            Map<String, PXMLExtensionHandler> customizedExtensionNodeHandlers =
+            Map<String, PDMLExtensionNodeHandler> customizedExtensionNodeHandlers =
                 new HashMap<>();
 
             customizedExtensionNodeHandlers.put (
@@ -138,15 +141,15 @@ service pXML_parser
 
             customizedExtensionNodeHandlers.put (
                 se_PML_declare_constant_formal_node.getNode().standard_tag().getJavaString(),
-                new ConstantDeclaration_ExtensionHandler() );
+                new SetConstant_ExtensionHandler() );
             customizedExtensionNodeHandlers.put (
                 "ins-const",
-                new InsertConstant_ExtensionHandler() );
+                new GetConstant_ExtensionHandler() );
 
-            return new DefaultPXMLExtensionsHandler ( customizedExtensionNodeHandlers );
+            return new PDMLExtensionsHandlerImpl ( customizedExtensionNodeHandlers );
             */
 
-            return new DefaultPXMLExtensionsHandler();
+            return new PDMLExtensionsHandlerImpl();
         }
     end java
 
@@ -164,16 +167,17 @@ service pXML_parser
             variable canceling_error text_error or null = null
 
             java
-                ParserEventHandler<ty_mutable_PDML_AST_node, ty_mutable_PDML_AST_node> eventHandler =
-                    new CreateTree_ParserEventHandler();
+                PDMLParserEventHandler<ty_mutable_PDML_AST_node, ty_mutable_PDML_AST_node> eventHandler =
+                    new CreateTree_PDMLParserEventHandler();
 
                 try {
-                    new EventStreamParserBuilder<> ( eventHandler )
+                    new PDMLParserBuilder<> ( eventHandler )
                         .setErrorHandler ( i_error_handler.getJavaTextErrorHandler() )
                         .setExtensionsHandler ( createExtensionsHandler() )
+                        .setScriptingEnvironment ( new ScriptingEnvironmentImpl(true) )
                         .setFormalNodes ( createFormalNodes() )
                         .parseFile ( i_file.getJavaFile() );
-                } catch ( TextReaderException e ) {
+                } catch ( InvalidTextException e ) {
                     v_canceling_error = fa_text_error.createFromJava ( e.toTextError() );
                 }
                 v_pXML_root_node = eventHandler.getResult();

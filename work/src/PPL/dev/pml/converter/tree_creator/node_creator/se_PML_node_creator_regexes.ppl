@@ -7,6 +7,8 @@ service PML_node_creator_regexes
         paragraph_break = regex.create ( '''\r?\n[ \t]*\r?\n''' )
         whitespace = regex.create ( '''[ \t\r\n]+''' )
 
+        vertical_bar_separator = regex.create ( '''\s*\|\s*''' )
+        semicolon_separator = regex.create ( '''\s*;\s*''' )
         comma_separator = regex.create ( '''\s*,\s*''' )
         tab_separator   = regex.create ( '''\s*\t\s*''' )
     .

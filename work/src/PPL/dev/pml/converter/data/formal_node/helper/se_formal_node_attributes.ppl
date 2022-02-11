@@ -16,7 +16,7 @@ An id can be used to:
 - identify a node so that it can be styled individually with CSS
 - create an HTML anchor so that it can be accessed with the # (hash) sign (e.g. writing id=foo will enable you to have an HTML link ending with #foo.
 
-An identifier must start with a letter and can be followed by any number of letters, digits, and underscores. Note for programmers: The regex of an identifier is: [a-zA-Z][a-zA-Z0-9_]*. Identifiers are case-sensitive. The following identifiers are all different: name, Name, and NAME.'''
+An identifier must start with a letter or an underscore, and can be followed by any number of letters, digits, underscores, dots, and hyphens. Note for programmers: The regex of an identifier is: [a-zA-Z_][a-zA-Z0-9_\.-]*. Identifiers are case-sensitive. The following identifiers are all different: name, Name, and NAME.'''
 
             examples = "id = basic_concept" ) )
 

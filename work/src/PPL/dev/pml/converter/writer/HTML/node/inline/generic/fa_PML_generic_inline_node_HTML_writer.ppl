@@ -7,14 +7,13 @@ factory PML_generic_inline_node_HTML_writer type:PML_node_HTML_writer<PML_generi
         import java.util.Map;
         import java.util.HashMap;
 
-//        import org.graalvm.polyglot.PolyglotException;
+        // import org.graalvm.polyglot.PolyglotException;
 
         import org.ppl.core.basics.base_types.ty_non_null;
 
-        import dev.pml.converter.writer.HTML.context.se_generic_scripting_context.GenericScriptingContext;
+        import dev.pml.converter.writer.HTML.context.se_generic_scripting_bindings.PMLWriterContextBinding;
 
-        import dev.pdml.ext.scripting.ScriptingUtils;
-
+        import dev.pp.scripting.ScriptingUtils;
     end java_header
 
     attributes access:private
@@ -22,10 +21,6 @@ factory PML_generic_inline_node_HTML_writer type:PML_node_HTML_writer<PML_generi
     .
 
     function write
-
-        // context.write ( ":-)" )
-
-//        const script_code = i_node.script_code
 
         java
             Map<String, String> attributes = new HashMap<>();
@@ -47,29 +42,14 @@ factory PML_generic_inline_node_HTML_writer type:PML_node_HTML_writer<PML_generi
         .
 
         java
-            GenericScriptingContext scriptingContext = new GenericScriptingContext ( i_context, i_node );
-
-//            ScriptingUtils.executeJavascriptWithContext ( "context.write ( ':-) 2' );", scriptingContext );
-//            ScriptingUtils.executeJavascriptWithContext ( a_script_code.getJavaString(), scriptingContext );
-
-/*
-            ScriptingUtils.executeJavascriptWithBindings (
-                a_script_code.getJavaString(),
-                Map.of (
-                    "context", scriptingContext,
-                    "attributes", attributes
-                ),
-                i_config.getError_handler().getJavaTextErrorHandler() );
-*/
-
+            Map<String, Object> bindings = new HashMap<>();
+            bindings.put ( "context", new PMLWriterContextBinding ( i_context, i_node ) );
+            bindings.put ( "attributes", attributes );
 
             try {
-                ScriptingUtils.executeJavascriptWithBindings (
+                ScriptingUtils.executeJavascriptScript (
                     a_script_code.getJavaString(),
-                    Map.of (
-                        "context", scriptingContext,
-                        "attributes", attributes
-                    ),
+                    bindings,
                     true );
             // } catch ( PolyglotException | IllegalStateException | IllegalArgumentException e ) {
             } catch ( Exception e ) {
@@ -80,6 +60,7 @@ factory PML_generic_inline_node_HTML_writer type:PML_node_HTML_writer<PML_generi
                 throw e;
             }
         end java
+
     .
 
     creator create -> PML_node_HTML_writer<PML_generic_inline_node>

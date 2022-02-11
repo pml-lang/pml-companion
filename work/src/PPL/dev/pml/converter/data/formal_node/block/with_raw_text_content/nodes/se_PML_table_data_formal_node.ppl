@@ -24,7 +24,7 @@ service PML_table_data_formal_node
                 title = "Table Data"
                 description = '''Simple table data defined as plain text, and rendered as a table.
 Each line of text represents a row.
-Cell values in a row are separated by a comma or a TAB character.
+Cell values in a row are separated by a vertical bar (|), a semicolon (;), a comma (,) or a TAB character.
 The content of each cell can only be plain text. If formatted text or complex cell content (e.g. picture in a cell, or table in a table) is needed, then please use the 'table' tag.
 A header and footer can optionally be defined.
 The horizontal alignment (left, center, or right) can be specified for each column.

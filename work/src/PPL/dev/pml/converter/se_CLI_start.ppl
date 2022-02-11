@@ -38,12 +38,7 @@ examples:
         case type of result
 
             when error e
-                case type of e
-                    when text_error
-                        // already handled by error_handler
-                    otherwise
-                        OS.err.write_line ( e.to_string )
-                .
+                report_error ( e )
                 se_OS_process.exit_with_error
 
             otherwise
@@ -81,6 +76,16 @@ examples:
                 const r = result
                 const a = allow_process_exit_after_execution )
             return result = r, allow_process_exit = a
+        .
+
+        function report_error ( error )
+
+            case type of error
+                when text_error
+                    write_form_to_OS_err__text_error_handler.create.handle_error ( error )
+                otherwise
+                    OS.err.write_line ( error.to_string )
+            .
         .
     .
 .

@@ -3,7 +3,7 @@
 
 package dev.pml.converter.data.user_defined_node;
 
-import dev.pp.text.annotations.NotNull;
+import dev.pp.basics.annotations.NotNull;
 
 public record UserDefinedNodeWriter(
     @NotNull String targetCodeName,

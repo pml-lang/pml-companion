@@ -73,11 +73,14 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
             write_string_member ( writer, name = "id", value = formal_node.standard_tag, is_last = no )
 
             variable type string
+            variable is_inline_type yes_no
             case type of formal_node
                 when PML_formal_block_node<*>
                     type = "block"
+                    is_inline_type = no
                 when PML_formal_inline_node<*>
                     type = "inline"
+                    is_inline_type = yes
             .
             write_string_member ( writer, name = "type", value = type, is_last = no )
 
@@ -93,6 +96,9 @@ The JSON file can be used by editor plugins and tools that depend on PML tags an
 
             write_yes_no_member ( writer, name = "HTML_attributes_allowed",
                 value = formal_node.HTML_attributes_allowed, is_last = no )
+
+            write_yes_no_member ( writer, name = "is_inline_type",
+                value = is_inline_type, is_last = no )
 
             variable is_raw_text_block yes_no
             variable closing_tag = PML_default_values.node_end_symbol.to_string

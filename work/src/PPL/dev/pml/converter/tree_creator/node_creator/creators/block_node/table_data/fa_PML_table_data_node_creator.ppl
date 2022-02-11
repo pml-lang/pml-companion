@@ -60,6 +60,10 @@ factory PML_table_data_node_creator type:PML_node_creator<PML_table_data_node>
 
             if i_first_line.contains ( "\t" ) then
                 return se_PML_node_creator_regexes.tab_separator
+            else if i_first_line.contains ( "|" ) then
+                return se_PML_node_creator_regexes.vertical_bar_separator
+            else if i_first_line.contains ( ";" ) then
+                return se_PML_node_creator_regexes.semicolon_separator
             else if i_first_line.contains ( "," ) then
                 return se_PML_node_creator_regexes.comma_separator
             else

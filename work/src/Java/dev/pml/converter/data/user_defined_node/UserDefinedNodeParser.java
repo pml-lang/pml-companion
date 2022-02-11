@@ -8,14 +8,14 @@ import dev.pdml.core.data.AST.children.ASTNodeChildren;
 import dev.pdml.core.data.AST.children.Node_ASTNodeChild;
 import dev.pdml.core.data.formalNode.FormalNode;
 import dev.pdml.core.data.formalNode.FormalNodes;
-import dev.pdml.core.data.formalNode.types.standard.TextBlockType;
+import dev.pdml.ext.extensions.types.TextBlockType;
 import dev.pdml.core.data.node.name.NodeName;
 import dev.pdml.core.PDMLConstants;
-import dev.pdml.ext.utilities.PDMLParserUtils;
-import dev.pp.text.annotations.NotNull;
-import dev.pp.text.annotations.Nullable;
+import dev.pdml.ext.utilities.parser.PDMLParserUtils;
+import dev.pp.basics.annotations.NotNull;
+import dev.pp.basics.annotations.Nullable;
+import dev.pp.basics.utilities.directory.DirectoryContentUtils;
 import dev.pp.text.error.handler.TextErrorHandler;
-import dev.pp.text.utilities.DirectoryUtilities;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ public class UserDefinedNodeParser {
         Map<String, UserDefinedNode> UDNs = new HashMap<>();
         for ( File directory : directories ) {
 
-            DirectoryUtilities.consumeNonExcludedFilesWithExtensionInTree ( directory, PDMLConstants.PDML_FILE_EXTENSION, file -> {
+            DirectoryContentUtils.forEachNonExcludedFileWithExtensionInTree ( directory, PDMLConstants.PDML_FILE_EXTENSION, file -> {
                 try {
                     addUDNsInFile ( file, UDNs, errorHandler );
                 } catch ( Exception e ) {
@@ -91,7 +91,7 @@ public class UserDefinedNodeParser {
 
             default -> errorHandler.handleError (
                 "INVALID_ROOT_NODE",
-                "Node '" + rootNode.getName().fullName() + "' is invalid. The root node must be be named '" +
+                "Node '" + rootNode.getName().qualifiedName() + "' is invalid. The root node must be be named '" +
                     NODE_NODE_NAME + "' or '" + NODES_NODE_NAME + "'.",
                 rootNode.getName().getToken() );
         }
@@ -106,7 +106,7 @@ public class UserDefinedNodeParser {
         if ( children == null ) {
             errorHandler.handleError (
                 "EMPTY_NODES",
-                "Node '" + nodesNode.getName().fullName() + "' must contain one or mode '" + NODE_NODE_NAME + "' nodes.",
+                "Node '" + nodesNode.getName().qualifiedName() + "' must contain one or mode '" + NODE_NODE_NAME + "' nodes.",
                 nodesNode.getName().getToken() );
             return;
         }
@@ -118,7 +118,7 @@ public class UserDefinedNodeParser {
             } else {
                 errorHandler.handleError (
                     "INVALID_NODE",
-                    "Node '" + name + "' is invalid. Node '" + nodesNode.getName().fullName() +
+                    "Node '" + name + "' is invalid. Node '" + nodesNode.getName().qualifiedName() +
                         "' can only contain nodes with name '" + NODE_NODE_NAME + "'.",
                     nodeNode.getName().getToken() );
             }
