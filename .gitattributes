@@ -1,28 +1,29 @@
-#
-# https://help.github.com/articles/dealing-with-line-endings/
-#
-
 * text=auto
 
-# Java sources
+## Java Sources
+###############
 *.gradle text
 *.java   text
 
-# Config Files
+## Repository Configuration
+###########################
 .editorconfig    text eol=lf
 .gitattributes   text eol=lf
 .gitconfig       text eol=lf
 .gitignore       text eol=lf
+.gitkeep         text eol=lf
 .gitmodules      text eol=lf
 .travis.yml      text eol=lf
 
-# Documentation Files
+## Documentation Files
+######################
 *.md         text
 *.pml        text linguist-language=PML
 *.txt        text
 LICENSE      text
 
-# OS Scripts
+## Scripts
+##########
 *.bat   text eol=crlf
 *.cmd   text eol=crlf
 *.sh    text eol=lf

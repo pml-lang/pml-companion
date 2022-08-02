@@ -15,3 +15,42 @@
 
 # Directories and files starting with NOGIT_
 **/NOGIT_*
+
+
+############################
+## COMMON IGNORE PATTERNS ##
+############################
+
+## Apps Local Settings & Temp Files
+###################################
+
+# Chrome's debug logs for local HTML pages:
+debug.log
+
+# Links and URLs:
+*.lnk
+*.url
+
+## Linux
+########
+*~
+.directory
+.fuse_hidden*
+.nfs*
+.Trash-*
+
+## macOS
+########
+*.DS_Store
+._*
+.AppleDouble
+.LSOverride
+Icon
+
+## Windows
+##########
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+.BIN/
