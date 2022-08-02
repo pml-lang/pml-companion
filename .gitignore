@@ -1,10 +1,14 @@
-/.gradle
-/build
-/buildGradle
-/distribution
-/distribution_zip
-/temp
-/tests
+# Gradle project-specific cache directory
+**/.gradle
+
+# IntelliJ Idea project-specific cache directory
+**/.idea
+
+# Gradle build output directory
+**/build
+
+# 'temp' directories
+**/temp
 
 # Directories and files starting with ---
 **/---*

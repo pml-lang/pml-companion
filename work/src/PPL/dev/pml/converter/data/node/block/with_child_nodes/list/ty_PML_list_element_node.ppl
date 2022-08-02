@@ -1,9 +1,0 @@
-// SPDX-License-Identifier: GPL-2.0-only
-// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
-
-type PML_list_element_node
-
-    inherit PML_block_node_with_child_nodes
-
-    inherit PML_has_HTML_attributes
-.

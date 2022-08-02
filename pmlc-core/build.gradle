@@ -1,0 +1,14 @@
+plugins {
+    id 'dev.pmlc.java-library-conventions'
+}
+
+dependencies {
+
+    /*
+    needed:
+        PP: basics, text, datatype, parameters, texttable, scripting
+        PDML: core, ext
+    */
+    implementation fileTree ( dir: '../dependencies' )
+    // implementation fileTree ( dir: '../dependencies', include: 'pp-basics*.jar')
+}

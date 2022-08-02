@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="generator" content="PML {{PML_version}} (www.pml-lang.dev)" />
+        <title>{{title}}</title>
+{{stylesheets}}
+    </head>
+    <body>
+{{Javascript}}

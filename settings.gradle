@@ -1,0 +1,18 @@
+/*
+ * Detailed information about configuring a multi-project build in Gradle can be found
+ * in the user manual at https://docs.gradle.org/7.4/userguide/multi_project_builds.html
+ */
+
+rootProject.name = 'pml-companion'
+include ( 'pmlc-core', 'pmlc-ext', 'pmlc-commands' )
+
+/*
+String PPDevRootDir = '../../../PP/dev/'
+// hack, to be removed if a better solution is found
+copy {
+    from "${PPDevRootDir}buildSrc/src/main/groovy"
+    into "./buildSrc/src/main/groovy"
+}
+include 'PP_basics'
+project ( ':PP_basics' ).projectDir = file ( "${PPDevRootDir}PP_basics" )
+*/

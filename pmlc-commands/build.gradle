@@ -1,0 +1,164 @@
+plugins {
+    id 'dev.pmlc.java-application-conventions'
+}
+
+dependencies {
+    /*
+    needed:
+        PP: basics, text, parameters, commands
+        PDML: ext
+    */
+    implementation fileTree ( dir: '../dependencies' )
+
+    // PML
+    implementation project ( ':pmlc-core' )
+    implementation project ( ':pmlc-ext' )
+
+    // Picocli
+    implementation 'info.picocli:picocli:4.6.3'
+
+    // https://picocli.info/#_annotation_processor
+    // https://github.com/remkop/picocli/tree/main/picocli-codegen
+    annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
+}
+
+application {
+    mainClass = 'dev.pmlc.commands.Start'
+}
+
+// OS script file name to start the application
+tasks.startScripts {
+    applicationName = "pmlc"
+}
+
+jar {
+    manifest {
+        attributes(
+            // create attributes in META-INF/MANIFEST.MF
+            'Main-Class': 'dev.pmlc.commands.Start',
+            // 'Class-Path': configurations.compile.collect { it.getName() }.join(' ')
+            'Class-Path': configurations.runtimeClasspath.files.collect { it.getName() }.join(' ')
+        )
+    }
+}
+
+distZip {
+    archiveBaseName = "pmlc"
+}
+
+distTar {
+    archiveBaseName = "pmlc"
+}
+
+compileJava {
+    // options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+    // Picocli annotation processor option to save file 'reflect-config.json' in a subdirectory
+    // which is the project's name (e.g. PMLC_cli)
+    options.compilerArgs += ["-Aproject=${project.name}"]
+}
+
+tasks.register ( 'createGraalVMNativeImageConfig' ) {
+    dependsOn 'classes'
+    doLast {
+        // println 'createGraalVMNativeImageConfig 1'
+        // System.out.println ( "createGraalVMNativeImageConfig 2" );
+        Path buildDir = Path.of ( project.buildDir.toString() );
+        Path nativeImageDir = buildDir.resolve ( "classes/java/main/META-INF/native-image" )
+        createNativeImageCLIParametersFile ( buildDir, nativeImageDir );
+        createNativeImageReflectionConfig ( nativeImageDir );
+    }
+}
+
+tasks.named ( 'jar' ) {
+    dependsOn ( 'createGraalVMNativeImageConfig' )
+}
+
+
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Path
+import java.util.stream.Collectors;
+
+static void createNativeImageReflectionConfig ( Path nativeImageDir ) {
+
+    Path reflectionConfigFile = nativeImageDir.resolve ( "reflect-config.json" )
+    Files.createDirectories ( reflectionConfigFile.getParent() );
+    try ( FileWriter writer = new FileWriter ( reflectionConfigFile.toFile(), StandardCharsets.UTF_8 ) ) {
+        writer.write ( "[\n" );
+
+        writeReflectionConfig (
+            Path.of ( "C:/aa/work/PP/dev/pp-libs/pp-scripting" ), "dev/pp/scripting/bindings/core", writer, false );
+
+        writeReflectionConfig (
+            Path.of ( "C:/aa/work/PDML/dev/pdml-java-impl/pdml-ext" ), "dev/pdml/ext/extensions/scripting/bindings", writer, true );
+
+        writer.write ( "]\n" );
+    }
+}
+
+static void writeReflectionConfig ( Path projectRootDir, String bindingsPath, FileWriter writer, boolean isLastSet ) {
+
+    Path sourceCodeDir = projectRootDir.resolve ( "src/main/java" );
+    String bindingsPackage = bindingsPath.replaceAll ( '/', '.' );
+    Path bindingsDir = sourceCodeDir.resolve ( bindingsPath );
+    List<Path> files = Files.list ( bindingsDir ).collect ( Collectors.toList() );
+    int size = files.size();
+    for ( int i = 0; i < size; i++ ) {
+        Path file = files.get(i);
+        String javaFileName = file.getFileName().toString();
+
+        // GUIDialogsBinding uses AWT, and that generates an error in GraalVM 22.1.0 when using native image with JDK17
+        // see https://issuehint.com/issue/oracle/graal/4113
+        // and https://issuehint.com/issue/oracle/graal/4072
+        //     if you try it with the JDK17 version of GraalVM, you'll see the error. The JDK11 version works properly, as you've shown.
+        if ( javaFileName.equals ( "GUIDialogsBinding.java" ) ) continue;
+
+        String className = bindingsPackage + "." + javaFileName.substring ( 0, javaFileName.length() - 5 );
+        writer.write ( "    {\n" );
+        writer.write ( "        \"name\":\"" );
+        writer.write ( className );
+        writer.write ( "\",\n" );
+        writer.write ( "        \"allPublicFields\":true,\n" );
+        writer.write ( "        \"allPublicMethods\":true\n" );
+        writer.write ( "    }" );
+        if ( ! isLastSet || i != size - 1 ) writer.write ( ',' );
+        writer.write ( "\n" );
+    }
+}
+
+static void createNativeImageCLIParametersFile ( Path buildDir, Path nativeImageDir ) {
+
+    // GraalVM doc: https://www.graalvm.org/22.1/reference-manual/native-image/BuildConfiguration/
+
+    Path CLIArgumentsFile = nativeImageDir.resolve ( "native-image.properties" )
+    Files.createDirectories ( CLIArgumentsFile.getParent() );
+    try ( FileWriter fileWriter = new FileWriter ( CLIArgumentsFile.toFile(), StandardCharsets.UTF_8 ) ) {
+        fileWriter.write ( "Args =" +
+            " --language:js" +
+            " --static" +
+            " -H:IncludeResources=config/.*" +
+            " -H:IncludeResources=data/.*\n" );
+        //    " -H:ReflectionConfigurationFiles=temp/reflection_config.json\n" );
+        // " --initialize-at-build-time" +
+
+        String relTargetFile = "native-image/" + OSName() + "/pmlc";
+        String imageName = "build/" + relTargetFile;
+        Path absTargetFile = buildDir.resolve ( relTargetFile )
+        Files.createDirectories ( absTargetFile.getParent() );
+        fileWriter.write ( "ImageName = " );
+        fileWriter.write ( imageName );
+        fileWriter.write ( "\n" );
+    }
+}
+
+static String OSName() {
+
+    String name = System.getProperty ( "os.name" ).toLowerCase();
+    if ( name.contains ( "win" ) ) {
+        return "Windows";
+    } else if ( name.contains ( "mac" ) ) {
+        return "MacOS";
+    } else {
+        return "Linux";
+    }
+}

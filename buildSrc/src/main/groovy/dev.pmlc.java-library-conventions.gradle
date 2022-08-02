@@ -1,0 +1,4 @@
+plugins {
+    id 'dev.pmlc.java-common-conventions'
+    id 'java-library'
+}

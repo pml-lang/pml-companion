@@ -1,7 +1,0 @@
-// SPDX-License-Identifier: GPL-2.0-only
-// Copyright (C) 2018 - 2021 Christian Neumanns, email: chris@pml-lang.dev
-
-enum type PML_source_code_highlighter
-
-    highlightjs, prism, none
-.
