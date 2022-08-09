@@ -11,7 +11,7 @@ assignees: ''
 A clear and concise description of the bug.
 
 **Reproducing**
-The simplest possible sample code and/or steps to reproduce the bug.
+The simplest possible code example and/or steps to reproduce the bug.
 
 **Expected vs actual behavior**
 What result did you expect?
