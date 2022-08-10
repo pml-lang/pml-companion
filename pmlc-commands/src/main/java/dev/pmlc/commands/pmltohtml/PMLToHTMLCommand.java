@@ -108,6 +108,7 @@ public class PMLToHTMLCommand {
             try {
                 try {
                     input = PMLToHTMLConverter.Input.createForFileOrStdin ( PMLInputFile );
+                    SimpleLogger.debug ( "Reading PML input from " + input );
                     documentNode = PMLParser.parseReader (
                         input.PMLInputReader(), input.PMLInputTextResource(), errorHandler );
                 } finally {

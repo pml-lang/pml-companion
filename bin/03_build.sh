@@ -3,4 +3,4 @@
 cd ..
 ./gradlew build
 
-read -p "Press Enter to continue... "
+# read -p "Press Enter to continue... "

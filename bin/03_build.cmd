@@ -3,4 +3,4 @@
 cd ..
 call gradlew build
 
-pause
+rem pause

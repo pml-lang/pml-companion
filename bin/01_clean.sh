@@ -3,4 +3,4 @@
 cd ..
 ./gradlew clean
 
-read -p "Press Enter to continue... "
+# read -p "Press Enter to continue... "

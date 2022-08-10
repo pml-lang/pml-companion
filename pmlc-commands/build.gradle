@@ -20,6 +20,8 @@ dependencies {
     // https://picocli.info/#_annotation_processor
     // https://github.com/remkop/picocli/tree/main/picocli-codegen
     annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
+
+    implementation group: 'org.graalvm.js', name: 'js', version: '22.1.0'
 }
 
 application {

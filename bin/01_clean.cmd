@@ -3,4 +3,4 @@
 cd ..
 call gradlew clean
 
-pause
+rem pause

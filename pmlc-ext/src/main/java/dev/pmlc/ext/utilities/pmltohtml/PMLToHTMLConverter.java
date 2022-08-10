@@ -8,9 +8,11 @@ import dev.pmlc.ext.utilities.pmltohtml.options.PMLToHTMLOptionsHelper;
 import dev.pmlc.ext.utilities.pmltohtml.writer.HTMLPageWriter;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
+import dev.pp.basics.utilities.DebugUtils;
 import dev.pp.basics.utilities.SimpleLogger;
 import dev.pp.basics.utilities.directory.DirectoryCopier;
 import dev.pp.basics.utilities.directory.DirectoryCreator;
+import dev.pp.basics.utilities.file.FilePathUtils;
 import dev.pp.basics.utilities.file.TextFileIO;
 import dev.pp.basics.utilities.os.OSDirectories;
 import dev.pp.basics.utilities.os.OSIO;
@@ -22,6 +24,7 @@ import dev.pp.texttable.writer.pretty.utilities.TextErrorOrWarning_FormWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -57,6 +60,17 @@ public class PMLToHTMLConverter {
             } else {
                 assert PMLInputFile != null;
                 return new Input ( PMLInputFile );
+            }
+        }
+
+        public String toString() {
+
+            if ( PMLInputFile != null ) {
+                return "file " + FilePathUtils.makeAbsoluteAndNormalize ( PMLInputFile ).toString();
+            } else if ( PMLInputReader == OSIO.standardInputUTF8Reader() ) {
+                return "STDIN";
+            } else {
+                return PMLInputReader.toString();
             }
         }
 
@@ -170,6 +184,8 @@ public class PMLToHTMLConverter {
         @NotNull PMLToHTMLOptions options,
         @NotNull TextErrorHandler errorHandler ) throws Exception {
 
+        SimpleLogger.debug ( "Reading PML input from " + input );
+
         DocumentNode documentNode = PMLParser.parseReader (
             input.PMLInputReader(), input.PMLInputTextResource(), errorHandler );
 
@@ -198,7 +214,10 @@ public class PMLToHTMLConverter {
         // TODO checkConsistency ( HTMLOutputDirectory, resourcesDirectoriesAndFiles, CSSDirectoriesAndFiles )
 
         if ( HTMLOutputDirectory != null ) {
-            DirectoryCreator.createWithParentsIfNotExists ( HTMLOutputDirectory );
+            if ( ! Files.exists ( HTMLOutputDirectory ) ) {
+                SimpleLogger.debug ( "Creating directory " + FilePathUtils.makeAbsoluteAndNormalize ( HTMLOutputDirectory ) );
+                DirectoryCreator.createWithParents ( HTMLOutputDirectory );
+            }
         }
 
         if ( HTMLOutputFile != null ) {
@@ -227,6 +246,7 @@ public class PMLToHTMLConverter {
         @Nullable List<Path> CSSDirectoriesAndFiles ) throws IOException {
 
         if ( resourcesDirectoriesAndFiles != null ) {
+            SimpleLogger.debug ( "Copying " + resourcesDirectoriesAndFiles + " to " + FilePathUtils.makeAbsoluteAndNormalize ( HTMLOutputDirectory ) );
             DirectoryCopier.copyDirectoriesAndFiles (
                 resourcesDirectoriesAndFiles, HTMLOutputDirectory, StandardCopyOption.REPLACE_EXISTING );
         }
@@ -234,7 +254,13 @@ public class PMLToHTMLConverter {
         if ( CSSDirectoriesAndFiles != null ) {
             // Path CSSTargetDirectory = Path.of ( HTMLOutputDirectory.toString(), CSS_DIRECTORY_NAME );
             Path CSSTargetDirectory = HTMLOutputDirectory.resolve ( CSS_DIRECTORY_NAME );
-            DirectoryCreator.createWithParentsIfNotExists ( CSSTargetDirectory );
+
+            if ( ! Files.exists ( CSSTargetDirectory ) ) {
+                SimpleLogger.debug ( "Creating directory " + FilePathUtils.makeAbsoluteAndNormalize ( CSSTargetDirectory ) );
+                DirectoryCreator.createWithParents ( CSSTargetDirectory );
+            }
+
+            SimpleLogger.debug ( "Copying " + CSSDirectoriesAndFiles + " to " + FilePathUtils.makeAbsoluteAndNormalize ( CSSTargetDirectory ) );
             DirectoryCopier.copyDirectoriesAndFiles (
                 CSSDirectoriesAndFiles, CSSTargetDirectory, StandardCopyOption.REPLACE_EXISTING );
         }

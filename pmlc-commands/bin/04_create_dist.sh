@@ -3,4 +3,4 @@
 cd ..
 ../gradlew installDist
 
-read -p "Press Enter to continue... "
+# read -p "Press Enter to continue... "

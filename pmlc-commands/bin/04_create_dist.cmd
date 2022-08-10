@@ -3,4 +3,4 @@
 cd ..
 call ..\gradlew installDist
 
-pause
+rem pause

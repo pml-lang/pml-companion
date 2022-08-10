@@ -20,9 +20,9 @@ import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
 import dev.pmlc.core.data.node.inline.PMLInlineNode;
 import dev.pmlc.core.data.node.inline.TextNode;
 import dev.pmlc.core.data.node.inline.XrefNode;
-import dev.pmlc.core.parser.PMLParserEventHandlerHelper.TextOrWhitespaceSegment;
-import dev.pmlc.core.parser.PMLParserEventHandlerHelper.TextSegment;
-import dev.pmlc.core.parser.PMLParserEventHandlerHelper.WhitespaceSegment;
+import dev.pmlc.core.parser.PMLWhitespaceHelper.TextOrWhitespaceSegment;
+import dev.pmlc.core.parser.PMLWhitespaceHelper.TextSegment;
+import dev.pmlc.core.parser.PMLWhitespaceHelper.WhitespaceSegment;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.basics.utilities.string.StringConstants;
@@ -393,11 +393,11 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
 
     private void addTextSegmentsToInlineChildren ( @NotNull String text, @NotNull PMLNode parentNode ) {
 
-        for ( TextOrWhitespaceSegment segment : PMLParserEventHandlerHelper.createTextOrWhitespaceSegments ( text ) ) {
+        for ( TextOrWhitespaceSegment segment : PMLWhitespaceHelper.createTextOrWhitespaceSegments ( text ) ) {
 
             String segmentString;
             if ( segment instanceof TextSegment textSegment ) {
-                segmentString = textSegment.string;
+                segmentString = textSegment.replaceNewLinesWithSpace();
             } else if ( segment instanceof WhitespaceSegment ) {
                 segmentString = " "; // replace whitespace with a single space
             } else {
@@ -411,7 +411,7 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
     private void addTextParagraphsToBlockNode ( final @NotNull String text, final @NotNull PMLBlockNode parentBlockNode ) {
 
         List<TextOrWhitespaceSegment> segments =
-            PMLParserEventHandlerHelper.createTextOrWhitespaceSegments ( text );
+            PMLWhitespaceHelper.createTextOrWhitespaceSegments ( text );
 
         // skip if it's only whitespace
         if ( segments.size() == 1 ) {
@@ -428,7 +428,7 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
             TextOrWhitespaceSegment segment = segments.get ( index );
 
             if ( segment instanceof TextSegment textSegment ) {
-                addTextToNewOrExistingImplicitParagraphNode ( parentBlockNode, textSegment.string );
+                addTextToNewOrExistingImplicitParagraphNode ( parentBlockNode, textSegment.replaceNewLinesWithSpace() );
 
             } else if ( segment instanceof WhitespaceSegment whitespaceSegment ) {
                 if ( whitespaceSegment.isParagraphBreak() ) {

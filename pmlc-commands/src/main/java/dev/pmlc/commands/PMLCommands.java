@@ -1,7 +1,7 @@
 package dev.pmlc.commands;
 
 import dev.pdml.commands.pdmltoxml.PDMLToXMLCommand;
-import dev.pdml.commands.standalone.StandaloneCommand;
+import dev.pdml.commands.standalone.PDMLToStandaloneCommand;
 import dev.pmlc.ext.PMLCVersion;
 import dev.pmlc.commands.pmltohtml.PMLToHTMLCommand;
 import dev.pmlc.ext.utilities.pmltohtml.PMLToHTMLConverter;
@@ -18,8 +18,8 @@ public class PMLCommands {
         .add ( PMLToHTMLCommand.COMMAND )
         .add ( PMLInfoCommand.COMMAND )
         .add ( PMLVersionCommand.COMMAND )
-        .add ( PDMLToXMLCommand.COMMAND )
-        .add ( StandaloneCommand.COMMAND )
+        .add ( PDMLToXMLCommand.COMMAND ) // TODO: add PMLToXMLCommand (must provide formal nodes to PDML parser)
+        .add ( PDMLToStandaloneCommand.COMMAND ) // TODO: add command to convert PML documents (must provide formal nodes to PDML parser)
         .add ( ExportTagsCommand.COMMAND )
         .add ( CreateNodesReferenceManualCommand.COMMAND )
         .add ( CreateCommandsReferenceManualCommand.COMMAND );
