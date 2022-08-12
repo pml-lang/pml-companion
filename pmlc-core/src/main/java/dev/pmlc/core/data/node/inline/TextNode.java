@@ -4,45 +4,31 @@ import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.formalnode.inline.FormalTextNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
-
-import java.util.Map;
+import dev.pp.text.location.TextLocation;
+import dev.pp.text.token.TextToken;
 
 public class TextNode extends PMLInlineNode {
 
     // TODO? @NotNull -> @Nullable
     // private @NotNull String text = "";
     public @NotNull String getText() { return rawText == null ? "" : rawText; }
-    /*
-    public void setText ( @NotNull String text ) {
-        this.text = text;
-        this.text = text;
-    }
-
-    @Override
-    public void setRawText ( @Nullable String rawText ) {
-
-        super.setRawText ( rawText );
-        this.text = rawText == null ? "" : rawText;
-    }
-
-     */
 
 
     public TextNode() { super(); }
 
-    public TextNode (
-        @Nullable Map<String, String> HTMLAttributes,
-        @NotNull String text ) {
+    public TextNode ( @NotNull TextToken token ) {
 
-        super ( HTMLAttributes );
-        this.rawText = text;
+        super();
+        this.rawText = token.getText();
+        this.startToken = token;
     }
 
-    public TextNode ( @NotNull String text ) {
+    public TextNode ( @NotNull String text, @Nullable TextLocation location ) {
 
-        this ( null, text );
+        this ( new TextToken ( text, location ) );
     }
 
 
+    @SuppressWarnings ( "unchecked" )
     public @NotNull FormalPMLNode<String, TextNode> getFormalNode() { return FormalTextNode.NODE; }
 }

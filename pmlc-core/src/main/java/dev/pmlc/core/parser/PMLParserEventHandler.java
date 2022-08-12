@@ -15,8 +15,8 @@ import dev.pmlc.core.data.formalnode.inline.FormalXrefNode;
 import dev.pmlc.core.data.node.PMLNode;
 import dev.pmlc.core.data.node.block.*;
 import dev.pmlc.core.data.node.block.chapter.ChapterNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterSubtitleNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
+import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
+import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.inline.PMLInlineNode;
 import dev.pmlc.core.data.node.inline.TextNode;
 import dev.pmlc.core.data.node.inline.XrefNode;
@@ -82,6 +82,7 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
     private int chapterCounter = 1;
     private boolean keepWhitespaceInText = false;
     private @Nullable ParagraphNode implicitParagraphNode = null;
+    private @Nullable PMLBlockNode parentBlockNodeOfImplicitParagraphNode = null;
     private final @NotNull List<PendingXrefNodeToCheck> pendingXrefNodesToCheck = new ArrayList<>();
     private final @NotNull Map<String, ParsedNodeWithId> parsedNodesWithId = new HashMap<>();
 
@@ -118,6 +119,8 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
 
     public void onRootNodeEnd ( @NotNull NodeEndEvent event, @NotNull PMLNode rootNode ) {
 
+        stopImplicitParagraphNode();
+
         // check referenced node ids in 'xref' nodes for nodes that appear after the 'xref' node.
         for ( PendingXrefNodeToCheck pendingXrefNodeToCheck : pendingXrefNodesToCheck ) {
             String nodeId = pendingXrefNodeToCheck.xrefNode.getReferencedNodeId();
@@ -140,18 +143,16 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
 
         if ( node instanceof PMLBlockNode blockNode ) {
 
-            implicitParagraphNode = null;
-
             if ( blockNode instanceof ChapterNode chapterNode ) {
                 chapterNode.setLevel ( currentChapterLevel );
                 currentChapterLevel++;
                 chapterNode.setNodeId ( CHAPTER_AUTO_ID_PREFIX + chapterCounter ); // might be overridden by attribute 'id'
                 chapterCounter++;
 
-            } else if ( blockNode instanceof ChapterTitleNode chapterTitleNode ) {
+            } else if ( blockNode instanceof TitleNode chapterTitleNode ) {
                 chapterTitleNode.setLevel ( currentChapterLevel );
 
-            } else if ( blockNode instanceof ChapterSubtitleNode chapterSubtitleNode ) {
+            } else if ( blockNode instanceof SubtitleNode chapterSubtitleNode ) {
                 chapterSubtitleNode.setLevel ( currentChapterLevel );
 
             } else if ( blockNode instanceof MonospaceNode ) {
@@ -162,32 +163,54 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
             }
         }
 
-        FormalPMLNode<?, ?> formalParentNode = parentNode.getFormalNode();
+        @Nullable String errorReason = null;
 
-        if ( parentNode instanceof PMLBlockNode parentBlockNode
-            && node instanceof PMLBlockNode childBlockNode
-            && formalParentNode.isBlockChildNodesAllowed() ) {
+        if ( node instanceof PMLBlockNode childBlockNode ) {
 
-            parentBlockNode.addBlockChildNode ( childBlockNode );
+            stopImplicitParagraphNode();
 
-        } else if ( node instanceof PMLInlineNode childInlineNode
-            && formalParentNode.isInlineChildNodesAllowed() ) {
+            if ( parentNode instanceof PMLBlockNode parentBlockNode ) {
+                if ( parentNode.getFormalNode().isBlockChildNodesAllowed() ) {
+                    parentBlockNode.addBlockChildNode ( childBlockNode );
+                } else {
+                    errorReason = "'" + parentNode.getName() + "' cannot contain block nodes.";
+                }
+            } else {
+                errorReason = "inline nodes cannot contain block nodes";
+            }
 
-            parentNode.addInlineChildNode ( childInlineNode );
+        } else if ( node instanceof PMLInlineNode childInlineNode ) {
+            if ( parentNode instanceof PMLBlockNode parentBlockNode ) {
+                if ( parentNode.getFormalNode().isInlineChildNodesAllowed() ) {
+                    parentNode.addInlineChildNode ( childInlineNode );
+                } else {
+                    if ( parentNode.getFormalNode().isBlockChildNodesAllowed() ) {
+                        ParagraphNode paragraphNode = createImplicitParagraphNodeIfNotExists ( parentBlockNode, event.getToken() );
+                        paragraphNode.addInlineChildNode ( childInlineNode );
+                    } else {
+                        errorReason = "'" + parentNode.getName() + "' cannot contain inline child nodes.";
+                    }
+                }
 
-        } else if ( parentNode instanceof PMLBlockNode parentBlockNode
-            && node instanceof PMLInlineNode childInlineNode
-            && formalParentNode.isBlockChildNodesAllowed() ) {
-
-            createImplicitParagraphNodeIfNotExists ( parentBlockNode );
-            assert implicitParagraphNode != null;
-            implicitParagraphNode.addInlineChildNode ( childInlineNode );
+            } else {
+                if ( parentNode.getFormalNode().isInlineChildNodesAllowed() ) {
+                    parentNode.addInlineChildNode ( childInlineNode );
+                } else {
+                    errorReason = "'" + parentNode.getName() + "' cannot contain inline child nodes.";
+                }
+            }
 
         } else {
+            throw new RuntimeException ( "Unexpected type of node '" + node.getName() + "'." );
+        }
+
+        if ( errorReason != null ) {
             cancelingError (
                 "INVALID_CHILD_NODE",
-                "Node '" + event.getName() + "' cannot be contained in node '" + parentNode.getName() + "'.",
-                event.getName().getToken() );
+                "Node '" + node.getName() +
+                    "' cannot be contained in node '" + parentNode.getName() +
+                    "', because " + errorReason + ".",
+                event.getToken() );
         }
 
         return node;
@@ -197,12 +220,14 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
 
         node.createData();
 
+        if ( node instanceof PMLBlockNode ) {
+            stopImplicitParagraphNode();
+        }
+
         if ( node instanceof ChapterNode ) {
             currentChapterLevel --;
-
         } else if ( node instanceof MonospaceNode ) {
             keepWhitespaceInText = false;
-
         }
     }
 
@@ -224,7 +249,10 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
             addTextToBlockNode ( textToken, parentBlockNode );
 
         } else {
-            invalidTextError ( textToken, parentNode );
+            nonCancelingError (
+                "INVALID_TEXT",
+                "Node '" + parentNode.getName() + "' cannot contain text.",
+                textToken );
         }
     }
 
@@ -373,27 +401,26 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
 
     private void addTextToInlineChildren ( @NotNull TextToken textToken, @NotNull PMLNode parentNode ) {
 
-        String text = textToken.getText();
         if ( keepWhitespaceInText ) {
-            parentNode.addInlineChildNode ( new TextNode ( text ) );
+            parentNode.addInlineChildNode ( new TextNode ( textToken ) );
         } else {
-            addTextSegmentsToInlineChildren ( text, parentNode );
+            addTextSegmentsToInlineChildren ( textToken, parentNode );
         }
     }
 
     private void addTextToBlockNode ( final @NotNull TextToken textToken, final @NotNull PMLBlockNode parentBlockNode ) {
 
-        String text = textToken.getText();
         if ( keepWhitespaceInText ) {
-            addTextToNewOrExistingImplicitParagraphNode ( parentBlockNode, text );
+            // TODO?
+            addTextTokenToNewOrExistingImplicitParagraphNode ( textToken, parentBlockNode );
         } else {
-            addTextParagraphsToBlockNode ( text, parentBlockNode );
+            addTextSegmentsToImplicitParagraphNode ( textToken, parentBlockNode );
         }
     }
 
-    private void addTextSegmentsToInlineChildren ( @NotNull String text, @NotNull PMLNode parentNode ) {
+    private void addTextSegmentsToInlineChildren ( @NotNull TextToken textToken, @NotNull PMLNode parentNode ) {
 
-        for ( TextOrWhitespaceSegment segment : PMLWhitespaceHelper.createTextOrWhitespaceSegments ( text ) ) {
+        for ( TextOrWhitespaceSegment segment : PMLWhitespaceHelper.createTextOrWhitespaceSegments ( textToken ) ) {
 
             String segmentString;
             if ( segment instanceof TextSegment textSegment ) {
@@ -404,45 +431,27 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
                 throw new RuntimeException ( "Unexpected segment " + segment );
             }
 
-            parentNode.addInlineChildNode ( new TextNode ( segmentString ) );
+            parentNode.addInlineChildNode ( new TextNode ( segmentString, segment.location ) );
         }
     }
 
-    private void addTextParagraphsToBlockNode ( final @NotNull String text, final @NotNull PMLBlockNode parentBlockNode ) {
+    private void addTextSegmentsToImplicitParagraphNode (
+        final @NotNull TextToken startToken,
+        final @NotNull PMLBlockNode parentBlockNode ) {
 
-        List<TextOrWhitespaceSegment> segments =
-            PMLWhitespaceHelper.createTextOrWhitespaceSegments ( text );
-
-        // skip if it's only whitespace
-        if ( segments.size() == 1 ) {
-            TextOrWhitespaceSegment singleSegment = segments.get ( 0 );
-            if ( singleSegment instanceof WhitespaceSegment whitespaceSegment ) {
-                if ( ! whitespaceSegment.isParagraphBreak() ) return;
-            }
-            if ( singleSegment instanceof TextSegment textSegment ) {
-                if ( textSegment.string.isBlank() ) return;
-            }
-        }
-
-        for ( int index = 0; index < segments.size(); index++ ) {
-            TextOrWhitespaceSegment segment = segments.get ( index );
+        for ( TextOrWhitespaceSegment segment : PMLWhitespaceHelper.createTextOrWhitespaceSegments ( startToken ) ) {
 
             if ( segment instanceof TextSegment textSegment ) {
-                addTextToNewOrExistingImplicitParagraphNode ( parentBlockNode, textSegment.replaceNewLinesWithSpace() );
+                TextToken token = new TextToken ( textSegment.replaceNewLinesWithSpace(), segment.location );
+                addTextTokenToNewOrExistingImplicitParagraphNode ( token, parentBlockNode );
 
             } else if ( segment instanceof WhitespaceSegment whitespaceSegment ) {
-                if ( whitespaceSegment.isParagraphBreak() ) {
-                    implicitParagraphNode = null;
+                if ( whitespaceSegment.isParagraphBreak () ) {
+                    implicitParagraphBreak ( new TextToken ( segment.string, segment.location ), parentBlockNode );
 
                 } else {
-                    boolean isFirstItemOfParagraph =
-                        index == 0
-                        || implicitParagraphNode == null
-                        || ! implicitParagraphNode.hasInlineChildNodes();
-                    boolean isLastItemOfParagraph = index == segments.size() - 1;
-                    if ( ! isFirstItemOfParagraph && ! isLastItemOfParagraph ) {
-                        addTextToNewOrExistingImplicitParagraphNode ( parentBlockNode, " " );
-                    }
+                    TextToken token = new TextToken ( " ", segment.location );
+                    addTextTokenToNewOrExistingImplicitParagraphNode ( token, parentBlockNode );
                 }
 
             } else {
@@ -451,32 +460,81 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
         }
     }
 
-    private void addTextToNewOrExistingImplicitParagraphNode (
+    private void addTextTokenToNewOrExistingImplicitParagraphNode (
+        @NotNull TextToken token,
+        @NotNull PMLBlockNode parentBlockNode ) {
+
+        @NotNull ParagraphNode paragraphNode = createImplicitParagraphNodeIfNotExists ( parentBlockNode, token );
+        paragraphNode.addInlineChildNode ( new TextNode ( token ) );
+    }
+
+    private @NotNull ParagraphNode createImplicitParagraphNodeIfNotExists (
         @NotNull PMLBlockNode parentBlockNode,
-        @NotNull String text ) {
+        @NotNull TextToken startToken ) {
 
-        createImplicitParagraphNodeIfNotExists ( parentBlockNode );
-        assert implicitParagraphNode != null;
-        implicitParagraphNode.addInlineChildNode ( new TextNode ( text ) );
+        return implicitParagraphNode == null
+            ? createImplicitParagraphNode ( parentBlockNode, startToken )
+            : implicitParagraphNode;
     }
 
-    private void createImplicitParagraphNodeIfNotExists ( @NotNull PMLBlockNode parentBlockNode ) {
+    private @NotNull ParagraphNode createImplicitParagraphNode (
+        @NotNull PMLBlockNode parentBlockNode,
+        @NotNull TextToken startToken ) {
 
-        if ( implicitParagraphNode == null ) createImplicitParagraphNode ( parentBlockNode );
+        assert implicitParagraphNode == null;
+        assert parentBlockNodeOfImplicitParagraphNode == null;
+
+        implicitParagraphNode = new ParagraphNode ( startToken );
+        parentBlockNodeOfImplicitParagraphNode = parentBlockNode;
+
+        return implicitParagraphNode;
     }
 
-    private void createImplicitParagraphNode ( @NotNull PMLBlockNode parentBlockNode ) {
+    private void stopImplicitParagraphNode() {
 
-        implicitParagraphNode = new ParagraphNode();
-        parentBlockNode.addBlockChildNode ( implicitParagraphNode );
+        if ( implicitParagraphNode == null ) return;
+
+        @Nullable List<PMLInlineNode> childNodes = implicitParagraphNode.getInlineChildNodes();
+        sanitizeParagraphNode ( childNodes );
+
+        if ( childNodes != null && ! childNodes.isEmpty() ) {
+            assert parentBlockNodeOfImplicitParagraphNode != null;
+            parentBlockNodeOfImplicitParagraphNode.addBlockChildNode ( implicitParagraphNode );
+        }
+
+        implicitParagraphNode = null;
+        parentBlockNodeOfImplicitParagraphNode = null;
     }
 
-    private void invalidTextError ( @NotNull TextToken text, @NotNull PMLNode parentNode ) {
+    private void sanitizeParagraphNode ( @Nullable List<PMLInlineNode> childNodes ) {
 
-        nonCancelingError (
-            "INVALID_TEXT",
-            "Node '" + parentNode.getName() + "' cannot contain text.",
-            text );
+        if ( childNodes == null || childNodes.isEmpty() ) return;
+
+        // remove single leading space
+        removeChildIfOneSpace ( childNodes, 0 );
+        // remove single trailing space
+        if ( childNodes.size() >= 1 ) {
+            removeChildIfOneSpace ( childNodes, childNodes.size() - 1 );
+        }
+    }
+
+    private void removeChildIfOneSpace ( @NotNull List<PMLInlineNode> childNodes, int index ) {
+
+        PMLInlineNode childNode = childNodes.get ( index );
+        if ( childNode instanceof TextNode textNode ) {
+            if ( textNode.getText().equals ( " " ) ) {
+                childNodes.remove ( index );
+            }
+        }
+    }
+
+    private void implicitParagraphBreak ( @NotNull TextToken startToken, @NotNull PMLBlockNode parentBlockNode ) {
+
+        PMLBlockNode parent = parentBlockNodeOfImplicitParagraphNode;
+        // assert parent != null;
+        if ( parent == null ) parent = parentBlockNode;
+        stopImplicitParagraphNode();
+        createImplicitParagraphNode ( parent, startToken );
     }
 
 
@@ -491,7 +549,6 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
 
         TextTokenParameters textTokenParameters = TextTokenParametersPDMLParser.parseAndAdd (
             PDMLReader, new TextTokenParameters ( startToken ), true );
-        // DebugUtils.writeNameValue ( "textTokenParameters", textTokenParameters );
 
         // re-insert ] of node 'config' that has been consumed already
         PDMLReader.insertStringToRead ( "]" );

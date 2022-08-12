@@ -26,6 +26,7 @@ dependencies {
 
 application {
     mainClass = 'dev.pmlc.commands.Start'
+    applicationDefaultJvmArgs = ['-ea'] // enable assertions
 }
 
 // OS script file name to start the application

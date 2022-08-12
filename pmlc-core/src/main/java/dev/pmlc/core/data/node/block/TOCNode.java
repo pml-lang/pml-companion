@@ -3,7 +3,7 @@ package dev.pmlc.core.data.node.block;
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.formalnode.block.FormalTOCNode;
 import dev.pmlc.core.data.node.PMLNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
+import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 
@@ -13,8 +13,8 @@ import java.util.List;
 public class TOCNode extends PMLBlockNode {
 
 
-    private final @NotNull ChapterTitleNode chapterTitleNode;
-    public @NotNull ChapterTitleNode getChapterTitleNode () { return chapterTitleNode; }
+    private final @NotNull TitleNode chapterTitleNode;
+    public @NotNull TitleNode getChapterTitleNode () { return chapterTitleNode; }
 
     private final @NotNull String chapterId;
     public @NotNull String getChapterId() { return chapterId; }
@@ -34,7 +34,7 @@ public class TOCNode extends PMLBlockNode {
     }
 
     public TOCNode (
-        @NotNull ChapterTitleNode chapterTitleNode,
+        @NotNull TitleNode chapterTitleNode,
         @NotNull String chapterId,
         int chapterLevel ) {
 

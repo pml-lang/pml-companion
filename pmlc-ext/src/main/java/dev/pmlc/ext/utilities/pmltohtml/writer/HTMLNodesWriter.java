@@ -3,8 +3,8 @@ package dev.pmlc.ext.utilities.pmltohtml.writer;
 import dev.pmlc.core.data.formalnode.FormalPMLNodeCreator;
 import dev.pmlc.core.data.formalnode.block.*;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterSubtitleNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterTitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalSubtitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pmlc.core.data.formalnode.block.code.FormalHTMLCodeNode;
 import dev.pmlc.core.data.formalnode.block.code.FormalInputNode;
 import dev.pmlc.core.data.formalnode.block.code.FormalOutputNode;
@@ -17,8 +17,8 @@ import dev.pmlc.core.data.formalnode.inline.FormalXrefNode;
 import dev.pmlc.core.data.formalnode.inline.font.*;
 import dev.pmlc.core.data.node.block.*;
 import dev.pmlc.core.data.node.block.chapter.ChapterNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterSubtitleNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
+import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
+import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.block.code.*;
 import dev.pmlc.core.data.node.block.list.ListElementNode;
 import dev.pmlc.core.data.node.block.list.ListNode;
@@ -89,14 +89,14 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         helper.writeBlockNodeWithBlockChildren ( node, FormalChapterNode.HTML_TAG, FormalChapterNode.CSS_CLASS );
     }
 
-    public void chapterSubtitle ( @NotNull ChapterSubtitleNode node ) throws Exception {
+    public void chapterSubtitle ( @NotNull SubtitleNode node ) throws Exception {
 
-        writeChapterTitleNode ( node, node.getLevel(), FormalChapterSubtitleNode.CSS_CLASS );
+        writeChapterTitleNode ( node, node.getLevel(), FormalSubtitleNode.CSS_CLASS );
     }
 
-    public void chapterTitle ( @NotNull ChapterTitleNode node ) throws Exception {
+    public void chapterTitle ( @NotNull TitleNode node ) throws Exception {
 
-        writeChapterTitleNode ( node, node.getLevel(), FormalChapterTitleNode.CSS_CLASS );
+        writeChapterTitleNode ( node, node.getLevel(), FormalTitleNode.CSS_CLASS );
 
         if ( node.isDocumentTitle() && options.TOCPosition() == TOCPosition.TOP ) {
             DocumentNode documentNode = (DocumentNode) node.getParentNode();

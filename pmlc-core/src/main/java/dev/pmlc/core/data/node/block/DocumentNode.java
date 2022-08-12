@@ -1,11 +1,11 @@
 package dev.pmlc.core.data.node.block;
 
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterTitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pmlc.core.data.formalnode.block.FormalOptionsNode;
 import dev.pmlc.core.data.formalnode.block.FormalDocumentNode;
 import dev.pmlc.core.data.node.block.chapter.ChapterNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
+import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.validation.NodeValidationContext;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
@@ -55,14 +55,14 @@ public class DocumentNode extends PMLBlockNode {
         return findChildNodesByName ( FormalOptionsNode.NAME.toString() );
     }
 
-    public @Nullable ChapterTitleNode getTitleNode() {
+    public @Nullable TitleNode getTitleNode() {
 
-        return findFirstChildNodeByName ( FormalChapterTitleNode.NAME.toString() );
+        return findFirstChildNodeByName ( FormalTitleNode.NAME.toString() );
     }
 
     public @Nullable String getTitleText() {
 
-        @Nullable ChapterTitleNode titleNode = getTitleNode();
+        @Nullable TitleNode titleNode = getTitleNode();
         if ( titleNode == null ) return null;
 
         return titleNode.getTextInTree();
@@ -88,7 +88,12 @@ public class DocumentNode extends PMLBlockNode {
 
     public @NotNull TOCNode createTOC ( int maxChapterLevel ) throws TextErrorException {
 
-        @NotNull TOCNode rootNode = createTOCNode ( getTitleNode(), getNodeId(), 0, getStartToken() );
+        int level = 0;
+
+        TitleNode titleNode = getTitleNode();
+        if ( titleNode == null ) titleNode = new TitleNode ( "Untitled", level, null );
+
+        @NotNull TOCNode rootNode = createTOCNode ( titleNode, getNodeId(), level, getStartToken() );
         addTOCChildNodes ( rootNode, getDirectChildChapters(), maxChapterLevel );
         return rootNode;
     }
@@ -114,24 +119,28 @@ public class DocumentNode extends PMLBlockNode {
     }
 
     private @NotNull TOCNode createTOCNode (
-        @Nullable ChapterTitleNode titleNode,
+        @Nullable TitleNode titleNode,
         @Nullable String id,
         int level,
         @Nullable TextToken errorToken ) throws TextErrorException {
 
-        if ( titleNode == null )
+        if ( titleNode == null ) {
             // throw new RuntimeException ( "Each chapter included in the table of contents must have a title." );
             throw new TextErrorException (
                 "TOC_CHAPTER_NEEDS_TITLE",
                 "Each chapter included in the table of contents must have a title.",
                 errorToken );
 
-        if ( id == null )
+            // titleNode = new ChapterTitleNode ( "Untitled", level );
+        }
+
+        if ( id == null ) {
             // throw new RuntimeException ( "Each chapter included in the table of contents must have an id." );
             throw new TextErrorException (
                 "TOC_CHAPTER_NEEDS_ID",
                 "Each chapter included in the table of contents must have an id.",
                 errorToken );
+        }
 
         return new TOCNode ( titleNode, id, level );
     }

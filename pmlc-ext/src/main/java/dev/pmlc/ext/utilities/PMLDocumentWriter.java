@@ -6,7 +6,7 @@ import dev.pdml.ext.extensions.utilities.PDMLEscaper;
 import dev.pmlc.core.data.formalnode.block.FormalDocumentNode;
 import dev.pmlc.core.data.formalnode.block.FormalParagraphNode;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterTitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.commands.command.FormalCommand;
@@ -166,7 +166,7 @@ public class PMLDocumentWriter extends BasicDocumentWriter {
 
         writeIndent();
         writeNodeStart ( nodeName, id == null ? null : Map.of ( "id", id ) );
-        writeInlineNodeWithTextContent ( FormalChapterTitleNode.NAME.toString(), null, title, escapeTitle );
+        writeInlineNodeWithTextContent ( FormalTitleNode.NAME.toString(), null, title, escapeTitle );
         writeNewLine();
         increaseIndent();
 
@@ -487,7 +487,7 @@ public class PMLDocumentWriter extends BasicDocumentWriter {
         writeHeader ( "Input Parameters" );
         @Nullable FormalParameters parameters = command.getInputParameters();
         if ( parameters == null ) {
-            writeParagraph ( "This command doesn't have input parameters" );
+            writeParagraph ( "This command has no input parameters" );
         } else {
             // writeFormalParameters ( parameters.getAllSortedByName() );
             writeFormalParameters ( parameters.getAllSortedByPositionalIndexThenName() );

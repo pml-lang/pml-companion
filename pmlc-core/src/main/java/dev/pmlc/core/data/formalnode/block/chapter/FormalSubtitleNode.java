@@ -4,7 +4,7 @@ import dev.pdml.core.data.node.name.NodeName;
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.formalnode.FormalPMLNodeCreator;
 import dev.pmlc.core.data.formalnode.SharedFormalNodeAttributes;
-import dev.pmlc.core.data.node.block.chapter.ChapterSubtitleNode;
+import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
 import dev.pmlc.core.nodeshandler.PMLNodesHandler;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.parameters.formalParameter.list.FormalParameters;
@@ -12,7 +12,7 @@ import dev.pp.text.documentation.SimpleDocumentation;
 
 import java.util.function.Supplier;
 
-public class FormalChapterSubtitleNode {
+public class FormalSubtitleNode {
 
     public static final @NotNull NodeName NAME = new NodeName ( "subtitle" );
 
@@ -31,8 +31,8 @@ public class FormalChapterSubtitleNode {
 
     public static final @NotNull String CSS_CLASS = FormalPMLNodeCreator.prefixedHTMLClassName ( "chapter-subtitle" );
 
-    public static final @NotNull FormalPMLNode<Void, ChapterSubtitleNode> NODE =
+    public static final @NotNull FormalPMLNode<Void, SubtitleNode> NODE =
         FormalPMLNodeCreator.createForBlockNodeWithInlineChildNodes (
             NAME, ATTRIBUTES, true,
-            DOCUMENTATION, ChapterSubtitleNode::new, PMLNodesHandler::chapterSubtitle, HTML_TAG, CSS_CLASS );
+            DOCUMENTATION, SubtitleNode::new, PMLNodesHandler::chapterSubtitle, HTML_TAG, CSS_CLASS );
 }

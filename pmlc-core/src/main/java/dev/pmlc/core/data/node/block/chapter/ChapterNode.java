@@ -2,7 +2,7 @@ package dev.pmlc.core.data.node.block.chapter;
 
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterTitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pmlc.core.data.node.block.PMLBlockNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
@@ -24,14 +24,14 @@ public class ChapterNode extends PMLBlockNode {
 
     public @NotNull FormalPMLNode<Void, ChapterNode> getFormalNode() { return FormalChapterNode.NODE; }
 
-    public @Nullable ChapterTitleNode getTitleNode() {
+    public @Nullable TitleNode getTitleNode() {
 
-        return findFirstChildNodeByName ( FormalChapterTitleNode.NAME.toString() );
+        return findFirstChildNodeByName ( FormalTitleNode.NAME.toString() );
     }
 
     public @Nullable String getTitleText() {
 
-        ChapterTitleNode titleNode = getTitleNode();
+        TitleNode titleNode = getTitleNode();
         if ( titleNode == null ) return null;
 
         return titleNode.getTextInTree();

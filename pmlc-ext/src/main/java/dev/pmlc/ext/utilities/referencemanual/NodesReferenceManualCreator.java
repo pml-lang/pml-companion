@@ -3,8 +3,8 @@ package dev.pmlc.ext.utilities.referencemanual;
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.formalnode.block.*;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterSubtitleNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterTitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalSubtitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pmlc.core.data.formalnode.block.code.*;
 import dev.pmlc.core.data.formalnode.block.list.FormalListElementNode;
 import dev.pmlc.core.data.formalnode.block.list.FormalListNode;
@@ -129,8 +129,8 @@ public class NodesReferenceManualCreator {
             writeNode ( FormalDocumentNode.NODE );
             writeNode ( FormalParagraphNode.NODE );
             writeNode ( FormalChapterNode.NODE );
-            writeNode ( FormalChapterTitleNode.NODE );
-            writeNode ( FormalChapterSubtitleNode.NODE );
+            writeNode ( FormalTitleNode.NODE );
+            writeNode ( FormalSubtitleNode.NODE );
             writeNode ( FormalOptionsNode.NODE );
         endChapter();
 

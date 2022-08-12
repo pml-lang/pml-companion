@@ -4,7 +4,7 @@ import dev.pdml.core.data.node.name.NodeName;
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.formalnode.FormalPMLNodeCreator;
 import dev.pmlc.core.data.formalnode.SharedFormalNodeAttributes;
-import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
+import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.nodeshandler.PMLNodesHandler;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.parameters.formalParameter.list.FormalParameters;
@@ -12,7 +12,7 @@ import dev.pp.text.documentation.SimpleDocumentation;
 
 import java.util.function.Supplier;
 
-public class FormalChapterTitleNode {
+public class FormalTitleNode {
 
     public static final @NotNull NodeName NAME = new NodeName ( "title" );
 
@@ -30,8 +30,8 @@ public class FormalChapterTitleNode {
 
     public static final @NotNull String CSS_CLASS = FormalPMLNodeCreator.prefixedHTMLClassName ( "chapter-title" );
 
-    public static final @NotNull FormalPMLNode<Void, ChapterTitleNode> NODE =
+    public static final @NotNull FormalPMLNode<Void, TitleNode> NODE =
         FormalPMLNodeCreator.createForBlockNodeWithInlineChildNodes (
             NAME, ATTRIBUTES, true,
-            DOCUMENTATION, ChapterTitleNode::new, PMLNodesHandler::chapterTitle, HTML_TAG, CSS_CLASS );
+            DOCUMENTATION, TitleNode::new, PMLNodesHandler::chapterTitle, HTML_TAG, CSS_CLASS );
 }

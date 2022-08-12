@@ -35,8 +35,8 @@ public class NodeValidationContext {
         @Nullable List<? extends PMLNode> childNodes = node.getChildNodes();
         if ( childNodes == null ) {
             handleWarning (
-                "EMPTY_LIST",
-                "The list is empty.",
+                "EMPTY_NODE",
+                "Node '" + node.getName() + "' has no content.",
                 node.getStartToken() );
         }
     }

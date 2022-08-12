@@ -1,11 +1,11 @@
 package dev.pmlc.core.data.node.block.chapter;
 
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
-import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterSubtitleNode;
+import dev.pmlc.core.data.formalnode.block.chapter.FormalSubtitleNode;
 import dev.pmlc.core.data.node.block.PMLBlockNode;
 import dev.pp.basics.annotations.NotNull;
 
-public class ChapterSubtitleNode extends PMLBlockNode {
+public class SubtitleNode extends PMLBlockNode {
 
 
     private int level = 1;
@@ -13,8 +13,8 @@ public class ChapterSubtitleNode extends PMLBlockNode {
     public void setLevel ( int level ) { this.level = level; }
 
 
-    public ChapterSubtitleNode () { super(); }
+    public SubtitleNode () { super(); }
 
 
-    public @NotNull FormalPMLNode<Void, ChapterSubtitleNode> getFormalNode() { return FormalChapterSubtitleNode.NODE; }
+    public @NotNull FormalPMLNode<Void, SubtitleNode> getFormalNode() { return FormalSubtitleNode.NODE; }
 }

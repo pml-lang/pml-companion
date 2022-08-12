@@ -3,8 +3,8 @@ package dev.pmlc.ext.nodeHandlers.impls;
 import dev.pmlc.core.data.node.PMLNode;
 import dev.pmlc.core.data.node.block.*;
 import dev.pmlc.core.data.node.block.chapter.ChapterNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterSubtitleNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
+import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
+import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.block.code.*;
 import dev.pmlc.core.data.node.block.list.ListElementNode;
 import dev.pmlc.core.data.node.block.list.ListNode;
@@ -41,9 +41,9 @@ public class ThrowingNodesHandler implements PMLNodesHandler {
 
     public void chapter ( @NotNull ChapterNode node ) throws Exception { handleNode ( node ); }
 
-    public void chapterSubtitle ( @NotNull ChapterSubtitleNode node ) throws Exception { handleNode ( node ); }
+    public void chapterSubtitle ( @NotNull SubtitleNode node ) throws Exception { handleNode ( node ); }
 
-    public void chapterTitle ( @NotNull ChapterTitleNode node ) throws Exception { handleNode ( node ); }
+    public void chapterTitle ( @NotNull TitleNode node ) throws Exception { handleNode ( node ); }
 
     public void division ( @NotNull DivisionNode node ) throws Exception { handleNode ( node ); }
 

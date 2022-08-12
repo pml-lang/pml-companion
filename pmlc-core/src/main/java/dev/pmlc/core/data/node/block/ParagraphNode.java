@@ -5,6 +5,7 @@ import dev.pmlc.core.data.formalnode.block.FormalParagraphNode;
 import dev.pmlc.core.data.node.inline.PMLInlineNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
+import dev.pp.text.token.TextToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,26 +29,14 @@ public class ParagraphNode extends PMLBlockNode {
 
     public ParagraphNode() { super(); }
 
-    public ParagraphNode ( @Nullable List<PMLInlineNode> inlineChildNodes ) {
+    public ParagraphNode ( @NotNull TextToken startToken ) {
 
         super();
-        this.inlineChildNodes = inlineChildNodes;
+        this.startToken = startToken;
     }
 
-/*
-    public ParagraphNode (
-        @Nullable String nodeId,
-        @Nullable Map<String, String> HTMLAttributes,
-        @Nullable List<PMLInlineNode> inlineChildNodes ) {
 
-        super ( nodeId, HTMLAttributes, null );
-
-        this.inlineChildNodes = inlineChildNodes;
-    }
-
- */
-
-
+    @SuppressWarnings ( "unchecked" )
     public @NotNull FormalPMLNode<Void, ParagraphNode> getFormalNode() { return FormalParagraphNode.NODE; }
 
     public void addBlockChildNode ( @NotNull PMLBlockNode node ) {

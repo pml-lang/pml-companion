@@ -1,6 +1,9 @@
 package dev.pmlc.core.parser;
 
 import dev.pp.basics.annotations.NotNull;
+import dev.pp.basics.annotations.Nullable;
+import dev.pp.text.location.TextLocation;
+import dev.pp.text.token.TextToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +13,20 @@ public class PMLWhitespaceHelper {
     public static class TextOrWhitespaceSegment {
 
         public final @NotNull String string;
+        public final @Nullable TextLocation location;
 
-        public TextOrWhitespaceSegment ( @NotNull String string ) {
+        private TextOrWhitespaceSegment ( @NotNull String string, @Nullable TextLocation location ) {
             assert string != null && ! string.isEmpty();
 
             this.string = string;
+            this.location = location;
         }
     }
 
     public static class WhitespaceSegment extends TextOrWhitespaceSegment {
 
-        public WhitespaceSegment ( @NotNull String string ) {
-            super ( string );
+        public WhitespaceSegment ( @NotNull String string, @Nullable TextLocation location ) {
+            super ( string, location );
         }
 
         public boolean isParagraphBreak() {
@@ -37,8 +42,8 @@ public class PMLWhitespaceHelper {
 
     public static class TextSegment extends TextOrWhitespaceSegment {
 
-        public TextSegment ( @NotNull String string ) {
-            super ( string );
+        public TextSegment ( @NotNull String string, @Nullable TextLocation location ) {
+            super ( string, location );
         }
 
         public @NotNull String replaceNewLinesWithSpace() {
@@ -56,19 +61,24 @@ public class PMLWhitespaceHelper {
         }
     }
 
-    public static @NotNull List<TextOrWhitespaceSegment> createTextOrWhitespaceSegments ( @NotNull String string ) {
-        assert ! string.isEmpty();
+    public static @NotNull List<TextOrWhitespaceSegment> createTextOrWhitespaceSegments (
+        @NotNull TextToken textToken ) {
 
+//        return createTextOrWhitespaceSegments ( textToken.getText(), textToken.getLocation() );
         List<TextOrWhitespaceSegment> segments = new ArrayList<>();
         int currentIndex = 0;
+        String string = textToken.getText();
+        TextLocation startLocation = textToken.getLocation();
 
         while ( currentIndex < string.length() ) {
 
+            // TODO startLocation should be redefined for each segment
+
             TextOrWhitespaceSegment segment;
             if ( isAtWhitespaceSegment ( string, currentIndex ) ) {
-                segment = createWhitespaceSegment ( string, currentIndex );
+                segment = createWhitespaceSegment ( string, currentIndex, startLocation );
             } else {
-                segment = createTextSegment ( string, currentIndex );
+                segment = createTextSegment ( string, currentIndex, startLocation );
             }
             segments.add ( segment );
 
@@ -77,6 +87,34 @@ public class PMLWhitespaceHelper {
 
         return segments;
     }
+/*
+    public static @NotNull List<TextOrWhitespaceSegment> createTextOrWhitespaceSegments (
+        @NotNull String string,
+        @Nullable TextLocation startLocation ) {
+        assert ! string.isEmpty();
+
+        List<TextOrWhitespaceSegment> segments = new ArrayList<>();
+        int currentIndex = 0;
+
+        while ( currentIndex < string.length() ) {
+
+            // TODO location should be redefined for each segment
+
+            TextOrWhitespaceSegment segment;
+            if ( isAtWhitespaceSegment ( string, currentIndex ) ) {
+                segment = createWhitespaceSegment ( string, currentIndex, startLocation );
+            } else {
+                segment = createTextSegment ( string, currentIndex, startLocation );
+            }
+            segments.add ( segment );
+
+            currentIndex = currentIndex + segment.string.length();
+        }
+
+        return segments;
+    }
+
+ */
 
      /**
      * Check if we are positioned at 2 or more whitespace characters (\r\n counts as one character)
@@ -107,26 +145,28 @@ public class PMLWhitespaceHelper {
 
     protected static WhitespaceSegment createWhitespaceSegment (
         final @NotNull String string,
-        final int startIndex ) {
+        final int startIndex,
+        final @Nullable TextLocation location ) {
 
         int index;
         for ( index = startIndex; index < string.length(); index ++ ) {
             if ( ! isWhitespaceCharacter ( string.charAt ( index ) ) ) break;
         }
 
-        return new WhitespaceSegment ( string.substring ( startIndex, index ) );
+        return new WhitespaceSegment ( string.substring ( startIndex, index ), location );
     }
 
     protected static TextSegment createTextSegment (
         final @NotNull String string,
-        final int startIndex ) {
+        final int startIndex,
+        final @Nullable TextLocation location ) {
 
         int index;
         for ( index = startIndex; index < string.length(); index ++ ) {
             if ( isAtWhitespaceSegment ( string, index ) ) break;
         }
 
-        return new TextSegment ( string.substring ( startIndex, index ) );
+        return new TextSegment ( string.substring ( startIndex, index ), location );
     }
 
     private static boolean isWhitespaceCharacter ( char character ) {

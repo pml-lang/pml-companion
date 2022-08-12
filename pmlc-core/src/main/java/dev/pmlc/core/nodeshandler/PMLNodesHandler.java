@@ -4,8 +4,8 @@ import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.node.PMLNode;
 import dev.pmlc.core.data.node.block.*;
 import dev.pmlc.core.data.node.block.chapter.ChapterNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterSubtitleNode;
-import dev.pmlc.core.data.node.block.chapter.ChapterTitleNode;
+import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
+import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.block.code.*;
 import dev.pmlc.core.data.node.block.list.ListElementNode;
 import dev.pmlc.core.data.node.block.list.ListNode;
@@ -44,9 +44,9 @@ public interface PMLNodesHandler {
 
     void chapter ( @NotNull ChapterNode node ) throws Exception;
 
-    void chapterSubtitle ( @NotNull ChapterSubtitleNode node ) throws Exception;
+    void chapterSubtitle ( @NotNull SubtitleNode node ) throws Exception;
 
-    void chapterTitle ( @NotNull ChapterTitleNode node ) throws Exception;
+    void chapterTitle ( @NotNull TitleNode node ) throws Exception;
 
     void division ( @NotNull DivisionNode node ) throws Exception;
 
