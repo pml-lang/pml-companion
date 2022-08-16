@@ -6,7 +6,7 @@ import dev.pmlc.core.data.node.block.PMLBlockNode;
 import dev.pmlc.core.data.node.inline.PMLInlineNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
-import dev.pp.parameters.formalParameter.list.FormalParameters;
+import dev.pp.parameters.formalParameter.FormalParameters;
 import dev.pp.text.documentation.SimpleDocumentation;
 
 import java.util.function.Supplier;

@@ -7,7 +7,7 @@ import dev.pmlc.core.data.node.block.DocumentNode;
 import dev.pmlc.core.data.node.block.PMLBlockNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.parameter.Parameters;
 
 public class XrefNode extends PMLInlineNode {
 

@@ -11,8 +11,8 @@ import dev.pp.basics.utilities.file.TextFileIO;
 import dev.pp.commands.command.FormalCommand;
 import dev.pp.datatype.CommonDataTypes;
 import dev.pp.parameters.formalParameter.FormalParameter;
-import dev.pp.parameters.formalParameter.list.FormalParameters;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.formalParameter.FormalParameters;
+import dev.pp.parameters.parameter.Parameters;
 import dev.pp.text.utilities.json.JSONWriter;
 
 import java.io.IOException;

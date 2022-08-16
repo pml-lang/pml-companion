@@ -9,7 +9,7 @@ import dev.pmlc.core.nodeshandler.PMLNodesHandler;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.datatype.CommonDataTypes;
 import dev.pp.parameters.formalParameter.FormalParameter;
-import dev.pp.parameters.formalParameter.list.FormalParameters;
+import dev.pp.parameters.formalParameter.FormalParameters;
 import dev.pp.text.documentation.SimpleDocumentation;
 
 import java.nio.file.Path;

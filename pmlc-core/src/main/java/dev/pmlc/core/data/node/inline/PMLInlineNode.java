@@ -2,7 +2,7 @@ package dev.pmlc.core.data.node.inline;
 
 import dev.pmlc.core.data.node.PMLNode;
 import dev.pp.basics.annotations.Nullable;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.parameter.Parameters;
 
 import java.util.List;
 import java.util.Map;

@@ -12,7 +12,7 @@ import dev.pp.basics.annotations.Nullable;
 import dev.pp.commands.command.FormalCommand;
 import dev.pp.datatype.DataType;
 import dev.pp.parameters.formalParameter.FormalParameter;
-import dev.pp.parameters.formalParameter.list.FormalParameters;
+import dev.pp.parameters.formalParameter.FormalParameters;
 import dev.pp.text.documentation.SimpleDocumentation;
 import dev.pp.text.utilities.text.BasicDocumentWriter;
 import dev.pp.text.utilities.text.TextLines;

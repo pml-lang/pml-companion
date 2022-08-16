@@ -4,7 +4,7 @@ import dev.pmlc.ext.PMLCVersion;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.commands.command.FormalCommand;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.parameter.Parameters;
 
 import java.util.Map;
 

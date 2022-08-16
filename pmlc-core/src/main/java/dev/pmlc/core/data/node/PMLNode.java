@@ -6,7 +6,7 @@ import dev.pmlc.core.data.node.inline.TextNode;
 import dev.pmlc.core.data.node.validation.NodeValidationContext;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.parameter.Parameters;
 import dev.pp.text.token.TextToken;
 
 import java.util.ArrayList;

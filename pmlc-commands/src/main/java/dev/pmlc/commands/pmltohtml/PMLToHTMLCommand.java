@@ -13,7 +13,7 @@ import dev.pp.basics.utilities.SimpleLogger;
 import dev.pp.commands.command.CommandExecutor;
 import dev.pp.commands.command.FormalCommand;
 import dev.pp.parameters.formalParameter.FormalParameter;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.parameter.Parameters;
 import dev.pp.parameters.utilities.TextErrorUtils2;
 import dev.pp.text.error.handler.TextErrorHandler;
 import dev.pp.text.error.TextErrorException;

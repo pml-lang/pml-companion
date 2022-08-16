@@ -8,8 +8,8 @@ import dev.pmlc.ext.PMLCResources;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.basics.utilities.file.FileNameUtils;
-import dev.pp.parameters.parameter.list.Parameters;
-import dev.pp.parameters.parameter.list.ParametersCreator;
+import dev.pp.parameters.parameter.Parameters;
+import dev.pp.parameters.parameter.ParametersCreator;
 import dev.pp.parameters.textTokenParameter.TextTokenParameters;
 import dev.pp.text.error.TextErrorException;
 

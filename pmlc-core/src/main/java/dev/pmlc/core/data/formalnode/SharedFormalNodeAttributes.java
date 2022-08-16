@@ -3,7 +3,7 @@ package dev.pmlc.core.data.formalnode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.datatype.CommonDataTypes;
 import dev.pp.parameters.formalParameter.FormalParameter;
-import dev.pp.parameters.formalParameter.list.FormalParameters;
+import dev.pp.parameters.formalParameter.FormalParameters;
 
 public class SharedFormalNodeAttributes {
 

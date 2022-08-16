@@ -6,7 +6,7 @@ import dev.pp.basics.annotations.NotNull;
 import dev.pp.datatype.CommonDataTypes;
 import dev.pp.datatype.nonUnion.scalar.impls.Enum.EnumDataType;
 import dev.pp.parameters.formalParameter.FormalParameter;
-import dev.pp.parameters.formalParameter.list.FormalParameters;
+import dev.pp.parameters.formalParameter.FormalParameters;
 
 import java.nio.file.Path;
 import java.util.List;

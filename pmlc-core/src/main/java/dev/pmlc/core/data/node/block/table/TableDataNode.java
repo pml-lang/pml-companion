@@ -8,7 +8,7 @@ import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.basics.utilities.string.HTextAlign;
 import dev.pp.datatype.utils.validator.DataValidatorException;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.parameter.Parameters;
 import dev.pp.text.token.TextToken;
 import dev.pp.text.utilities.text.TextLines;
 

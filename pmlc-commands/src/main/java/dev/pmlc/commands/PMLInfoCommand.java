@@ -10,7 +10,7 @@ import dev.pp.basics.utilities.string.HTextAlign;
 import dev.pp.basics.utilities.string.StringAligner;
 import dev.pp.basics.utilities.string.StringConstants;
 import dev.pp.commands.command.FormalCommand;
-import dev.pp.parameters.parameter.list.Parameters;
+import dev.pp.parameters.parameter.Parameters;
 
 import java.util.Map;
 
