@@ -9,7 +9,7 @@ public class PMLCVersion {
     public static @NotNull String APPLICATION_SHORT_NAME = "PMLC";
 
     public static @NotNull String VERSION = "3.0.0";
-    public static @NotNull String DATE_PUBLISHED = "2022-08-07";
+    public static @NotNull String DATE_PUBLISHED = "2022-08-19";
     public static @NotNull String VERSION_TEXT = APPLICATION_SHORT_NAME + " " + VERSION + " " + DATE_PUBLISHED;
 
     public static @NotNull String getMajorVersion() {
