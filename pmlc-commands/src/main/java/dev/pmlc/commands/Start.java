@@ -14,7 +14,7 @@ public class Start {
         init();
 
         int exitCode;
-        if ( args.length == 1 && args[0].endsWith ( ".pml" ) ) { // e.g. pmlc index.pml
+        if ( args.length == 1 && args[0].toLowerCase().endsWith ( ".pml" ) ) { // e.g. pmlc index.pml
             exitCode = PMLCommands.PMLToHTML ( args[0] );
         } else {
             exitCode = PMLCommands.runCommand ( args );
