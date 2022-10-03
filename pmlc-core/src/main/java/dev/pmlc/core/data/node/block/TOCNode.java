@@ -60,11 +60,12 @@ public class TOCNode extends PMLBlockNode {
 
     public boolean isRootNode() { return chapterLevel == 0; }
 
-    public @NotNull String getChapterTitleText() {
+    public @NotNull String getChapterTitleTextOrEmpty () {
 
-        String text = chapterTitleNode.getTextInTree();
-        assert text != null;
-        return text;
+        @Nullable String text = chapterTitleNode.getTextInTree();
+        // assert text != null;
+        // return text;
+        return text != null ? text : "";
     }
 
     public void addChildNode ( @NotNull TOCNode childNode ) {

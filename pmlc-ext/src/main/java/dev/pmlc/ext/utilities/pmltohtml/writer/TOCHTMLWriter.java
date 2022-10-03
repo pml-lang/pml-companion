@@ -106,7 +106,7 @@ public class TOCHTMLWriter {
         helper.write ( "<summary><a href=\"#" );
         helper.write ( TOCNode.getChapterId() );
         helper.write ( "\">" );
-        helper.escapeAndWriteText ( TOCNode.getChapterTitleText() );
+        helper.escapeAndWriteText ( TOCNode.getChapterTitleTextOrEmpty () );
         helper.writeHTMLEndTag ( "a" );
         helper.writeHTMLEndTag ( "summary" );
         helper.writeNewLine();
@@ -140,7 +140,7 @@ public class TOCHTMLWriter {
         helper.write ( "<a href=\"#" );
         helper.write ( TOCNode.getChapterId() );
         helper.write ( "\">" );
-        helper.escapeAndWriteText ( TOCNode.getChapterTitleText() );
+        helper.escapeAndWriteText ( TOCNode.getChapterTitleTextOrEmpty () );
         helper.writeHTMLEndTag ( "a" );
         helper.writeHTMLEndTag ( "li" );
         helper.writeNewLine();

@@ -6,6 +6,7 @@ import dev.pmlc.core.data.node.inline.TextNode;
 import dev.pmlc.core.data.node.validation.NodeValidationContext;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
+import dev.pp.basics.utilities.string.StringBuilderUtils;
 import dev.pp.parameters.parameter.Parameters;
 import dev.pp.text.token.TextToken;
 
@@ -176,7 +177,9 @@ public abstract class PMLNode {
 
         forEachNodeInTree ( true, node -> {
             if ( node instanceof TextNode textNode ) {
-                sb.append ( textNode.getText() );
+                sb.append ( textNode.getText () );
+            } else {
+                StringBuilderUtils.appendIfNotNull ( sb, node.getRawText() );
             }
         });
 
