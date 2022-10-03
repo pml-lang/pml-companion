@@ -268,6 +268,37 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+/* Footnotes */
+
+.pml-footnotes {
+    margin-left: 2em;
+}
+
+.pml-footnote-ref a {
+    text-decoration: none;
+}
+
+.pml-footnote-backlink a {
+    text-decoration: none;
+}
+
+.pml-footnote-ref a::before {
+    content: "[";
+}
+
+.pml-footnote-ref a::after {
+    content: "]";
+}
+
+.pml-footnote td p:first-child {
+    margin-top: 0;
+}
+
+.pml-footnote td p:last-child {
+    margin-bottom: 0;
+}
+
+
 /* Table of Contents (TOC) */
 
 .pml-toc {

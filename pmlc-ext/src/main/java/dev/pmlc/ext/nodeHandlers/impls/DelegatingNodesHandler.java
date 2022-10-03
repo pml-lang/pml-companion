@@ -6,6 +6,8 @@ import dev.pmlc.core.data.node.block.chapter.ChapterNode;
 import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
 import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.block.code.*;
+import dev.pmlc.core.data.node.block.footnote.FootnoteDefinitionNode;
+import dev.pmlc.core.data.node.block.footnote.FootnotesPlaceholderNode;
 import dev.pmlc.core.data.node.block.list.ListElementNode;
 import dev.pmlc.core.data.node.block.list.ListNode;
 import dev.pmlc.core.data.node.block.media.AudioNode;
@@ -15,6 +17,8 @@ import dev.pmlc.core.data.node.block.media.YoutubeVideoNode;
 import dev.pmlc.core.data.node.block.table.*;
 import dev.pmlc.core.data.node.inline.*;
 import dev.pmlc.core.data.node.inline.font.*;
+import dev.pmlc.core.data.node.inline.footnote.FootnoteReferenceNode;
+import dev.pmlc.core.data.node.inline.footnote.InlineFootnoteNode;
 import dev.pmlc.core.nodeshandler.PMLNodesHandler;
 import dev.pp.basics.annotations.NotNull;
 
@@ -52,6 +56,10 @@ public class DelegatingNodesHandler implements PMLNodesHandler {
     public void division ( @NotNull DivisionNode node ) throws Exception { delegateNode ( node ); }
 
     public void document ( @NotNull DocumentNode node ) throws Exception { delegateNode ( node ); }
+
+    public void footnoteDefinition ( @NotNull FootnoteDefinitionNode node ) throws Exception { delegateNode ( node ); }
+
+    public void footnotes ( @NotNull FootnotesPlaceholderNode node ) throws Exception { delegateNode ( node ); }
 
     public void header ( @NotNull HeaderNode node ) throws Exception { delegateNode ( node ); }
 
@@ -104,7 +112,11 @@ public class DelegatingNodesHandler implements PMLNodesHandler {
 
     public void bold ( @NotNull BoldNode node ) throws Exception { delegateNode ( node ); }
 
+    public void footnoteReference ( @NotNull FootnoteReferenceNode node ) throws Exception { delegateNode ( node ); }
+
     public void inlineCode ( @NotNull InlineCodeNode node ) throws Exception { delegateNode ( node ); }
+
+    public void inlineFootnote ( @NotNull InlineFootnoteNode node ) throws Exception { delegateNode ( node ); }
 
     public void italic ( @NotNull ItalicNode node ) throws Exception { delegateNode ( node ); }
 

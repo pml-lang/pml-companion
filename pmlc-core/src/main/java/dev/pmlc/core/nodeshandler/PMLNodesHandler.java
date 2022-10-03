@@ -7,6 +7,8 @@ import dev.pmlc.core.data.node.block.chapter.ChapterNode;
 import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
 import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.block.code.*;
+import dev.pmlc.core.data.node.block.footnote.FootnoteDefinitionNode;
+import dev.pmlc.core.data.node.block.footnote.FootnotesPlaceholderNode;
 import dev.pmlc.core.data.node.block.list.ListElementNode;
 import dev.pmlc.core.data.node.block.list.ListNode;
 import dev.pmlc.core.data.node.block.media.AudioNode;
@@ -16,6 +18,8 @@ import dev.pmlc.core.data.node.block.media.YoutubeVideoNode;
 import dev.pmlc.core.data.node.block.table.*;
 import dev.pmlc.core.data.node.inline.*;
 import dev.pmlc.core.data.node.inline.font.*;
+import dev.pmlc.core.data.node.inline.footnote.FootnoteReferenceNode;
+import dev.pmlc.core.data.node.inline.footnote.InlineFootnoteNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 
@@ -51,6 +55,10 @@ public interface PMLNodesHandler {
     void division ( @NotNull DivisionNode node ) throws Exception;
 
     void document ( @NotNull DocumentNode node ) throws Exception;
+
+    void footnoteDefinition ( @NotNull FootnoteDefinitionNode node ) throws Exception;
+
+    void footnotes ( @NotNull FootnotesPlaceholderNode node ) throws Exception;
 
     void header ( @NotNull HeaderNode node ) throws Exception;
 
@@ -103,7 +111,11 @@ public interface PMLNodesHandler {
 
     void bold ( @NotNull BoldNode node ) throws Exception;
 
+    void footnoteReference ( @NotNull FootnoteReferenceNode node ) throws Exception;
+
     void inlineCode ( @NotNull InlineCodeNode node ) throws Exception;
+
+    void inlineFootnote ( @NotNull InlineFootnoteNode node ) throws Exception;
 
     void italic ( @NotNull ItalicNode node ) throws Exception;
 

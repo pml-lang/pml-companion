@@ -8,6 +8,8 @@ import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pmlc.core.data.formalnode.block.code.FormalHTMLCodeNode;
 import dev.pmlc.core.data.formalnode.block.code.FormalInputNode;
 import dev.pmlc.core.data.formalnode.block.code.FormalOutputNode;
+import dev.pmlc.core.data.formalnode.block.footnote.FormalFootnoteDefinitionNode;
+import dev.pmlc.core.data.formalnode.block.footnote.FormalFootnotesPlaceholderNode;
 import dev.pmlc.core.data.formalnode.block.list.FormalListElementNode;
 import dev.pmlc.core.data.formalnode.block.list.FormalListNode;
 import dev.pmlc.core.data.formalnode.block.table.*;
@@ -15,11 +17,14 @@ import dev.pmlc.core.data.formalnode.inline.FormalLinkNode;
 import dev.pmlc.core.data.formalnode.inline.FormalSpanNode;
 import dev.pmlc.core.data.formalnode.inline.FormalXrefNode;
 import dev.pmlc.core.data.formalnode.inline.font.*;
+import dev.pmlc.core.data.formalnode.inline.footnote.FormalFootnoteReferenceNode;
 import dev.pmlc.core.data.node.block.*;
 import dev.pmlc.core.data.node.block.chapter.ChapterNode;
 import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
 import dev.pmlc.core.data.node.block.chapter.TitleNode;
 import dev.pmlc.core.data.node.block.code.*;
+import dev.pmlc.core.data.node.block.footnote.FootnoteDefinitionNode;
+import dev.pmlc.core.data.node.block.footnote.FootnotesPlaceholderNode;
 import dev.pmlc.core.data.node.block.list.ListElementNode;
 import dev.pmlc.core.data.node.block.list.ListNode;
 import dev.pmlc.core.data.node.block.media.AudioNode;
@@ -29,12 +34,15 @@ import dev.pmlc.core.data.node.block.media.YoutubeVideoNode;
 import dev.pmlc.core.data.node.block.table.*;
 import dev.pmlc.core.data.node.inline.*;
 import dev.pmlc.core.data.node.inline.font.*;
+import dev.pmlc.core.data.node.inline.footnote.FootnoteReferenceNode;
+import dev.pmlc.core.data.node.inline.footnote.InlineFootnoteNode;
 import dev.pmlc.core.nodeshandler.PMLNodesHandler;
 import dev.pmlc.ext.utilities.pmltohtml.options.PMLToHTMLOptions;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.text.utilities.html.HTMLWriter;
 
+import java.util.List;
 import java.util.Map;
 
 public class HTMLNodesWriter implements PMLNodesHandler {
@@ -141,6 +149,73 @@ public class HTMLNodesWriter implements PMLNodesHandler {
 
         helper.decreaseIndent();
         helper.writeBlockEndLine ( tag );
+    }
+
+    public void footnoteDefinition ( @NotNull FootnoteDefinitionNode node ) throws Exception {
+
+        // definitions are rendered in footnotes (node [fnotes])
+    }
+
+    private void footnoteDefinition_ ( @NotNull FootnoteDefinitionNode node ) throws Exception {
+
+        helper.writeHTMLBlockStartTag ( FormalFootnoteDefinitionNode.HTML_TAG, node.getNodeId(),
+            FormalFootnoteDefinitionNode.CSS_CLASS, node.getHTMLAttributes(), null );
+        helper.increaseIndent();
+
+        // <td>1.</td>
+        helper.writeIndent();
+        Map<String, String> tdAttributes = Map.of ( "style", "vertical-align: top;" );
+        helper.writeHTMLStartTag ( "td", null, null, null, tdAttributes );
+        helper.write ( String.valueOf ( node.getRenderPosition() ) );
+        helper.write ( "." );
+        helper.writeHTMLEndTag ( "td" );
+        helper.writeNewLine();
+
+        // <td>^^</td>
+        helper.writeIndent();
+        helper.writeHTMLStartTag ( "td", null, FormalPMLNodeCreator.prefixedHTMLClassName ( "footnote-backlink" ),
+            null, tdAttributes );
+        for ( FootnoteReferenceNode reference : node.getReferences () ) {
+            helper.writeHTMLATag ( "#" + reference.getId() );
+            helper.write ( "^" );
+            helper.writeHTMLEndTag ( "a" );
+        }
+        helper.writeHTMLEndTag ( "td" );
+        helper.writeNewLine();
+
+        // <td>
+        //     content
+        // </td>
+        helper.writeHTMLBlockStartTag ( "td", null, null, null, null );
+        helper.increaseIndent();
+        handleChildNodes ( node.getChildNodes() );
+        helper.decreaseIndent();
+        helper.writeBlockEndLine ( "td" );
+
+        helper.decreaseIndent();
+        helper.writeBlockEndLine ( FormalFootnoteDefinitionNode.HTML_TAG );
+    }
+
+    public void footnotes ( @NotNull FootnotesPlaceholderNode node ) throws Exception {
+
+        helper.writeBlockStartLine ( FormalFootnotesPlaceholderNode.HTML_TAG, FormalFootnotesPlaceholderNode.CSS_CLASS );
+        helper.increaseIndent();
+
+        helper.writeHTMLBlockStartTag ( "table", null, null, null, null );
+        helper.increaseIndent();
+
+        List<FootnoteDefinitionNode> definitions = node.getDefinitions();
+        if ( definitions != null ) {
+            for ( FootnoteDefinitionNode definition : definitions ) {
+                footnoteDefinition_ ( definition );
+            }
+        }
+
+        helper.decreaseIndent();
+        helper.writeBlockEndLine ( "table" );
+
+        helper.decreaseIndent();
+        helper.writeBlockEndLine ( FormalFootnotesPlaceholderNode.HTML_TAG );
     }
 
     public void header ( @NotNull HeaderNode node ) throws Exception {
@@ -295,11 +370,34 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         helper.writeInlineNode ( node, FormalBoldNode.HTML_TAG, FormalBoldNode.CSS_CLASS );
     }
 
+    public void footnoteReference ( @NotNull FootnoteReferenceNode node ) throws Exception {
+
+        helper.writeHTMLStartTag ( FormalFootnoteReferenceNode.HTML_TAG, node.getId(),
+            FormalFootnoteReferenceNode.CSS_CLASS, node.getHTMLAttributes(), null );
+
+        helper.writeHTMLATag ( "#" + node.getDefinitionId() );
+        // helper.write ( "[" ); // done in CSS
+        String inlineText = node.getInlineText();
+        if ( inlineText == null ) inlineText = String.valueOf ( node.getListIndex() );
+        helper.write ( inlineText );
+        // helper.write ( "]" ); // done in CSS
+        helper.writeHTMLEndTag ( "a" );
+
+        helper.writeHTMLEndTag ( FormalFootnoteReferenceNode.HTML_TAG );
+    }
+
     public void inlineCode ( @NotNull InlineCodeNode node ) throws Exception {
 
         helper.writeHTMLStartTag ( node, FormalInlineCodeNode.HTML_TAG, FormalInlineCodeNode.CSS_CLASS, null );
         helper.escapeAndWriteNullableText ( node.getRawText() );
         helper.writeHTMLEndTag ( FormalInlineCodeNode.HTML_TAG );
+    }
+
+    public void inlineFootnote ( @NotNull InlineFootnoteNode node ) throws Exception {
+
+        FootnoteReferenceNode reference = node.getReferenceNode ();
+        assert reference != null;
+        footnoteReference ( reference );
     }
 
     public void italic ( @NotNull ItalicNode node ) throws Exception {

@@ -6,12 +6,16 @@ import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterNode;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalSubtitleNode;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pmlc.core.data.formalnode.block.code.*;
+import dev.pmlc.core.data.formalnode.block.footnote.FormalFootnoteDefinitionNode;
+import dev.pmlc.core.data.formalnode.block.footnote.FormalFootnotesPlaceholderNode;
 import dev.pmlc.core.data.formalnode.block.list.FormalListElementNode;
 import dev.pmlc.core.data.formalnode.block.list.FormalListNode;
 import dev.pmlc.core.data.formalnode.block.media.FormalAudioNode;
 import dev.pmlc.core.data.formalnode.block.media.FormalImageNode;
 import dev.pmlc.core.data.formalnode.block.media.FormalVideoNode;
 import dev.pmlc.core.data.formalnode.block.media.FormalYoutubeVideoNode;
+import dev.pmlc.core.data.formalnode.inline.footnote.FormalFootnoteReferenceNode;
+import dev.pmlc.core.data.formalnode.inline.footnote.FormalInlineFootnoteNode;
 import dev.pmlc.ext.PMLCVersion;
 import dev.pmlc.ext.utilities.PMLDocumentWriter;
 import dev.pmlc.ext.utilities.pmltohtml.PMLToHTMLConverter;
@@ -158,7 +162,6 @@ public class NodesReferenceManualCreator {
             writeNode ( FormalMonospaceNode.NODE );
             writeNode ( FormalDivisionNode.NODE );
             writeNode ( FormalHTMLCodeNode.NODE );
-
         endChapter();
 
         startChapter ( "Media Nodes", "media_nodes" );
@@ -166,6 +169,11 @@ public class NodesReferenceManualCreator {
             writeNode ( FormalAudioNode.NODE );
             writeNode ( FormalVideoNode.NODE );
             writeNode ( FormalYoutubeVideoNode.NODE );
+        endChapter();
+
+        startChapter ( "Footnotes", "footnotes_block" );
+            writeNode ( FormalFootnotesPlaceholderNode.NODE );
+            writeNode ( FormalFootnoteDefinitionNode.NODE );
         endChapter();
 
         startChapter ( "Software Development", "software_development_nodes" );
@@ -201,6 +209,11 @@ public class NodesReferenceManualCreator {
         writeNode ( FormalNewLineNode.NODE );
         writeNode ( FormalSpaceNode.NODE );
         writeNode ( FormalTextNode.NODE );
+
+        startChapter ( "Footnotes", "footnotes_inline" );
+            writeNode ( FormalInlineFootnoteNode.NODE );
+            writeNode ( FormalFootnoteReferenceNode.NODE );
+        endChapter();
 
         endChapter();
     }

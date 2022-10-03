@@ -6,6 +6,8 @@ import dev.pmlc.core.data.formalnode.block.chapter.FormalChapterNode;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalSubtitleNode;
 import dev.pmlc.core.data.formalnode.block.chapter.FormalTitleNode;
 import dev.pmlc.core.data.formalnode.block.code.*;
+import dev.pmlc.core.data.formalnode.block.footnote.FormalFootnoteDefinitionNode;
+import dev.pmlc.core.data.formalnode.block.footnote.FormalFootnotesPlaceholderNode;
 import dev.pmlc.core.data.formalnode.block.list.FormalListElementNode;
 import dev.pmlc.core.data.formalnode.block.list.FormalListNode;
 import dev.pmlc.core.data.formalnode.block.media.FormalAudioNode;
@@ -15,6 +17,8 @@ import dev.pmlc.core.data.formalnode.block.media.FormalYoutubeVideoNode;
 import dev.pmlc.core.data.formalnode.block.table.*;
 import dev.pmlc.core.data.formalnode.inline.*;
 import dev.pmlc.core.data.formalnode.inline.font.*;
+import dev.pmlc.core.data.formalnode.inline.footnote.FormalFootnoteReferenceNode;
+import dev.pmlc.core.data.formalnode.inline.footnote.FormalInlineFootnoteNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 
@@ -65,6 +69,8 @@ public class FormalNodeRegistry {
         addFormalNode ( FormalTitleNode.NODE, map );
         addFormalNode ( FormalDivisionNode.NODE, map );
         addFormalNode ( FormalDocumentNode.NODE, map );
+        addFormalNode ( FormalFootnoteDefinitionNode.NODE, map );
+        addFormalNode ( FormalFootnotesPlaceholderNode.NODE, map );
         addFormalNode ( FormalHeaderNode.NODE, map );
         addFormalNode ( FormalHTMLCodeNode.NODE, map );
         addFormalNode ( FormalImageNode.NODE, map );
@@ -90,7 +96,9 @@ public class FormalNodeRegistry {
 
         // Inline Nodes
         addFormalNode ( FormalBoldNode.NODE, map );
+        addFormalNode ( FormalFootnoteReferenceNode.NODE, map );
         addFormalNode ( FormalInlineCodeNode.NODE, map );
+        addFormalNode ( FormalInlineFootnoteNode.NODE, map );
         addFormalNode ( FormalItalicNode.NODE, map );
         addFormalNode ( FormalLinkNode.NODE, map );
         addFormalNode ( FormalNewLineNode.NODE, map );

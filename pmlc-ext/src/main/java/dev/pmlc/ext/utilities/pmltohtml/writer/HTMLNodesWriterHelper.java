@@ -160,6 +160,11 @@ public class HTMLNodesWriterHelper {
         write ( ">" );
     }
 
+    public void writeHTMLATag ( String hrefValue ) throws IOException {
+
+        writeHTMLStartTag ( "a", null, null, null, Map.of ( "href", hrefValue ) );
+    }
+
     private void writeHTMLAttributes (
         @Nullable String idAttribute,
         @Nullable String classAttribute,

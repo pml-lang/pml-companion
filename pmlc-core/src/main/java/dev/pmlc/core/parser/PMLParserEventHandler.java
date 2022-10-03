@@ -11,15 +11,20 @@ import dev.pmlc.core.data.formalnode.FormalNodeRegistry;
 import dev.pmlc.core.data.formalnode.FormalPMLNode;
 import dev.pmlc.core.data.formalnode.SharedFormalNodeAttributes;
 import dev.pmlc.core.data.formalnode.block.FormalDocumentNode;
+import dev.pmlc.core.data.formalnode.block.footnote.FormalFootnotesPlaceholderNode;
 import dev.pmlc.core.data.formalnode.inline.FormalXrefNode;
 import dev.pmlc.core.data.node.PMLNode;
 import dev.pmlc.core.data.node.block.*;
 import dev.pmlc.core.data.node.block.chapter.ChapterNode;
 import dev.pmlc.core.data.node.block.chapter.SubtitleNode;
 import dev.pmlc.core.data.node.block.chapter.TitleNode;
+import dev.pmlc.core.data.node.block.footnote.FootnoteDefinitionNode;
+import dev.pmlc.core.data.node.block.footnote.FootnotesPlaceholderNode;
 import dev.pmlc.core.data.node.inline.PMLInlineNode;
 import dev.pmlc.core.data.node.inline.TextNode;
 import dev.pmlc.core.data.node.inline.XrefNode;
+import dev.pmlc.core.data.node.inline.footnote.FootnoteReferenceNode;
+import dev.pmlc.core.data.node.inline.footnote.InlineFootnoteNode;
 import dev.pmlc.core.parser.PMLWhitespaceHelper.TextOrWhitespaceSegment;
 import dev.pmlc.core.parser.PMLWhitespaceHelper.TextSegment;
 import dev.pmlc.core.parser.PMLWhitespaceHelper.WhitespaceSegment;
@@ -43,6 +48,8 @@ import java.util.*;
 public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, DocumentNode> {
 
     private static final @NotNull String CHAPTER_AUTO_ID_PREFIX = "ch__";
+    private static final @NotNull String FOOTNOTE_REFERENCE_AUTO_ID_PREFIX = "fnr__";
+    private static final @NotNull String FOOTNOTE_DEFINITION_AUTO_ID_PREFIX = "fnd__";
 
     private static class ParsedNodeWithId {
 
@@ -85,6 +92,15 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
     private @Nullable PMLBlockNode parentBlockNodeOfImplicitParagraphNode = null;
     private final @NotNull List<PendingXrefNodeToCheck> pendingXrefNodesToCheck = new ArrayList<>();
     private final @NotNull Map<String, ParsedNodeWithId> parsedNodesWithId = new HashMap<>();
+
+    // Footnotes
+    private int nextFootnoteReferenceAutoId = 1;
+    private int nextFootnoteDefinitionAutoId = 1;
+    private int nextRenderedFootnotePosition = 1;
+    private final Map<String, FootnoteDefinitionNode> footnoteDefinitions = new HashMap<>();
+    private final Map<String, List<FootnoteReferenceNode>> unresolvedFootnoteReferences = new HashMap<>();
+    private final List<FootnoteReferenceNode> unrenderedFootnoteReferences = new ArrayList<>();
+    private final Set<String> renderedFootnoteDefinitionIds = new HashSet<>();
 
     private final @NotNull PDMLReader PDMLReader;
 
@@ -134,6 +150,8 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
                     pendingXrefNodeToCheck.idToken );
             }
         }
+
+        checkFootnotesAtRootNodeEnd();
     }
 
     public @NotNull PMLNode onNodeStart ( @NotNull NodeStartEvent event, @NotNull PMLNode parentNode ) throws Exception {
@@ -159,7 +177,7 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
                 keepWhitespaceInText = true;
 
             } else if ( blockNode instanceof OptionsNode configNode ) {
-                handleConfigNode ( configNode, event.getToken() );
+                handleConfigNode ( configNode, event.getToken () );
             }
         }
 
@@ -228,6 +246,14 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
             currentChapterLevel --;
         } else if ( node instanceof MonospaceNode ) {
             keepWhitespaceInText = false;
+        } else if ( node instanceof FootnoteReferenceNode footnoteReferenceNode ) {
+            handleFootnoteReferenceNode ( footnoteReferenceNode );
+        } else if ( node instanceof FootnoteDefinitionNode footnoteDefinitionNode ) {
+            handleFootnoteDefinitionNode ( footnoteDefinitionNode );
+        } else if ( node instanceof InlineFootnoteNode inlineFootnoteNode ) {
+            handleInlineFootnoteNode ( inlineFootnoteNode );
+        } else if ( node instanceof FootnotesPlaceholderNode footnotesPlaceholderNode ) {
+            handleFootnotesPlaceholderNode ( footnotesPlaceholderNode );
         }
     }
 
@@ -538,6 +564,149 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
     }
 
 
+    // Handle footnote nodes
+
+    private void handleFootnoteReferenceNode ( @NotNull FootnoteReferenceNode footnoteReference ) {
+
+        footnoteReference.setId ( footnoteReferenceAutoId () );
+
+        String definitionId = footnoteReference.getDefinitionId();
+        FootnoteDefinitionNode existingDefinition = footnoteDefinitions.get ( definitionId );
+        if ( existingDefinition != null ) {
+            footnoteReference.setDefinitionNode ( existingDefinition );
+            existingDefinition.addReference ( footnoteReference );
+        } else {
+            List<FootnoteReferenceNode> unresolvedReferences = unresolvedFootnoteReferences.get ( definitionId );
+            if ( unresolvedReferences == null ) {
+                unresolvedReferences = new ArrayList<>();
+                unresolvedFootnoteReferences.put ( definitionId, unresolvedReferences );
+            }
+            unresolvedReferences.add ( footnoteReference );
+        }
+
+        unrenderedFootnoteReferences.add ( footnoteReference );
+    }
+
+    private void handleFootnoteDefinitionNode ( @NotNull FootnoteDefinitionNode footnoteDefinition ) {
+
+        String id = footnoteDefinition.getNodeId();
+        assert id != null;
+        /* Not necessary, because the id of every node must be unique, and this has been checked already
+        if ( footnoteDefinitions.containsKey ( id ) ) {
+            nonCancelingError (
+                "DUPLICATE_FOOTNOTE_ID",
+                "A footnote with id '" + id + "' has already been defined at the following location: " +
+                    footnoteDefinitions.get ( id ).getStartToken(),
+                footnoteDefinition.getStartToken() );
+        }
+         */
+        footnoteDefinitions.put ( id, footnoteDefinition );
+
+        List<FootnoteReferenceNode> unresolvedReferences = unresolvedFootnoteReferences.get ( id );
+        if ( unresolvedReferences != null ) {
+            for ( FootnoteReferenceNode reference : unresolvedReferences ) {
+                reference.setDefinitionNode ( footnoteDefinition );
+                footnoteDefinition.addReference ( reference );
+            }
+            unresolvedFootnoteReferences.remove ( id );
+        }
+    }
+
+    private void handleFootnotesPlaceholderNode ( @NotNull FootnotesPlaceholderNode footnotesPlaceholder ) {
+
+        if ( unrenderedFootnoteReferences.isEmpty() ) {
+            warning (
+                "NO_FOOTNOTES_DEFINED",
+                "There are no footnotes to be rendered.",
+                footnotesPlaceholder.getStartToken() );
+            return;
+        }
+
+        nextRenderedFootnotePosition = 1;
+
+        for ( FootnoteReferenceNode reference : unrenderedFootnoteReferences ) {
+            String id = reference.getDefinitionId();
+            FootnoteDefinitionNode definition = reference.getDefinitionNode();
+            if ( definition == null ) {
+                nonCancelingError (
+                    "FOOTNOTE_NOT_DEFINED",
+                    "Footnote with id '" + id + "' has not yet been defined, and can therefore not be rendered at position: " + footnotesPlaceholder.getStartToken(),
+                    reference.getStartToken() );
+                continue;
+            }
+
+            if ( ! renderedFootnoteDefinitionIds.contains ( id ) ) {
+                definition.setRenderPosition ( nextRenderedFootnotePosition );
+                nextRenderedFootnotePosition ++;
+                footnotesPlaceholder.addDefinition ( definition );
+                renderedFootnoteDefinitionIds.add ( id );
+            }
+        }
+
+        unrenderedFootnoteReferences.clear();
+    }
+
+    private void handleInlineFootnoteNode ( @NotNull InlineFootnoteNode inlineFootnote ) {
+
+        ParagraphNode paragraphNode = new ParagraphNode();
+        paragraphNode.setInlineChildNodes ( inlineFootnote.getInlineChildNodes() );
+        FootnoteDefinitionNode definitionNode = new FootnoteDefinitionNode();
+        definitionNode.addBlockChildNode ( paragraphNode );
+        String definitionId = footnoteDefinitionAutoId();
+        definitionNode.setNodeId ( definitionId );
+        footnoteDefinitions.put ( definitionId, definitionNode );
+
+        FootnoteReferenceNode referenceNode = new FootnoteReferenceNode ();
+        referenceNode.setStartToken ( inlineFootnote.getStartToken() );
+        referenceNode.setId ( footnoteReferenceAutoId () );
+        referenceNode.setDefinitionId ( definitionId );
+        referenceNode.setDefinitionNode ( definitionNode );
+        definitionNode.addReference ( referenceNode );
+        unrenderedFootnoteReferences.add ( referenceNode );
+
+        inlineFootnote.setReferenceNode ( referenceNode );
+        // inlineFootnote.setDefinitionNode ( definitionNode );
+    }
+
+    private String footnoteReferenceAutoId () {
+
+        String r = FOOTNOTE_REFERENCE_AUTO_ID_PREFIX + nextFootnoteReferenceAutoId;
+        nextFootnoteReferenceAutoId++;
+        return r;
+    }
+
+    private String footnoteDefinitionAutoId() {
+
+        String r = FOOTNOTE_DEFINITION_AUTO_ID_PREFIX + nextFootnoteDefinitionAutoId;
+        nextFootnoteDefinitionAutoId++;
+        return r;
+    }
+
+    private void checkFootnotesAtRootNodeEnd() {
+
+        boolean hasUnrenderedFootnote = false;
+        for ( FootnoteReferenceNode reference : unrenderedFootnoteReferences ) {
+            hasUnrenderedFootnote = true;
+            warning (
+                "UNRENDERED_FOOTNOTE",
+                "Footnote is not rendered, because there is no '" +
+                FormalFootnotesPlaceholderNode.NAME + "' node defined after it.",
+                reference.getStartToken() );
+        }
+        if ( hasUnrenderedFootnote ) return;
+
+        for ( FootnoteDefinitionNode definition : footnoteDefinitions.values() ) {
+            String id = definition.getNodeId();
+            if ( ! renderedFootnoteDefinitionIds.contains ( id ) ) {
+                warning (
+                    "UNUSED_FOOTNOTE",
+                    "Footnote definition with id '" + id + "' is never used.",
+                    definition.getStartToken() );
+            }
+        }
+    }
+
+
     // Config
 
     private void handleConfigNode (
@@ -575,5 +744,13 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
         @Nullable TextToken token ) {
 
         errorHandler.handleAbortingError ( id, message, token );
+    }
+
+    private void warning (
+        @NotNull String id,
+        @NotNull String message,
+        @Nullable TextToken token ) {
+
+        errorHandler.handleNonAbortingWarning ( id, message, token );
     }
 }
