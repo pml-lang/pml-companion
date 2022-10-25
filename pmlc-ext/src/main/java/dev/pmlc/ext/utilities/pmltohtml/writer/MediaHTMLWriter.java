@@ -161,6 +161,7 @@ public class MediaHTMLWriter {
         @NotNull String CSSClass,
         @Nullable String source,
         @Nullable Integer width,
+
         @Nullable Integer height,
         @Nullable Boolean border,
         @Nullable Map<String, String> extraAttributes,
@@ -173,19 +174,19 @@ public class MediaHTMLWriter {
         String clazz = CSSClass;
         if ( border != null && border ) clazz = clazz + " " + FormalPMLNodeCreator.prefixedHTMLClassName ( "bordered" );
 
-        Map<String, String> nodeAttributes = new HashMap<>();
+        Map<String, String> nodeHTMLAttributes = node.getHTMLAttributes();
+        Map<String, String> HTMLAttributes = nodeHTMLAttributes != null ? new HashMap<> ( nodeHTMLAttributes ) : new HashMap<>();
         if ( source != null ) {
-            nodeAttributes.put ( "src", source );
+            HTMLAttributes.put ( "src", source );
         }
         if ( width != null ) {
-            nodeAttributes.put ( "width", width.toString() );
+            HTMLAttributes.put ( "width", width.toString() );
         }
-
         if ( height != null ) {
-            nodeAttributes.put ( "height", height.toString() );
+            HTMLAttributes.put ( "height", height.toString() );
         }
 
-        helper.writeHTMLStartTag ( tag, null, clazz, nodeAttributes, extraAttributes );
+        helper.writeHTMLStartTag ( tag, null, clazz, HTMLAttributes, extraAttributes );
     }
 
     private static void writeSource (
