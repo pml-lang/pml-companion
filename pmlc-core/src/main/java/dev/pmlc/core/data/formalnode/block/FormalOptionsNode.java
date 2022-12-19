@@ -19,7 +19,8 @@ public class FormalOptionsNode {
         """
         Used to define a set of options applied to the document.
         If used, this node must be the first child node of the 'doc' node.
-        Please consult the user manual and/or the CLI manual to see the list of options available.""",
+        Please consult the user manual and/or the CLI manual to see the list of options available.
+        The following parameters are only valid in the CLI, not in the options node: input, output, open_file_cmd, and verbosity.""",
         """
         [doc [title Options Demo]
             [options
