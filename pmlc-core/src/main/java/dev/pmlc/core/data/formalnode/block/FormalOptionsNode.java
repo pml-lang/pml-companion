@@ -23,8 +23,8 @@ public class FormalOptionsNode {
         """
         [doc [title Options Demo]
             [options
-                [TOCPosition top]
-                [TOCTitle Inhaltsverzeichnis]
+                [TOC_position top]
+                [TOC_title Inhaltsverzeichnis]
             ]
             text
         ]""" );
