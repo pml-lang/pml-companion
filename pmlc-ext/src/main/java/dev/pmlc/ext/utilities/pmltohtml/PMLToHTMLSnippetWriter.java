@@ -36,7 +36,7 @@ public class PMLToHTMLSnippetWriter {
         @NotNull Writer HTMLSnippetWriter,
         @NotNull TextErrorHandler errorHandler ) throws Exception {
 
-        DocumentNode documentNode = PMLParser.parseReader ( PMLDocumentReader, inputTextResource, errorHandler );
+        DocumentNode documentNode = PMLParser.parseReader ( PMLDocumentReader, inputTextResource, null, null, errorHandler );
 
         HTMLNodesWriter htmlNodesWriter = new HTMLNodesWriter (
             new HTMLWriter ( HTMLSnippetWriter ), PMLToHTMLOptions.builder().build() );

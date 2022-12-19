@@ -16,7 +16,9 @@ public class FormalVerbatimTextNode {
 
     public static final @NotNull Supplier<SimpleDocumentation> DOCUMENTATION = () -> new SimpleDocumentation (
         "Verbatim Text",
-        "Raw, verbatim text that is rendered as is, without any transformations",
+        """
+            Raw, verbatim text that is rendered as is, without any transformations.
+            Note: The text still has to be escaped, according to the standard PML escaping rules.""",
         "Math's ring operator is [verbatim &#x2218;]." );
 
     public static final @NotNull String HTML_TAG = "";

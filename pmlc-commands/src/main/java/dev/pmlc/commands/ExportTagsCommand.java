@@ -48,9 +48,7 @@ public class ExportTagsCommand {
         .addInputParameter ( OUTPUT_FILE_PARAMETER )
         .build();
 
-    public static Void execute (
-        @Nullable Map<String, String> stringParameters,
-        @Nullable Parameters parameters ) throws IOException {
+    public static Void execute ( @Nullable Parameters parameters ) throws IOException {
 
         assert parameters != null;
 

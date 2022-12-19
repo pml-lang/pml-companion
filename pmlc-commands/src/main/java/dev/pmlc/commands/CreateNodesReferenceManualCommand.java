@@ -51,9 +51,7 @@ public class CreateNodesReferenceManualCommand {
         // .addInputParameter ( TEMP_DIRECTORY_PARAMETER )
         .build();
 
-    public static Void execute (
-        @Nullable Map<String, String> stringParameters,
-        @Nullable Parameters parameters ) throws Exception {
+    public static Void execute ( @Nullable Parameters parameters ) throws Exception {
 
 /*
         assert parameters != null;

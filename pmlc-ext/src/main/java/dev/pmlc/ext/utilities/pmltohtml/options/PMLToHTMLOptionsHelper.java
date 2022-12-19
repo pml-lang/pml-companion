@@ -46,7 +46,8 @@ public class PMLToHTMLOptionsHelper {
     }
 
     public static @NotNull PMLToHTMLOptions createMergedOptions (
-        @Nullable Map<String, String> CLIParameters,
+//        @Nullable Map<String, String> CLIParameters,
+        @Nullable TextTokenParameters CLIParameters,
         @NotNull DocumentNode documentNode ) throws TextErrorException, IOException {
 
         List<TextTokenParameters> parametersList = new ArrayList<>();
@@ -64,7 +65,8 @@ public class PMLToHTMLOptionsHelper {
         }
 
         if ( CLIParameters != null ) {
-            parametersList.add ( new TextTokenParameters ( CLIParameters, null ) );
+//            parametersList.add ( new TextTokenParameters ( CLIParameters, null ) );
+            parametersList.add ( CLIParameters );
         }
 
         TextTokenParameters mergedTextTokenParameters =

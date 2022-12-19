@@ -13,7 +13,10 @@ import dev.pp.basics.utilities.SimpleLogger;
 import dev.pp.commands.command.CommandExecutor;
 import dev.pp.commands.command.FormalCommand;
 import dev.pp.parameters.formalParameter.FormalParameter;
+import dev.pp.parameters.formalParameter.FormalParameters;
 import dev.pp.parameters.parameter.Parameters;
+import dev.pp.parameters.textTokenParameter.TextTokenParameter;
+import dev.pp.parameters.textTokenParameter.TextTokenParameters;
 import dev.pp.parameters.utilities.TextErrorUtils2;
 import dev.pp.text.error.handler.TextErrorHandler;
 import dev.pp.text.error.TextErrorException;
@@ -89,9 +92,7 @@ public class PMLToHTMLCommand {
         }
 */
 
-        public Void execute (
-            @Nullable Map<String, String> stringParameters,
-            @Nullable Parameters parameters ) throws Exception {
+        public Void execute ( @Nullable Parameters parameters ) throws Exception {
 
             assert parameters != null;
             // TODO
@@ -110,14 +111,14 @@ public class PMLToHTMLCommand {
                     input = PMLToHTMLConverter.Input.createForFileOrStdin ( PMLInputFile );
                     SimpleLogger.debug ( "Reading PML input from " + input );
                     documentNode = PMLParser.parseReader (
-                        input.PMLInputReader(), input.PMLInputTextResource(), errorHandler );
+                        input.PMLInputReader(), input.PMLInputTextResource(), null, null, errorHandler );
                 } finally {
                     PMLToHTMLConverter.Input.closeIfFileReader ( input );
                 }
 
                 NodeValidator.validateTree ( documentNode, errorHandler );
 
-                convertDocumentNode ( documentNode, stringParameters, parameters, input );
+                convertDocumentNode ( documentNode, parameters, input );
 
             } catch ( TextErrorException e ) {
                 TextErrorUtils2.showInEditor (
@@ -131,13 +132,13 @@ public class PMLToHTMLCommand {
 
     private static void convertDocumentNode  (
         @NotNull DocumentNode documentNode,
-        @Nullable Map<String, String> CLIParameterStrings,
         @NotNull Parameters CLIParameters,
         @NotNull PMLToHTMLConverter.Input input ) throws Exception {
 
         @Nullable Path HTMLOutputFile = CLIParameters.getNullable ( PMLToHTMLFormalCLIParameters.HTML_OUTPUT_FILE );
 
         // remove all CLI specific parameters that are not PMLToHTML options.
+/*
         if ( CLIParameterStrings != null ) {
             for ( FormalParameter<?> formalParameter : PMLToHTMLFormalCLIParameters.CLI_SPECIFIC_PARAMETERS.getAll() ) {
                 CLIParameterStrings.remove ( formalParameter.getName() );
@@ -145,6 +146,32 @@ public class PMLToHTMLCommand {
         }
 
         PMLToHTMLOptions options = PMLToHTMLOptionsHelper.createMergedOptions ( CLIParameterStrings, documentNode );
+*/
+/*
+        TextTokenParameters textTokenParameters = CLIParameters.getTextTokenParameters() == null ? null :
+            CLIParameters.getTextTokenParameters().createCopy();
+        if ( textTokenParameters != null ) {
+            for ( FormalParameter<?> formalParameter : PMLToHTMLFormalCLIParameters.CLI_SPECIFIC_PARAMETERS.getAll() ) {
+                textTokenParameters.removeIfExists ( formalParameter.getName () );
+            }
+        }
+*/
+
+        TextTokenParameters allCLIParameters = CLIParameters.getTextTokenParameters();
+        TextTokenParameters nonCLISpecificParameters = null;
+        if ( allCLIParameters != null ) {
+            nonCLISpecificParameters = new TextTokenParameters ( allCLIParameters.getStartToken() );
+            FormalParameters CLISpecificFormalParameters = PMLToHTMLFormalCLIParameters.CLI_SPECIFIC_PARAMETERS;
+            for ( TextTokenParameter parameter : allCLIParameters.getList() ) {
+                if ( ! CLISpecificFormalParameters.containsName ( parameter.getName() ) ) {
+                    nonCLISpecificParameters.add ( parameter );
+                }
+            }
+            if ( nonCLISpecificParameters.isEmpty() ) nonCLISpecificParameters = null ;
+        }
+
+        PMLToHTMLOptions options = PMLToHTMLOptionsHelper.createMergedOptions ( nonCLISpecificParameters, documentNode );
+
 
         @Nullable PMLToHTMLConverter.Output output = null;
         try {

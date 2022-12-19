@@ -53,16 +53,19 @@ public class PMLParser {
         @NotNull Reader PMLCodeReader,
         @Nullable TextResource resource ) throws Exception {
 
-        return parseReader ( PMLCodeReader, resource, SharedDefaultOptions.createErrorHandler () );
+        return parseReader ( PMLCodeReader, resource, null, null, SharedDefaultOptions.createErrorHandler () );
     }
 
     public static @NotNull DocumentNode parseReader (
         @NotNull Reader PMLCodeReader,
         @Nullable TextResource resource,
+        @Nullable Integer lineOffset,
+        @Nullable Integer columnOffset,
         @NotNull TextErrorHandler errorHandler ) throws Exception { // IOException, InvalidTextException {
 
         @Nullable TextError initialLastError = errorHandler.lastError();
-        DocumentNode documentNode = parseReaderWithoutThrowingIfNonCancellingErrorDetected ( PMLCodeReader,  resource, errorHandler );
+        DocumentNode documentNode = parseReaderWithoutThrowingIfNonCancellingErrorDetected (
+            PMLCodeReader, resource, lineOffset, columnOffset, errorHandler );
         errorHandler.throwIfNewErrors ( initialLastError );
 
         return documentNode;
@@ -71,6 +74,8 @@ public class PMLParser {
     private static @NotNull DocumentNode parseReaderWithoutThrowingIfNonCancellingErrorDetected (
         @NotNull Reader PMLCodeReader,
         @Nullable TextResource resource,
+        @Nullable Integer lineOffset,
+        @Nullable Integer columnOffset,
         @NotNull TextErrorHandler errorHandler ) throws Exception { // IOException, InvalidTextException {
 
         PDMLExtensionsHandler extensionsHandler = new PDMLExtensionsHandlerImpl();
@@ -78,7 +83,7 @@ public class PMLParser {
         ScriptingEnvironment scriptingEnvironment = new ScriptingEnvironmentImpl ( true );
 
         PDMLReaderOptions readerOptions = new PDMLReaderOptions ( errorHandler, extensionsHandler, scriptingEnvironment );
-        PDMLReader PDMLReader = new PDMLReaderImpl ( PMLCodeReader, resource, readerOptions );
+        PDMLReader PDMLReader = new PDMLReaderImpl ( PMLCodeReader, resource, lineOffset, columnOffset, readerOptions );
 
         DocBinding docBinding = new DocBinding ( PDMLReader );
         scriptingEnvironment.addBinding ( docBinding.bindingName(), docBinding );

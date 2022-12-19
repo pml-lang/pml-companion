@@ -407,6 +407,7 @@ public class PMLParserEventHandler implements PDMLParserEventHandler<PMLNode, Do
         if ( textTokenParameters == null ) return null ;
 
         @Nullable Map<String, String> HTMLAttributes = new LinkedHashMap<>();
+        // for ( TextTokenParameter textTokenParameter : textTokenParameters.getList() ) {
         for ( TextTokenParameter textTokenParameter : textTokenParameters.getList() ) {
             String name = textTokenParameter.getName();
             if ( PMLAttributeUtils.isHTMLAttributeName ( name ) ) {

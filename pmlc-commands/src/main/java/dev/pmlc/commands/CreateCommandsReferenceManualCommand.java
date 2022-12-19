@@ -22,9 +22,7 @@ public class CreateCommandsReferenceManualCommand {
             "pmlc create_commands_manual" )
         .build();
 
-    public static Void execute (
-        @Nullable Map<String, String> stringParameters,
-        @Nullable Parameters parameters ) throws Exception {
+    public static Void execute ( @Nullable Parameters parameters ) throws Exception {
 
         new CommandsReferenceManualCreator ().createManual ( PMLCommands.COMMANDS );
 

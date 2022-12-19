@@ -18,9 +18,7 @@ public class PMLVersionCommand {
             "pmlc version" )
         .build();
 
-    public static Void execute (
-        @Nullable Map<String, String> stringParameters,
-        @Nullable Parameters parameters ) {
+    public static Void execute ( @Nullable Parameters parameters ) {
 
         System.out.println ( PMLCVersion.VERSION_TEXT );
 

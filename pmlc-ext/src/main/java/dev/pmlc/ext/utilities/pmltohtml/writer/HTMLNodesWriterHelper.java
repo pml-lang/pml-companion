@@ -151,12 +151,12 @@ public class HTMLNodesWriterHelper {
         @NotNull String HTMLTag,
         @Nullable String idAttribute,
         @Nullable String classAttribute,
-        @Nullable Map<String,String> nodeAttributes,
+        @Nullable Map<String,String> nodeHTMLAttributes,
         @Nullable Map<String,String> extraAttributes ) throws IOException {
 
         write ( "<" );
         write ( HTMLTag );
-        writeHTMLAttributes ( idAttribute, classAttribute, nodeAttributes, extraAttributes );
+        writeHTMLAttributes ( idAttribute, classAttribute, nodeHTMLAttributes, extraAttributes );
         write ( ">" );
     }
 

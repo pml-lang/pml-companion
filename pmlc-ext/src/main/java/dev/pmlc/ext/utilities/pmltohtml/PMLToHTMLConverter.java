@@ -187,7 +187,7 @@ public class PMLToHTMLConverter {
         SimpleLogger.debug ( "Reading PML input from " + input );
 
         DocumentNode documentNode = PMLParser.parseReader (
-            input.PMLInputReader(), input.PMLInputTextResource(), errorHandler );
+            input.PMLInputReader(), input.PMLInputTextResource(), null, null, errorHandler );
 
         NodeValidator.validateTree ( documentNode, errorHandler );
 
