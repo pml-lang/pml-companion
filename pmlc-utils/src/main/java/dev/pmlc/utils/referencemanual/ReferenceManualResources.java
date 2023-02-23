@@ -13,9 +13,9 @@ public class ReferenceManualResources {
     public static void copyResources ( @NotNull Path targetRootDirectory ) throws IOException {
 
         copyResource ( "media/bird_talk.mp3", targetRootDirectory, false );
-        copyResource ( "media/gold_star.png", targetRootDirectory, false );
         copyResource ( "media/red_flower.mp4", targetRootDirectory, false );
         copyResource ( "media/strawberries.jpg", targetRootDirectory, false );
+        copyResource ( "images/gold_star.png", targetRootDirectory, false );
         copyResource ( "source_code/hello_world.ppl", targetRootDirectory, true );
     }
 
