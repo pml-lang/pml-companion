@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
 }
 
 java {
@@ -18,12 +18,21 @@ java {
 
 test {
     useJUnitPlatform()
+    // jvmArgs += "--enable-preview"
 }
 
-version = '3.1.0'
+version = '4.0.0'
+
+tasks.withType(JavaCompile) {
+    // options.compilerArgs += '-Xlint:preview'
+    // options.compilerArgs += '--enable-preview'
+    options.compilerArgs += '-Xlint:deprecation'
+    // options.compilerArgs += '-Xlint:unchecked'
+}
 
 /*
-tasks.withType(JavaCompile) {
-    options.compilerArgs += [ '-Xlint:deprecation', '-Xlint:unchecked' ]
+tasks.withType(JavaExec) {
+    jvmArgs += '--enable-preview'
 }
-*/
+ */
+

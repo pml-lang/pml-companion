@@ -1,16 +1,14 @@
 package dev.pmlc.commands;
 
-import dev.pmlc.ext.utilities.CommandsReferenceManualCreator;
+import dev.pmlc.utils.referencemanual.CommandsReferenceManualCreator;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
-import dev.pp.commands.command.FormalCommand;
-import dev.pp.parameters.parameter.Parameters;
-
-import java.util.Map;
+import dev.pp.commands.command.CommandSpec;
+import dev.pp.parameters.parameters.Parameters;
 
 public class CreateCommandsReferenceManualCommand {
 
-    public static final @NotNull FormalCommand<Void> COMMAND = FormalCommand.builder (
+    public static final @NotNull CommandSpec<Void,Void> COMMAND = CommandSpec.<Void,Void>builder (
         "create_commands_reference_manual", CreateCommandsReferenceManualCommand::execute )
         .alternativeName ( "ccrm" )
         .documentation (
@@ -22,9 +20,9 @@ public class CreateCommandsReferenceManualCommand {
             "pmlc create_commands_manual" )
         .build();
 
-    public static Void execute ( @Nullable Parameters parameters ) throws Exception {
+    public static Void execute ( @Nullable Parameters<?> parameters ) throws Exception {
 
-        new CommandsReferenceManualCreator ().createManual ( PMLCommands.COMMANDS );
+        new CommandsReferenceManualCreator().createManual ( PMLCommands.COMMANDS );
 
         return null;
     }

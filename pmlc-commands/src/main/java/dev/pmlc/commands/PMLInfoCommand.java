@@ -1,7 +1,7 @@
 package dev.pmlc.commands;
 
-import dev.pmlc.ext.PMLCResources;
-import dev.pmlc.ext.PMLCVersion;
+import dev.pmlc.converter.PMLCResources;
+import dev.pmlc.data.PmlcVersion;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.basics.utilities.os.OSDirectories;
@@ -9,14 +9,12 @@ import dev.pp.basics.utilities.os.OSName;
 import dev.pp.basics.utilities.string.HTextAlign;
 import dev.pp.basics.utilities.string.StringAligner;
 import dev.pp.basics.utilities.string.StringConstants;
-import dev.pp.commands.command.FormalCommand;
-import dev.pp.parameters.parameter.Parameters;
-
-import java.util.Map;
+import dev.pp.commands.command.CommandSpec;
+import dev.pp.parameters.parameters.Parameters;
 
 public class PMLInfoCommand {
 
-    public static final @NotNull FormalCommand<Void> COMMAND = FormalCommand.builder (
+    public static final @NotNull CommandSpec<Void,Void> COMMAND = CommandSpec.<Void,Void>builder (
         "info", PMLInfoCommand::execute )
         .documentation (
              "Display PMLC Info",
@@ -24,14 +22,14 @@ public class PMLInfoCommand {
             "pmlc info" )
         .build();
 
-    public static Void execute ( @Nullable Parameters parameters ) {
+    public static Void execute ( @Nullable Parameters<?> parameters ) {
 
         StringBuilder sb = new StringBuilder();
 
-        append ( "Application name", PMLCVersion.APPLICATION_NAME, sb );
-        append ( "Short name", PMLCVersion.APPLICATION_SHORT_NAME, sb );
-        append ( "Version", PMLCVersion.VERSION, sb );
-        append ( "Version date", PMLCVersion.DATE_PUBLISHED, sb );
+        append ( "Application name", PmlcVersion.APPLICATION_NAME, sb );
+        append ( "Short name", PmlcVersion.APPLICATION_SHORT_NAME, sb );
+        append ( "Version", PmlcVersion.VERSION, sb );
+        append ( "Version date", PmlcVersion.DATE_PUBLISHED, sb );
         append ( "Shared data dir.", PMLCResources.ROOT_DIRECTORY.toString(), sb );
         append ( "Working dir.", OSDirectories.currentWorkingDirectory().toString(), sb );
         append ( "OS name", OSName.name (), sb );

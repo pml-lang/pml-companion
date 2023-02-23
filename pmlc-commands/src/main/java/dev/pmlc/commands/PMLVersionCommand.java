@@ -1,16 +1,14 @@
 package dev.pmlc.commands;
 
-import dev.pmlc.ext.PMLCVersion;
+import dev.pmlc.data.PmlcVersion;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
-import dev.pp.commands.command.FormalCommand;
-import dev.pp.parameters.parameter.Parameters;
-
-import java.util.Map;
+import dev.pp.commands.command.CommandSpec;
+import dev.pp.parameters.parameters.Parameters;
 
 public class PMLVersionCommand {
 
-    public static final @NotNull FormalCommand<Void> COMMAND = FormalCommand.builder (
+    public static final @NotNull CommandSpec<Void,Void> COMMAND = CommandSpec.<Void,Void>builder (
         "version", PMLVersionCommand::execute )
         .documentation (
              "Display PMLC's Version Number",
@@ -18,9 +16,9 @@ public class PMLVersionCommand {
             "pmlc version" )
         .build();
 
-    public static Void execute ( @Nullable Parameters parameters ) {
+    public static Void execute ( @Nullable Parameters<?> parameters ) {
 
-        System.out.println ( PMLCVersion.VERSION_TEXT );
+        System.out.println ( PmlcVersion.VERSION_TEXT );
 
         return null;
     }

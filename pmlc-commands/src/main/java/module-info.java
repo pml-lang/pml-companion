@@ -6,12 +6,14 @@ module dev.pmlc.commands {
     requires dev.pp.commands;
     requires dev.pp.text;
 
-    requires dev.pdml.core;
+    requires dev.pdml.shared;
     requires dev.pdml.ext;
     requires dev.pdml.commands;
+    requires dev.pdml.utils;
 
-    requires dev.pmlc.core;
-    requires dev.pmlc.ext;
+    requires dev.pmlc.data;
+    requires dev.pmlc.converter;
+    requires dev.pmlc.utils;
 
     requires info.picocli;
 }

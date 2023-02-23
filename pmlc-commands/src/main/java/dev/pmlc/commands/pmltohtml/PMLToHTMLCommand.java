@@ -1,35 +1,39 @@
 package dev.pmlc.commands.pmltohtml;
 
-import dev.pdml.ext.commands.SharedDefaultOptions;
-import dev.pmlc.core.data.node.block.DocumentNode;
-import dev.pmlc.core.data.node.validation.NodeValidator;
-import dev.pmlc.core.parser.PMLParser;
-import dev.pmlc.ext.utilities.pmltohtml.PMLToHTMLConverter;
-import dev.pmlc.ext.utilities.pmltohtml.options.PMLToHTMLOptions;
-import dev.pmlc.ext.utilities.pmltohtml.options.PMLToHTMLOptionsHelper;
+import dev.pdml.utils.SharedDefaultOptions;
+import dev.pmlc.converter.pmltohtml.PMLToHTMLConverter;
+import dev.pmlc.converter.pmltohtml.options.PMLToHTMLOptions;
+import dev.pmlc.converter.pmltohtml.options.PMLToHTMLResources;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.basics.utilities.SimpleLogger;
+import dev.pp.basics.utilities.directory.DirectoryCreator;
 import dev.pp.commands.command.CommandExecutor;
-import dev.pp.commands.command.FormalCommand;
-import dev.pp.parameters.formalParameter.FormalParameter;
-import dev.pp.parameters.formalParameter.FormalParameters;
-import dev.pp.parameters.parameter.Parameters;
-import dev.pp.parameters.textTokenParameter.TextTokenParameter;
-import dev.pp.parameters.textTokenParameter.TextTokenParameters;
+import dev.pp.commands.command.CommandSpec;
+import dev.pp.datatype.utils.parser.DataParserException;
+import dev.pp.datatype.utils.validator.DataValidatorException;
+import dev.pp.parameters.parameter.Parameter;
+import dev.pp.parameters.parameters.MutableOrImmutableParameters;
+import dev.pp.parameters.parameters.Parameters;
+import dev.pp.parameters.parameterspecs.ParameterSpecs;
 import dev.pp.parameters.utilities.TextErrorUtils2;
-import dev.pp.text.error.handler.TextErrorHandler;
-import dev.pp.text.error.TextErrorException;
+import dev.pp.text.inspection.TextErrorException;
+import dev.pp.text.inspection.handler.TextInspectionMessageHandler;
+import dev.pp.text.reader.stack.CharReaderWithInserts;
+import dev.pp.text.reader.stack.CharReaderWithInsertsImpl;
+import dev.pp.text.resource.reader.TextResourceReader;
+import dev.pp.text.resource.writer.TextResourceWriter;
 
+import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Map;
 
 public class PMLToHTMLCommand {
 
-    public static final @NotNull FormalCommand<Void> COMMAND = FormalCommand.builder (
-            "PML_to_HTML", new Executor() )
+    @SuppressWarnings ( "unchecked" )
+    public static final @NotNull CommandSpec<?,Void> COMMAND_SPEC = CommandSpec.builder (
+        "PML_to_HTML", new Executor() )
         .alternativeName ( "p2h" )
-        .inputParameters ( PMLToHTMLFormalCLIParameters.PARAMETERS )
+        .inputParameters ( PMLToHTMLParameters.SPECS )
         .documentation (
             "Convert PML to HTML",
             "Convert a PML document into an HTML document.",
@@ -39,146 +43,122 @@ public class PMLToHTMLCommand {
         .build();
 
 
-    private static class Executor implements CommandExecutor<Void> {
+    public static @NotNull TextResourceWriter HtmlOutputForFile ( @NotNull Path file ) throws IOException {
+
+        @Nullable Path directory = file.getParent();
+        if ( directory != null ) DirectoryCreator.createWithParentsIfNotExists ( directory );
+        return new TextResourceWriter ( file );
+    }
+
+    private static class Executor<I> implements CommandExecutor<I,Void> {
 
         Executor() {}
 
-/*
         @Override
         public Void execute (
-            @Nullable Map<String, String> CLIParameterStrings,
-            @Nullable FormalParameters formalParameters ) throws Exception {
+            @Nullable MutableOrImmutableParameters<String> stringParameters,
+            @Nullable ParameterSpecs<I> parameterSpecs ) throws Exception {
 
-            // @Nullable String inputFileCLIParam =
-            //     CLIParameters == null ? null : CLIParameters.get ( PMLToHTMLFormalParameters.PML_INPUT_FILE.getName() );
-            // // TODO handle InvalidPathException
-            // @Nullable Path PMLInputFile = inputFileCLIParam == null ? null : Path.of ( inputFileCLIParam );
+            @Nullable Parameters<?> mergedParameters = null;
 
-            assert CLIParameterStrings != null; // TODO sure? create empty if null?
-            @Nullable Parameters CLIParameters = ParametersCreator.createFromStringMap (
-                CLIParameterStrings, null, PMLToHTMLFormalCLIParameters.PARAMETERS );
-            assert CLIParameters != null;
+            try ( TextResourceReader PMLInput = PMLInput ( stringParameters ) ) {
 
-            @NotNull SimpleLogger.LogLevel logLevel = CLIParameters.getNonNull ( PMLToHTMLFormalCLIParameters.VERBOSITY );
-            SimpleLogger.setLevel ( logLevel );
+                PMLToHTMLResources.createResourceFilesIfNotExists();
 
-            @Nullable Path PMLInputFile = CLIParameters.getNullable ( PMLToHTMLFormalCLIParameters.PML_INPUT_FILE );
-            @Nullable PMLToHTMLConverter.Input input = null;
-            @NotNull DocumentNode documentNode;
-            try {
-                TextErrorHandler errorHandler = SharedDefaultOptions.createErrorHandler ();
-                try {
-                    input = PMLToHTMLConverter.Input.createForFileOrStdin ( PMLInputFile );
-                    documentNode = PMLParser.parseReader (
-                        input.PMLInputReader (), input.PMLInputTextResource (), errorHandler );
-                } finally {
-                    if ( input != null ) input.closeIfFileReader ();
+                CharReaderWithInserts documentReader = CharReaderWithInsertsImpl.createAndAdvance (
+                    PMLInput.getReader(), PMLInput.getTextResource(), null, null );
+                mergedParameters = PMLToHTMLParametersMerger.createMergedParameters (
+                    stringParameters, documentReader );
+                PMLToHTMLOptions mergedOptions = PMLToHTMLParametersHelper.createOptions ( mergedParameters );
+
+                try ( TextResourceWriter HtmlOutput = HtmlOutput ( stringParameters, PMLInput ) ) {
+
+                    @NotNull SimpleLogger.LogLevel logLevel = mergedParameters.nonNullCastedValue (
+                        PMLToHTMLParameters.VERBOSITY );
+                    SimpleLogger.setLevel ( logLevel );
+
+                    TextInspectionMessageHandler errorHandler = SharedDefaultOptions.createErrorHandler();
+
+                    @Nullable Path outputFile = HtmlOutput.getResourceAsFilePath();
+                    @Nullable Path outputDirectory = outputFile == null ? null : outputFile.getParent();
+
+                    PMLToHTMLConverter.convert (
+                        documentReader,
+                        HtmlOutput.getWriter(), HtmlOutput.getTextResource(),
+                        outputDirectory, mergedOptions, errorHandler );
                 }
-
-                NodeValidator.validateTree ( documentNode, errorHandler );
-
-                convertDocumentNode ( documentNode, CLIParameterStrings, CLIParameters, input );
-
             } catch ( TextErrorException e ) {
-                TextErrorUtils2.showInEditor (
-                    e.getTextError (), CLIParameters, PMLToHTMLFormalCLIParameters.OPEN_FILE_OS_COMMAND_TEMPLATE );
+                if ( mergedParameters != null ) {
+                    TextErrorUtils2.showInEditor (
+                        e.getTextError (), mergedParameters, PMLToHTMLParameters.OPEN_FILE_OS_COMMAND_TEMPLATE );
+                }
                 throw e;
             }
-
-            // if ( 1 == 1 ) throw new RuntimeException ( "QQQ" );
-            // if ( 1 == 1 ) throw new Exception ( "EEE" );
 
             return null;
         }
-*/
 
-        public Void execute ( @Nullable Parameters parameters ) throws Exception {
-
-            assert parameters != null;
-            // TODO
-            // PMLToHTMLConverter.convertParameters ( parameters );
-
-            @NotNull SimpleLogger.LogLevel logLevel = parameters.getNonNull ( PMLToHTMLFormalCLIParameters.VERBOSITY );
-            SimpleLogger.setLevel ( logLevel );
-
-            TextErrorHandler errorHandler = SharedDefaultOptions.createErrorHandler();
-
-            @Nullable Path PMLInputFile = parameters.getNullable ( PMLToHTMLFormalCLIParameters.PML_INPUT_FILE );
-            @Nullable PMLToHTMLConverter.Input input = null;
-            @NotNull DocumentNode documentNode;
-            try {
-                try {
-                    input = PMLToHTMLConverter.Input.createForFileOrStdin ( PMLInputFile );
-                    SimpleLogger.debug ( "Reading PML input from " + input );
-                    documentNode = PMLParser.parseReader (
-                        input.PMLInputReader(), input.PMLInputTextResource(), null, null, errorHandler );
-                } finally {
-                    PMLToHTMLConverter.Input.closeIfFileReader ( input );
-                }
-
-                NodeValidator.validateTree ( documentNode, errorHandler );
-
-                convertDocumentNode ( documentNode, parameters, input );
-
-            } catch ( TextErrorException e ) {
-                TextErrorUtils2.showInEditor (
-                    e.getTextError(), parameters, PMLToHTMLFormalCLIParameters.OPEN_FILE_OS_COMMAND_TEMPLATE );
-                throw e;
-            }
-
-            return null;
+        @Override
+        public Void execute ( @Nullable Parameters<I> parameters ) throws Exception {
+            throw new UnsupportedOperationException ( "Should never be called." );
         }
     }
 
-    private static void convertDocumentNode  (
-        @NotNull DocumentNode documentNode,
-        @NotNull Parameters CLIParameters,
-        @NotNull PMLToHTMLConverter.Input input ) throws Exception {
 
-        @Nullable Path HTMLOutputFile = CLIParameters.getNullable ( PMLToHTMLFormalCLIParameters.HTML_OUTPUT_FILE );
+    private static @NotNull TextResourceReader PMLInput ( @Nullable MutableOrImmutableParameters<String> stringParameters )
+        throws IOException, DataParserException, DataValidatorException {
 
-        // remove all CLI specific parameters that are not PMLToHTML options.
-/*
-        if ( CLIParameterStrings != null ) {
-            for ( FormalParameter<?> formalParameter : PMLToHTMLFormalCLIParameters.CLI_SPECIFIC_PARAMETERS.getAll() ) {
-                CLIParameterStrings.remove ( formalParameter.getName() );
-            }
+        @Nullable Parameter<String> PMLInputFileParameter = stringParameters == null ? null :
+            stringParameters.parameterOrNull ( PMLToHTMLParameters.PML_INPUT_FILE );
+
+        @Nullable Path PMLInputFile = PMLInputFileParameter == null
+            ? null
+            : PMLToHTMLParameters.PML_INPUT_FILE.parse (
+            PMLInputFileParameter.getValue(), PMLInputFileParameter.valueOrElseNameLocation() );
+
+        return PMLInput ( PMLInputFile );
+    }
+
+    private static @NotNull TextResourceReader PMLInput ( @Nullable Path PMLInputFile ) throws IOException {
+
+        if ( PMLToHTMLParametersHelper.isStdinFilePath ( PMLInputFile ) ) {
+            return TextResourceReader.STDIN;
+        } else {
+            return new TextResourceReader ( PMLInputFile );
         }
+    }
 
-        PMLToHTMLOptions options = PMLToHTMLOptionsHelper.createMergedOptions ( CLIParameterStrings, documentNode );
-*/
-/*
-        TextTokenParameters textTokenParameters = CLIParameters.getTextTokenParameters() == null ? null :
-            CLIParameters.getTextTokenParameters().createCopy();
-        if ( textTokenParameters != null ) {
-            for ( FormalParameter<?> formalParameter : PMLToHTMLFormalCLIParameters.CLI_SPECIFIC_PARAMETERS.getAll() ) {
-                textTokenParameters.removeIfExists ( formalParameter.getName () );
+    private static @NotNull TextResourceWriter HtmlOutput (
+        @Nullable MutableOrImmutableParameters<String> stringParameters,
+        @NotNull TextResourceReader PMLInput ) throws IOException, DataParserException, DataValidatorException {
+
+        @Nullable Parameter<String> HtmlOutputFileParameter = stringParameters == null ? null :
+            stringParameters.parameterOrNull ( PMLToHTMLParameters.HTML_OUTPUT_FILE );
+
+        @Nullable Path HtmlOutputFile = HtmlOutputFileParameter == null
+            ? null
+            : PMLToHTMLParameters.HTML_OUTPUT_FILE.parse (
+            HtmlOutputFileParameter.getValue(), HtmlOutputFileParameter.valueOrElseNameLocation() );
+
+        return HtmlOutput ( HtmlOutputFile, PMLInput );
+    }
+
+    private static @NotNull TextResourceWriter HtmlOutput (
+        @Nullable Path HtmlOutputFile,
+        @NotNull TextResourceReader PMLInput ) throws IOException {
+
+        if ( HtmlOutputFile == null ) {
+            @Nullable Path PMLInputFile = PMLInput.getResourceAsFilePath();
+            if ( PMLInputFile == null ) {
+                return TextResourceWriter.STDOUT;
+            } else {
+                HtmlOutputFile = PMLToHTMLConverter.HTMLOutputFileForPMLInputFile ( PMLInputFile );
+                return HtmlOutputForFile ( HtmlOutputFile );
             }
-        }
-*/
-
-        TextTokenParameters allCLIParameters = CLIParameters.getTextTokenParameters();
-        TextTokenParameters nonCLISpecificParameters = null;
-        if ( allCLIParameters != null ) {
-            nonCLISpecificParameters = new TextTokenParameters ( allCLIParameters.getStartToken() );
-            FormalParameters CLISpecificFormalParameters = PMLToHTMLFormalCLIParameters.CLI_SPECIFIC_PARAMETERS;
-            for ( TextTokenParameter parameter : allCLIParameters.getList() ) {
-                if ( ! CLISpecificFormalParameters.containsName ( parameter.getName() ) ) {
-                    nonCLISpecificParameters.add ( parameter );
-                }
-            }
-            if ( nonCLISpecificParameters.isEmpty() ) nonCLISpecificParameters = null ;
-        }
-
-        PMLToHTMLOptions options = PMLToHTMLOptionsHelper.createMergedOptions ( nonCLISpecificParameters, documentNode );
-
-
-        @Nullable PMLToHTMLConverter.Output output = null;
-        try {
-            output = PMLToHTMLConverter.Output.createForFileOrStdout ( HTMLOutputFile, input );
-            PMLToHTMLConverter.convertRootNode ( documentNode, output, options );
-        } finally {
-            PMLToHTMLConverter.Output.closeIfFileWriter ( output );
+        } else if ( PMLToHTMLParametersHelper.isStdoutFilePath ( HtmlOutputFile ) ) {
+            return TextResourceWriter.STDOUT;
+        } else {
+            return HtmlOutputForFile ( HtmlOutputFile );
         }
     }
 }

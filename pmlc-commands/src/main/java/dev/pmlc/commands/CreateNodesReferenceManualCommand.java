@@ -1,17 +1,15 @@
 package dev.pmlc.commands;
 
-import dev.pmlc.ext.utilities.referencemanual.NodesReferenceManualCreator;
+import dev.pmlc.utils.referencemanual.NodesReferenceManualCreator;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
-import dev.pp.commands.command.FormalCommand;
-import dev.pp.parameters.parameter.Parameters;
-
-import java.util.Map;
+import dev.pp.commands.command.CommandSpec;
+import dev.pp.parameters.parameters.Parameters;
 
 public class CreateNodesReferenceManualCommand {
 
 /*
-    public static final @NotNull FormalParameter<Path> OUTPUT_DIRECTORY_PARAMETER = new FormalParameter.Builder<> (
+    public static final @NotNull ParameterSpec<Path> OUTPUT_DIRECTORY_PARAMETER = new ParameterSpec.Builder<> (
         "output_directory", CommonDataTypes.DIRECTORY_PATH )
         .alternativeName ( "od" )
         .documentation ( "Output Directory",
@@ -22,7 +20,7 @@ public class CreateNodesReferenceManualCommand {
             "ref_manual/HTML/" )
         .build();
 
-    public static final @NotNull FormalParameter<Path> TEMP_DIRECTORY_PARAMETER = new FormalParameter.Builder<> (
+    public static final @NotNull ParameterSpec<Path> TEMP_DIRECTORY_PARAMETER = new ParameterSpec.Builder<> (
         "temp_directory", CommonDataTypes.DIRECTORY_PATH )
         .alternativeName ( "td" )
         .defaultValue ( OSDirectories.TEMPORARY_FILES_DIRECTORY )
@@ -37,7 +35,7 @@ public class CreateNodesReferenceManualCommand {
         .build();
 */
 
-    public static final @NotNull FormalCommand<Void> COMMAND = FormalCommand.builder (
+    public static final @NotNull CommandSpec<Void,Void> COMMAND = CommandSpec.<Void,Void>builder (
         "create_nodes_reference_manual", CreateNodesReferenceManualCommand::execute )
         .alternativeName ( "cnrm" )
         .documentation (
@@ -51,7 +49,7 @@ public class CreateNodesReferenceManualCommand {
         // .addInputParameter ( TEMP_DIRECTORY_PARAMETER )
         .build();
 
-    public static Void execute ( @Nullable Parameters parameters ) throws Exception {
+    public static Void execute ( @Nullable Parameters<?> parameters ) throws Exception {
 
 /*
         assert parameters != null;
@@ -61,7 +59,7 @@ public class CreateNodesReferenceManualCommand {
 
         new ReferenceManualCreator().createReferenceManual ( outputDirectory, tempDirectory );
 */
-        new NodesReferenceManualCreator().createManual ();
+        new NodesReferenceManualCreator ().createManual ();
 
         return null;
     }

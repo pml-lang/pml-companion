@@ -1,0 +1,12 @@
+plugins {
+    id 'dev.pmlc.java-library-conventions'
+}
+
+dependencies {
+    implementation fileTree ( dir: '../dependencies' )
+    // implementation fileTree ( dir: '../dependencies', include: 'pp-basics*.jar')
+
+    // PMLC
+    implementation project ( ':pmlc-data' )
+    implementation project ( ':pmlc-parser' )
+}

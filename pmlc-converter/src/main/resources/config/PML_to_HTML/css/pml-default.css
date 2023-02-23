@@ -1,0 +1,383 @@
+/*
+    PML version: 4.0.0
+    
+    This is the default CSS style used for HTML files created with PML.
+    
+    If you want to change the presentation of your HTML document(s) created with PML, you can:
+        - modify this file
+        - create your own totally customized CSS file, based on this file
+    
+    The original file is stored in sub-directory runtime/resources/css of PML's root directory.
+    Do not modify that file, unless you have a really good reason to do so.
+*/
+
+
+/* basics */
+
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    margin: 0;
+    font-family: Verdana, "Open Sans", sans-serif;
+    line-height: 1.7;
+
+    /* can be used to globally increase/decrease text size
+    font-size: 1.2em;
+    */
+}
+
+
+/* skeleton */
+
+.pml-doc-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.pml-doc-header, .pml-doc-footer {
+    flex-grow: 0;
+
+    /*
+    padding:1em;
+    */
+}
+
+.pml-doc-content {
+    flex-grow: 1;
+
+    display: flex;
+    flex-direction: row;
+
+    height: 100%; /* allow individual scroll bars for left, text, and right */
+}
+
+.pml-doc-left, .pml-doc-right {
+    flex-grow: 1;
+    flex-shrink: 1;
+    width: 15%;
+
+    background-color: #fafafa;
+}
+
+.pml-doc-text {
+    flex-grow: 0;
+    flex-shrink: 3;
+    max-width: 800px;
+}
+
+.pml-doc-left, .pml-doc-text, .pml-doc-right {
+    overflow-y: auto; /* show scrollbar if necessary */
+    scrollbar-width: thin; /* works only in Firefox (2021-01-28) */
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+
+/* titles */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    color: darkgreen;
+
+    margin-top: 1em;
+    margin-bottom: 0px;
+}
+
+h4, h5, h6 {
+    font-size: 1em;
+}
+
+.pml-doc-title {
+    font-size: 2.2em;
+    margin-top: 0.2em;
+}
+
+.pml-chapter-title {
+}
+
+.pml-chapter-subtitle {
+    margin-top: 0;
+}
+
+.pml-header {
+    margin-top: 1.5em;
+    font-weight: bold;
+}
+
+.pml-caption {
+    font-style: italic;
+}
+
+
+/* text */
+
+.pml-paragraph {
+}
+
+
+/* table */
+
+.pml-table {
+    margin-top: 1em;
+    border: 1px solid black;
+	border-collapse: collapse;
+}
+
+.pml-table .pml-paragraph {
+    margin: 0;
+}
+
+.pml-table-header-cell, .pml-table-footer-cell, .pml-table-body-cell {
+    padding: 0.3em;
+    border: 1px solid black;
+}
+
+.pml-table-header-cell, .pml-table-footer-cell {
+    font-weight: bold;
+}
+
+.pml-table-header-cell {
+    text-align: center;
+}
+
+
+/* admonition */
+
+.pml-admonition {
+    display: flex;
+    align-items: center;
+}
+
+.pml-admonition-label {
+    font-weight: bold;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+.pml-admonition-content {
+    border-left: 1px solid grey;
+    padding-left: 1em;
+}
+
+
+/* quote */
+
+.pml-quote {
+    margin-left: 3.0em;
+    margin-right: 3.0em;
+    font-style: italic;
+}
+
+.pml-quote-text-block {
+    display: flex;
+    align-items: flex-start;
+}
+
+.pml-quote-text-prefix, .pml-quote-text-suffix {
+    font-family: "Times New Roman";
+    font-size: 1.5em;
+    font-weight: bold;
+    font-style: italic;
+    margin-top: -0.4em;
+}
+
+.pml-quote-text-prefix {
+    padding-right: 0.2em;
+}
+
+.pml-quote-text-suffix {
+    padding-left: 0.2em;
+}
+
+.pml-quote-text-prefix::before {
+    content: '“';
+}
+
+.pml-quote-text-suffix::after {
+    /* content: '”'; */
+}
+
+.pml-quote-text {
+    font-size: 1.2em;
+}
+
+.pml-quote-text .pml-paragraph {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.pml-quote-source {
+    text-align: right;
+}
+
+.pml-quote-source::before {
+    /* content: "\2014"; */
+}
+
+
+/* media */
+
+.pml-image {
+}
+
+.pml-audio {
+}
+
+.pml-video {
+}
+
+.pml-youtube-video {
+}
+
+
+/* monospace, code, input, output */
+
+.pml-monospace, .pml-code, .pml-inline-code, .pml-input, .pml-output {
+    font-family: Consolas, "DejaVu Sans Mono", monospace;
+    white-space: pre-wrap;
+}
+
+.pml-code code {
+    font-family: Consolas, "DejaVu Sans Mono", monospace;
+}
+
+.pml-code, .pml-inline-code, .pml-input, .pml-output {
+    background: #f5f5f5;
+    word-wrap: break-word;
+}
+
+.pml-code, .pml-input, .pml-output {
+    font-size: 0.9em;
+    line-height: 1.4;
+    border-radius: 7px;
+    margin-top: 0.5em;
+    padding: 1em;
+}
+
+.pml-inline-code {
+    /* font-size: 0.95em; */
+    border-radius: 4px;
+    padding: 0.1em .4em 0.1em .4em;
+    /* border: 1px dotted lightgrey; */
+}
+
+.pml-input, .pml-output {
+    border: dotted 1px grey;
+}
+
+
+/* Footnotes */
+
+.pml-footnotes {
+    margin-left: 2em;
+}
+
+.pml-footnote-ref a {
+    text-decoration: none;
+}
+
+.pml-footnote-backlink a {
+    text-decoration: none;
+}
+
+.pml-footnote-ref a::before {
+    content: "[";
+}
+
+.pml-footnote-ref a::after {
+    content: "]";
+}
+
+.pml-footnote td p:first-child {
+    margin-top: 0;
+}
+
+.pml-footnote td p:last-child {
+    margin-bottom: 0;
+}
+
+
+/* Table of Contents (TOC) */
+
+.pml-toc {
+    /*
+    border-bottom: 1px solid lightgrey;
+    padding-bottom: 1em;
+    */
+}
+
+.pml-toc-title {
+    margin-top: 0.7em;
+}
+
+.pml-toc ul {
+    padding-left: 0em;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.pml-toc ul ul {
+    padding-left: 1.5em;
+}
+
+.pml-toc li {
+    list-style-type: none; /* remove standard bullet */
+    line-height: 120%;
+    margin-top: 0.4em;
+}
+
+.pml-toc a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.pml-toc summary {
+    list-style-position: outside; /* works in Firefox, but not (yet?) in Chrome */
+    cursor: pointer;
+}
+
+/* hack because list-style-position doesn't work (yet?) in Chrome */
+.pml-toc summary::-webkit-details-marker {
+    margin-left: -1em;
+}
+
+.pml-toc-tree {
+    margin-left: 1em;
+}
+
+
+/* global */
+
+.pml-bordered {
+    border: 1px solid grey;
+}
+
+.pml-hidden {
+    display: none;
+}
+
+.pml-text-align-left {
+    text-align: left;
+}
+
+.pml-text-align-right {
+    text-align: right;
+}
+
+.pml-text-align-center {
+    text-align: center;
+}
+
+/*
+.pml-centered {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+*/

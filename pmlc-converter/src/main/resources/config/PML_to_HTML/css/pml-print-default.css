@@ -1,0 +1,104 @@
+/*
+    PML version: 4.0.0
+
+    This is the default CSS style used when printing a PML document.
+    
+    If you want to change the presentation of your HTML document(s) created with PML, you can:
+        - modify this file
+        - create your own totally customized CSS file, based on this file
+    
+    The original file is stored in sub-directory runtime/resources/css of PML's root directory.
+    Do not modify that file, unless you have a really good reason to do so.
+
+    Official CSS documentation for print media:
+    https://www.w3.org/TR/css-page-3/
+    https://www.w3.org/TR/css-gcpm-3/
+*/
+
+@page {
+    /* size: letter portrait; */
+    size: A4 portrait;
+    margin-left: 2cm;
+    margin-right: 1.5cm;
+    margin-top: 1.5cm;
+    margin-bottom: 1.5cm;
+}
+
+/* doesn't work yet in browsers (2021-02)
+@page {
+    @bottom-right {
+        content: counter(page) "/" counter(pages);
+    }
+}
+*/
+
+html {
+    height: auto;
+}
+
+body {
+    font-family: Georgia, Helvetica, "Times New Roman";
+    font-size: 12pt;
+    line-height: 1.6;
+    color: black;
+    background-color: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: black;
+    page-break-after: avoid;
+}
+
+header, footer, aside, nav {
+    display: none;
+}
+
+.pml-doc-text {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+a.pml-link::before, a.pml-xref::before {
+    content: "'";
+}
+
+a.pml-link::after {
+    content: "' (" attr(href) ")";
+}
+
+a.pml-xref::after {
+    /* not supported yet in browsers (2021-02), but supported by www.princexml.com
+    content: "' (page " target-counter(attr(href url), page) ")";
+    */
+    content: "'";
+}
+
+table, figure, img, svg, pre, blockquote {
+    page-break-inside: avoid;
+}
+
+.pml-doc-text {
+    max-width: none;
+}
+
+
+
+/* Optional instructions that might be useful
+
+print columns on a page:
+article {
+    column-width: 20em;
+    column-gap: 3em;
+}
+
+start a chapter on a new page:
+h2 {
+    page-break-before: always;
+}
+
+*/

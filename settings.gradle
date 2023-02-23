@@ -4,7 +4,7 @@
  */
 
 rootProject.name = 'pml-companion'
-include ( 'pmlc-core', 'pmlc-ext', 'pmlc-commands' )
+include ( 'pmlc-data', 'pmlc-parser', 'pmlc-converter', 'pmlc-utils', 'pmlc-commands' )
 
 /*
 String PPDevRootDir = '../../../PP/dev/'

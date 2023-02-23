@@ -11,8 +11,9 @@ dependencies {
     implementation fileTree ( dir: '../dependencies' )
 
     // PML
-    implementation project ( ':pmlc-core' )
-    implementation project ( ':pmlc-ext' )
+    implementation project ( ':pmlc-data' )
+    implementation project ( ':pmlc-converter' )
+    implementation project ( ':pmlc-utils' )
 
     // Picocli
     implementation 'info.picocli:picocli:4.6.3'
@@ -21,12 +22,13 @@ dependencies {
     // https://github.com/remkop/picocli/tree/main/picocli-codegen
     annotationProcessor 'info.picocli:picocli-codegen:4.6.3'
 
-    implementation group: 'org.graalvm.js', name: 'js', version: '22.2.0'
+    implementation group: 'org.graalvm.js', name: 'js', version: '22.3.1'
 }
 
 application {
     mainClass = 'dev.pmlc.commands.Start'
-    applicationDefaultJvmArgs = ['-ea'] // enable assertions
+    // applicationDefaultJvmArgs = ['-ea'] // enable assertions
+    applicationDefaultJvmArgs += [ '-ea', '--enable-preview' ]
 }
 
 // OS script file name to start the application
@@ -93,7 +95,7 @@ static void createNativeImageReflectionConfig ( Path nativeImageDir ) {
             Path.of ( "C:/aa/work/PP/dev/pp-libs/pp-scripting" ), "dev/pp/scripting/bindings/core", writer, false );
 
         writeReflectionConfig (
-            Path.of ( "C:/aa/work/PDML/dev/pdml-java-impl/pdml-ext" ), "dev/pdml/ext/extensions/scripting/bindings", writer, true );
+            Path.of ( "C:/aa/work/PDML/dev/full-pdml-impl/pdml-ext-scripting" ), "dev/pdml/extscripting/bindings", writer, true );
 
         writer.write ( "]\n" );
     }
