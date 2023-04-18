@@ -2,8 +2,8 @@ package dev.pmlc.parser;
 
 import dev.pdml.data.attribute.MutableNodeAttributes;
 import dev.pdml.parser.eventhandler.*;
-import dev.pmlc.data.nodespec.NodeSpecRegistry;
 import dev.pmlc.data.nodespec.PMLNodeSpec;
+import dev.pmlc.data.nodespec.PMLNodeSpecs;
 import dev.pmlc.data.nodespec.SharedNodeSpecAttributes;
 import dev.pmlc.data.nodespec.block.DocumentNodeSpec;
 import dev.pmlc.data.nodespec.block.footnote.FootnotesPlaceholderNodeSpec;
@@ -74,6 +74,8 @@ public class PMLParserEventHandler implements PdmlParserEventHandler<PMLNode, Do
 
     private final @NotNull TextInspectionMessageHandler errorHandler;
 
+    private final @NotNull PMLNodeSpecs nodeSpecs;
+
     private @Nullable DocumentNode documentNode = null;
     private @Nullable NodeStartEvent currentNodeStartEvent = null;
     private @Nullable PMLNodeSpec<?, ?> currentNodeSpec = null;
@@ -98,11 +100,11 @@ public class PMLParserEventHandler implements PdmlParserEventHandler<PMLNode, Do
 
 
     public PMLParserEventHandler (
+        @NotNull PMLNodeSpecs nodeSpecs,
         @NotNull TextInspectionMessageHandler errorHandler ) {
-        // @NotNull PdmlReader PDMLReader ) {
 
+        this.nodeSpecs = nodeSpecs;
         this.errorHandler = errorHandler;
-        // this.PDMLReader = PDMLReader;
     }
 
 
@@ -305,7 +307,7 @@ public class PMLParserEventHandler implements PdmlParserEventHandler<PMLNode, Do
     private @NotNull PMLNodeSpec<?, ?> requireNodeSpec ( @NotNull NodeStartEvent event ) throws DataValidatorException {
 
         String nodeName = event.name().qualifiedName();
-        PMLNodeSpec<?, ?> nodeSpec = NodeSpecRegistry.getByNameOrNull ( nodeName );
+        PMLNodeSpec<?, ?> nodeSpec = nodeSpecs.getOrNull ( nodeName );
         if ( nodeSpec == null ) cancelingError (
             "Node '" + nodeName + "' does not exist.",
             "INVALID_NODE_NAME",

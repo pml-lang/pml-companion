@@ -5,6 +5,7 @@ import dev.pmlc.converter.pmltohtml.options.PMLToHTMLOptions;
 import dev.pmlc.converter.pmltohtml.writer.HTMLPageWriter;
 import dev.pmlc.data.node.block.DocumentNode;
 import dev.pmlc.data.node.validator.NodeValidator;
+import dev.pmlc.data.nodespec.PMLNodeSpecs;
 import dev.pmlc.parser.PMLParser;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
@@ -104,7 +105,8 @@ public class PMLToHTMLConverter {
 
         SimpleLogger.debug ( "Reading PML input from " + inputReader );
 
-        DocumentNode documentNode = PMLParser.parseReader ( inputReader, errorHandler );
+        DocumentNode documentNode = PMLParser.parseReader (
+            inputReader, PMLNodeSpecs.createStandardNodeSpecs(), errorHandler );
 
         NodeValidator.validateTree ( documentNode, errorHandler );
 

@@ -10,9 +10,9 @@ import dev.pdml.reader.PdmlReaderOptions;
 import dev.pdml.reader.extensions.PdmlExtensionsHandler;
 import dev.pdml.utils.SharedDefaultOptions;
 import dev.pdml.utils.parser.PdmlParserOptionsBuilder;
-import dev.pmlc.data.nodespec.NodeSpecRegistry;
 import dev.pmlc.data.node.PMLNode;
 import dev.pmlc.data.node.block.DocumentNode;
+import dev.pmlc.data.nodespec.PMLNodeSpecs;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.basics.utilities.file.TextFileIO;
@@ -55,7 +55,8 @@ public class PMLParser {
         @NotNull Reader PMLCodeReader,
         @Nullable TextResource resource ) throws Exception {
 
-        return parseReader ( PMLCodeReader, resource, null, null, SharedDefaultOptions.createErrorHandler () );
+        return parseReader ( PMLCodeReader, resource, null, null,
+            PMLNodeSpecs.createStandardNodeSpecs(), SharedDefaultOptions.createErrorHandler() );
     }
 
     public static @NotNull DocumentNode parseReader (
@@ -63,17 +64,22 @@ public class PMLParser {
         @Nullable TextResource resource,
         @Nullable Integer lineOffset,
         @Nullable Integer columnOffset,
+        @NotNull PMLNodeSpecs nodeSpecs,
         @NotNull TextInspectionMessageHandler errorHandler ) throws Exception { // IOException, InvalidTextException {
 
-        return parseReader ( CharReaderWithInsertsImpl.createAndAdvance ( PMLCodeReader, resource, lineOffset, columnOffset ), errorHandler );
+        return parseReader (
+            CharReaderWithInsertsImpl.createAndAdvance ( PMLCodeReader, resource, lineOffset, columnOffset ),
+            nodeSpecs, errorHandler );
     }
 
     public static @NotNull DocumentNode parseReader (
         @NotNull CharReaderWithInserts PMLCodeReader,
+        @NotNull PMLNodeSpecs nodeSpecs,
         @NotNull TextInspectionMessageHandler errorHandler ) throws Exception { // IOException, InvalidTextException {
 
         @Nullable TextError initialLastError = errorHandler.lastError();
-        DocumentNode documentNode = parseReaderWithoutThrowingIfNonCancellingErrorDetected ( PMLCodeReader, errorHandler );
+        DocumentNode documentNode = parseReaderWithoutThrowingIfNonCancellingErrorDetected (
+            PMLCodeReader, nodeSpecs, errorHandler );
         errorHandler.throwIfNewErrors ( initialLastError );
 
         return documentNode;
@@ -81,6 +87,7 @@ public class PMLParser {
 
     private static @NotNull DocumentNode parseReaderWithoutThrowingIfNonCancellingErrorDetected (
         @NotNull CharReaderWithInserts PMLCodeReader,
+        @NotNull PMLNodeSpecs nodeSpecs,
         @NotNull TextInspectionMessageHandler errorHandler ) throws Exception { // IOException, InvalidTextException {
 
         PdmlExtensionsHandler extensionsHandler = new PdmlExtensionsHandlerImpl ();
@@ -93,14 +100,14 @@ public class PMLParser {
         DocBinding docBinding = new DocBinding ( PDMLReader );
         scriptingEnvironment.addBinding ( docBinding.bindingName(), docBinding );
 
-        PMLParserEventHandler eventHandler = new PMLParserEventHandler ( errorHandler );
+        PMLParserEventHandler eventHandler = new PMLParserEventHandler ( nodeSpecs, errorHandler );
 
         PdmlParserOptions<PMLNode, DocumentNode> parserOptions = new PdmlParserOptionsBuilder<> ( eventHandler )
             .errorHandler ( errorHandler )
             .extensionsHandler ( extensionsHandler )
             .scriptingEnvironment ( scriptingEnvironment )
             // TODO? include only node specs that define a type
-            .nodeSpecs ( NodeSpecRegistry.getAll() )
+            .nodeSpecs ( nodeSpecs.toPdmlNodeSpecs() )
             .allowStandardAttributesStartSyntax ( true )
             .allowAlternativeAttributesStartSyntax ( true )
             .build();

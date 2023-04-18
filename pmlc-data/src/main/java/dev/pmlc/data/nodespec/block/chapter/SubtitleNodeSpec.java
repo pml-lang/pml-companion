@@ -17,8 +17,8 @@ public class SubtitleNodeSpec {
     public static final @NotNull NodeName NAME = new NodeName ( "subtitle" );
 
     public static final @NotNull Supplier<SimpleDocumentation> DOCUMENTATION = () -> new SimpleDocumentation (
-        "Chapter Subtitle",
-        "A subtitle for a chapter, displayed on a separate line after a chapter's title. If present, this node must follow a 'title' (chapter title) node. The subtitle is not displayed in the table of contents.",
+        "Subtitle",
+        "A subtitle for a document or a chapter, displayed on a separate line after a title. If present, this node must follow a 'title' node (document or chapter title). The subtitle is not displayed in the table of contents.",
         """
             [ch [title My Life as a Gardener]
                 [subtitle Why I Left the Corporate World]

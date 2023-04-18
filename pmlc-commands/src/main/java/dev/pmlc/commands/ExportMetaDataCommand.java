@@ -2,8 +2,8 @@ package dev.pmlc.commands;
 
 import dev.pdml.shared.constants.CorePdmlConstants;
 import dev.pmlc.data.PmlcVersion;
-import dev.pmlc.data.nodespec.NodeSpecRegistry;
 import dev.pmlc.data.nodespec.PMLNodeSpec;
+import dev.pmlc.data.nodespec.PMLNodeSpecs;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.basics.utilities.SimpleLogger;
@@ -75,7 +75,7 @@ public class ExportMetaDataCommand {
                 .writeStringAttributeLine ( "pml_version", PmlcVersion.VERSION, false )
                 .writeStringAttributeLine ( "pml_release_date", PmlcVersion.DATE_PUBLISHED, false )
                 .writeArrayStartLine ( "nodes" );
-                    List<PMLNodeSpec<?,?>> nodes = NodeSpecRegistry.getListSortedByName();
+                    List<PMLNodeSpec<?,?>> nodes = PMLNodeSpecs.createStandardNodeSpecs().getListSortedByName();
                     int size = nodes.size();
                     for ( int i = 0; i < size; i++ ) {
                         PMLNodeSpec<?,?> node = nodes.get ( i );
