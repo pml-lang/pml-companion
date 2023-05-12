@@ -95,6 +95,8 @@ public interface PMLNodesHandler {
 
     void sourceCode ( @NotNull SourceCodeNode node ) throws Exception;
 
+    void styledSourceCode ( @NotNull StyledSourceCodeNode node ) throws Exception;
+
     void table ( @NotNull TableNode node ) throws Exception;
 
     void tableCell ( @NotNull TableCellNode node ) throws Exception;

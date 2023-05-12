@@ -40,6 +40,6 @@ public class ParagraphNodeSpec {
 
     public static final @NotNull PMLNodeSpec<Void, ParagraphNode> NODE =
         PMLNodeSpecCreator.createForBlockNodeWithInlineChildNodes (
-            NAME, ATTRIBUTES, true,
+            NAME, ATTRIBUTES, true, false,
             DOCUMENTATION, ParagraphNode::new, PMLNodesHandler::paragraph, HTML_TAG, CSS_CLASS );
 }

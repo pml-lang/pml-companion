@@ -37,6 +37,6 @@ public class HeaderNodeSpec {
 
     public static final @NotNull PMLNodeSpec<Void, HeaderNode> NODE =
         PMLNodeSpecCreator.createForBlockNodeWithInlineChildNodes (
-            NAME, ATTRIBUTES, true,
+            NAME, ATTRIBUTES, true, false,
             DOCUMENTATION, HeaderNode::new, PMLNodesHandler::header, HTML_TAG, CSS_CLASS );
 }

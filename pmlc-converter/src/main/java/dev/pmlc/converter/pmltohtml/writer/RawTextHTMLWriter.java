@@ -14,9 +14,10 @@ public class RawTextHTMLWriter {
 
     static void writeSourceCode (
         @NotNull PMLBlockNode node,
+        boolean isStyledCode,
         @Nullable String language,
         boolean useHighlighterInNode,
-        @NotNull HTMLNodesWriterHelper helper ) throws IOException {
+        @NotNull HTMLNodesWriterHelper helper ) throws Exception {
 
         @NotNull SourceCodeHighlighter configHighlighter = helper.getOptions().sourceCodeHighlighter();
 
@@ -61,7 +62,11 @@ public class RawTextHTMLWriter {
         String codeTag = "code";
         helper.writeHTMLStartTag ( codeTag, null, codeClassName, null, null );
 
-        writeRawText ( node, helper );
+        if ( ! isStyledCode ) {
+            writeRawText ( node, helper );
+        } else {
+            helper.writeChildNodes ( node );
+        }
 
         helper.writeEndTag ( codeTag );
         helper.writeEndTag ( SourceCodeNodeSpec.HTML_TAG );

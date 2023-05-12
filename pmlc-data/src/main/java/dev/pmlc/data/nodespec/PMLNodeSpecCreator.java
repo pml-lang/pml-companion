@@ -39,7 +39,7 @@ public class PMLNodeSpecCreator {
         return new PMLNodeSpec<> (
             name, null, false,
             attributes, hasOnlyAttributes, false, HTMLAttributesAllowed,
-            blockChildNodesAllowed, false, false,
+            blockChildNodesAllowed, false, false, false,
             defaultNodeCreator, nodeWriter, HTMLTag, CSSClass, documentation );
     }
 
@@ -47,6 +47,7 @@ public class PMLNodeSpecCreator {
         @NotNull NodeName name,
         @Nullable ParameterSpecs<?> attributes,
         boolean HTMLAttributesAllowed,
+        boolean keepWhitespaceInText,
         @Nullable Supplier<SimpleDocumentation> documentation,
         @NotNull PMLNodeSpec.InitialNodeCreator<NODE> defaultNodeCreator,
         PMLNodeSpec.NodeHandler<NODE> nodeWriter,
@@ -56,7 +57,7 @@ public class PMLNodeSpecCreator {
         return new PMLNodeSpec<> (
             name, null, false,
             attributes, false, false, HTMLAttributesAllowed,
-            false, true, false,
+            false, true, false, keepWhitespaceInText,
             defaultNodeCreator, nodeWriter, HTMLTag, CSSClass, documentation );
     }
 
@@ -80,7 +81,7 @@ public class PMLNodeSpecCreator {
         return new PMLNodeSpec<> (
             name, null,true,
             attributes, hasOnlyAttributes, false, HTMLAttributesAllowed,
-            false, inlineChildNodesAllowed,false,
+            false, inlineChildNodesAllowed,false, false,
             defaultNodeCreator, nodeWriter, HTMLTag, CSSClass, documentation );
     }
 
@@ -95,9 +96,26 @@ public class PMLNodeSpecCreator {
         @NotNull String CSSClass ) {
 
         return new PMLNodeSpec<> (
-            name, new PdmlTextBlockType(), false,
+            name, new PdmlTextBlockType ( true ), false,
             attributes, false, false, HTMLAttributesAllowed,
-            false, false, true,
+            false, false, true, false,
+            defaultNodeCreator, nodeWriter, HTMLTag, CSSClass, documentation );
+    }
+
+    public static <NODE extends PMLBlockNode> PMLNodeSpec<String, NODE> createForStyledTextBlockNode (
+        @NotNull NodeName name,
+        @Nullable ParameterSpecs<?> attributes,
+        boolean HTMLAttributesAllowed,
+        @Nullable Supplier<SimpleDocumentation> documentation,
+        @NotNull PMLNodeSpec.InitialNodeCreator<NODE> defaultNodeCreator,
+        PMLNodeSpec.NodeHandler<NODE> nodeWriter,
+        @NotNull String HTMLTag,
+        @NotNull String CSSClass ) {
+
+        return new PMLNodeSpec<> (
+            name, new PdmlTextBlockType ( false ), false,
+            attributes, false, false, HTMLAttributesAllowed,
+            false, true, false, true,
             defaultNodeCreator, nodeWriter, HTMLTag, CSSClass, documentation );
     }
 
@@ -115,7 +133,7 @@ public class PMLNodeSpecCreator {
             // name, new PdmlTextBlockType(), true,
             name, null, true,
             attributes, false, false, HTMLAttributesAllowed,
-            false, false, true,
+            false, false, true, false,
             defaultNodeCreator, nodeWriter, HTMLTag, CSSClass, documentation );
     }
 

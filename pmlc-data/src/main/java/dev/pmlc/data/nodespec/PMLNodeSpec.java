@@ -41,6 +41,9 @@ public class PMLNodeSpec<TYPE, NODE extends PMLNode> extends PdmlNodeSpec<TYPE> 
     private final boolean isRawTextNode;
     public boolean isRawTextNode() { return isRawTextNode; }
 
+    private final boolean keepWhitespaceInText;
+    public boolean keepWhitespaceInText() { return keepWhitespaceInText; }
+
     private final @NotNull InitialNodeCreator<NODE> initialNodeCreator;
     public @NotNull InitialNodeCreator<NODE> getInitialNodeCreator () { return initialNodeCreator; }
 
@@ -65,6 +68,7 @@ public class PMLNodeSpec<TYPE, NODE extends PMLNode> extends PdmlNodeSpec<TYPE> 
         boolean blockChildNodesAllowed,
         boolean inlineChildNodesAllowed,
         boolean isRawTextNode,
+        boolean keepWhitespaceInText,
         @NotNull InitialNodeCreator<NODE> initialNodeCreator,
         @NotNull NodeHandler<NODE> nodeHandler,
         @NotNull String HTMLTag,
@@ -80,6 +84,7 @@ public class PMLNodeSpec<TYPE, NODE extends PMLNode> extends PdmlNodeSpec<TYPE> 
         this.blockChildNodesAllowed = blockChildNodesAllowed;
         this.inlineChildNodesAllowed = inlineChildNodesAllowed;
         this.isRawTextNode = isRawTextNode;
+        this.keepWhitespaceInText = keepWhitespaceInText;
         this.initialNodeCreator = initialNodeCreator;
         this.nodeHandler = nodeHandler;
         this.HTMLTag = HTMLTag;

@@ -32,6 +32,6 @@ public class TitleNodeSpec {
 
     public static final @NotNull PMLNodeSpec<Void, TitleNode> NODE =
         PMLNodeSpecCreator.createForBlockNodeWithInlineChildNodes (
-            NAME, ATTRIBUTES, true,
+            NAME, ATTRIBUTES, true, false,
             DOCUMENTATION, TitleNode::new, PMLNodesHandler::chapterTitle, HTML_TAG, CSS_CLASS );
 }

@@ -33,6 +33,6 @@ public class SubtitleNodeSpec {
 
     public static final @NotNull PMLNodeSpec<Void, SubtitleNode> NODE =
         PMLNodeSpecCreator.createForBlockNodeWithInlineChildNodes (
-            NAME, ATTRIBUTES, true,
+            NAME, ATTRIBUTES, true, false,
             DOCUMENTATION, SubtitleNode::new, PMLNodesHandler::chapterSubtitle, HTML_TAG, CSS_CLASS );
 }

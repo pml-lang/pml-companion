@@ -248,7 +248,7 @@ public class HTMLNodesWriter implements PMLNodesHandler {
     }
 
     public void insertSourceCode ( @NotNull InsertSourceCodeNode node ) throws Exception {
-        RawTextHTMLWriter.writeSourceCode ( node, node.getLanguage(), node.getUseHighlighter(), helper );
+        RawTextHTMLWriter.writeSourceCode ( node, false, node.getLanguage(), node.getUseHighlighter(), helper );
     }
 
     public void list ( @NotNull ListNode node ) throws Exception {
@@ -284,7 +284,11 @@ public class HTMLNodesWriter implements PMLNodesHandler {
     }
 
     public void sourceCode ( @NotNull SourceCodeNode node ) throws Exception {
-        RawTextHTMLWriter.writeSourceCode ( node, node.getLanguage(), node.getUseHighlighter(), helper );
+        RawTextHTMLWriter.writeSourceCode ( node, false, node.getLanguage(), node.getUseHighlighter(), helper );
+    }
+
+    public void styledSourceCode ( @NotNull StyledSourceCodeNode node ) throws Exception {
+        RawTextHTMLWriter.writeSourceCode ( node, true, node.getLanguage(), node.getUseHighlighter(), helper );
     }
 
     public void table ( @NotNull TableNode node ) throws Exception {

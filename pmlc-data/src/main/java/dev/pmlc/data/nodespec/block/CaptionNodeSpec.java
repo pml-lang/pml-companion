@@ -29,6 +29,6 @@ public class CaptionNodeSpec {
 
     public static final @NotNull PMLNodeSpec<Void, CaptionNode> NODE =
         PMLNodeSpecCreator.createForBlockNodeWithInlineChildNodes (
-            NAME, ATTRIBUTES, true,
+            NAME, ATTRIBUTES, true, false,
             DOCUMENTATION, CaptionNode::new, PMLNodesHandler::caption, HTML_TAG, CSS_CLASS );
 }

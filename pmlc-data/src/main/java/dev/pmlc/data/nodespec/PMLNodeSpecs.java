@@ -100,6 +100,7 @@ public class PMLNodeSpecs {
         add ( QuoteNodeSpec.NODE );
         add ( QuoteSourceNodeSpec.NODE );
         add ( SourceCodeNodeSpec.NODE );
+        add ( StyledSourceCodeNodeSpec.NODE );
         add ( TableNodeSpec.NODE );
         add ( TableCellNodeSpec.NODE );
         add ( SimpleTableNodeSpec.NODE );

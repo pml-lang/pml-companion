@@ -92,6 +92,8 @@ public class ThrowingNodesHandler implements PMLNodesHandler {
 
     public void sourceCode ( @NotNull SourceCodeNode node ) throws Exception { handleNode ( node ); }
 
+    public void styledSourceCode ( @NotNull StyledSourceCodeNode node ) throws Exception { handleNode ( node ); }
+
     public void table ( @NotNull TableNode node ) throws Exception { handleNode ( node ); }
 
     public void tableCell ( @NotNull TableCellNode node ) throws Exception { handleNode ( node ); }

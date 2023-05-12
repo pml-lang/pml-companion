@@ -96,6 +96,8 @@ public class DelegatingNodesHandler implements PMLNodesHandler {
 
     public void sourceCode ( @NotNull SourceCodeNode node ) throws Exception { delegateNode ( node ); }
 
+    public void styledSourceCode ( @NotNull StyledSourceCodeNode node ) throws Exception { delegateNode ( node ); }
+
     public void table ( @NotNull TableNode node ) throws Exception { delegateNode ( node ); }
 
     public void tableCell ( @NotNull TableCellNode node ) throws Exception { delegateNode ( node ); }

@@ -53,6 +53,6 @@ public class MonospaceNodeSpec {
 
     public static final @NotNull PMLNodeSpec<Void, MonospaceNode> NODE =
         PMLNodeSpecCreator.createForBlockNodeWithInlineChildNodes (
-            NAME, ATTRIBUTES, true,
+            NAME, ATTRIBUTES, true, true,
             DOCUMENTATION, MonospaceNode::new, PMLNodesHandler::monospace, HTML_TAG, CSS_CLASS );
 }

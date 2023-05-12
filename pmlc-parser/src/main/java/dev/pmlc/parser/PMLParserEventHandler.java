@@ -168,11 +168,13 @@ public class PMLParserEventHandler implements PdmlParserEventHandler<PMLNode, Do
 
             } else if ( blockNode instanceof SubtitleNode chapterSubtitleNode ) {
                 chapterSubtitleNode.setLevel ( currentChapterLevel );
-
-            } else if ( blockNode instanceof MonospaceNode ) {
-                keepWhitespaceInText = true;
             }
         }
+
+        if ( node.getNodeSpec().keepWhitespaceInText() ) {
+            keepWhitespaceInText = true;
+        }
+
 
         @Nullable String errorReason = null;
 
@@ -236,10 +238,12 @@ public class PMLParserEventHandler implements PdmlParserEventHandler<PMLNode, Do
             stopImplicitParagraphNode();
         }
 
+        if ( node.getNodeSpec().keepWhitespaceInText() ) {
+            keepWhitespaceInText = false;
+        }
+
         if ( node instanceof ChapterNode ) {
             currentChapterLevel --;
-        } else if ( node instanceof MonospaceNode ) {
-            keepWhitespaceInText = false;
         } else if ( node instanceof FootnoteReferenceNode footnoteReferenceNode ) {
             handleFootnoteReferenceNode ( footnoteReferenceNode );
         } else if ( node instanceof FootnoteDefinitionNode footnoteDefinitionNode ) {

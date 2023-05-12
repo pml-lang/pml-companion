@@ -126,6 +126,10 @@ public class HTMLNodesWriterHelper extends HTMLWriter {
         writeEndTag ( HTMLTag );
     }
 
+    public void writeChildNodes ( @NotNull PMLNode node ) throws Exception {
+        nodesHandler.handleChildNodes ( node.getChildNodes() );
+    }
+
     public void writeHTMLStartTag (
         @NotNull PMLNode node,
         @NotNull String HTMLTag,
