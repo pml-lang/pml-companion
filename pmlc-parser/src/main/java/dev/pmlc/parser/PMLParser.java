@@ -97,8 +97,8 @@ public class PMLParser {
         PdmlReaderOptions readerOptions = new PdmlReaderOptions ( errorHandler, extensionsHandler, scriptingEnvironment );
         PdmlReader PDMLReader = new PdmlReaderImpl ( PMLCodeReader, readerOptions );
 
-        DocBinding docBinding = new DocBinding ( PDMLReader );
-        scriptingEnvironment.addBinding ( docBinding.bindingName(), docBinding );
+        scriptingEnvironment.addBinding ( new DocBinding ( PDMLReader ) );
+        scriptingEnvironment.addBinding ( new NodesBinding ( nodeSpecs ) );
 
         PMLParserEventHandler eventHandler = new PMLParserEventHandler ( nodeSpecs, errorHandler );
 

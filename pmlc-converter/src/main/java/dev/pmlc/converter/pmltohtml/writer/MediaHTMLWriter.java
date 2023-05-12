@@ -60,7 +60,7 @@ public class MediaHTMLWriter {
         writeSource ( node.getSource(), "audio", helper );
 
         helper.writeIndent();
-        helper.writeHTMLEndTag ( AudioNodeSpec.HTML_TAG );
+        helper.writeEndTag ( AudioNodeSpec.HTML_TAG );
         helper.writeNewLine();
 
         writeEnd ( helper );
@@ -85,7 +85,7 @@ public class MediaHTMLWriter {
         writeSource ( node.getSource(), "video", helper );
 
         helper.writeIndent();
-        helper.writeHTMLEndTag ( VideoNodeSpec.HTML_TAG );
+        helper.writeEndTag ( VideoNodeSpec.HTML_TAG );
         helper.writeNewLine();
 
         writeEnd ( helper );

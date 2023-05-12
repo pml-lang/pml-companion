@@ -5,7 +5,6 @@ import dev.pmlc.converter.pmltohtml.options.PMLToHTMLOptions;
 import dev.pmlc.converter.pmltohtml.writer.HTMLNodesWriter;
 import dev.pmlc.parser.PMLParser;
 import dev.pp.basics.annotations.NotNull;
-import dev.pp.text.utilities.html.HTMLWriter;
 
 import java.io.*;
 
@@ -32,7 +31,7 @@ public class PMLToHTMLSnippetWriter {
         DocumentNode documentNode = PMLParser.parseReader ( PMLDocumentReader, null );
 
         HTMLNodesWriter htmlNodesWriter = new HTMLNodesWriter (
-            new HTMLWriter ( HTMLSnippetWriter ), PMLToHTMLOptions.builder().build() );
+            HTMLSnippetWriter, PMLToHTMLOptions.builder().build() );
 
         htmlNodesWriter.handleChildNodes ( documentNode.getChildNodes() );
     }

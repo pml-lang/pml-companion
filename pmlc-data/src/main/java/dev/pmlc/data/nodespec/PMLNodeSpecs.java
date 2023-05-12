@@ -37,7 +37,7 @@ public class PMLNodeSpecs {
     private final @NotNull Map<String, PMLNodeSpec<?,?>> map;
 
 
-    public PMLNodeSpecs() {
+    private PMLNodeSpecs() {
         this.map = new HashMap<>();
     }
 

@@ -108,13 +108,13 @@ public class TableDataHTMLWriter {
 
         for ( int index = 0; index < cells.size(); index ++ ) {
             String className = cellClassName ( index, horizontalColumnAlignments, cellClassName );
-            helper.writeHTMLStartTag ( cellTag, className );
+            helper.writeStartTag ( cellTag, className );
             String cellValue = cells.get ( index );
             if ( cellValue != null ) helper.escapeAndWriteText ( cellValue );
-            helper.writeHTMLEndTag ( cellTag );
+            helper.writeEndTag ( cellTag );
         }
 
-        helper.writeHTMLEndTag ( rowTag );
+        helper.writeEndTag ( rowTag );
         helper.writeNewLine();
     }
 

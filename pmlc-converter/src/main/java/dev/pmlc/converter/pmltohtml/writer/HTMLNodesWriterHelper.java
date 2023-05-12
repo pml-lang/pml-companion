@@ -3,23 +3,24 @@ package dev.pmlc.converter.pmltohtml.writer;
 import dev.pmlc.converter.pmltohtml.options.PMLToHTMLOptions;
 import dev.pmlc.data.node.PMLNode;
 import dev.pmlc.data.node.block.PMLBlockNode;
-import dev.pmlc.data.node.inline.PMLInlineNode;
 import dev.pmlc.data.node.handler.PMLNodesHandler;
+import dev.pmlc.data.node.inline.PMLInlineNode;
 import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.text.utilities.html.HTMLWriter;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class HTMLNodesWriterHelper {
+public class HTMLNodesWriterHelper extends HTMLWriter {
 
 
     private static final @NotNull String CSS_CLASS_ATTRIBUTE_NAME = "class";
 
 
-    private final @NotNull HTMLWriter writer;
+    // private final @NotNull HTMLWriter writer;
 
     private final @NotNull PMLToHTMLOptions options;
     PMLToHTMLOptions getOptions() { return options; }
@@ -28,11 +29,13 @@ public class HTMLNodesWriterHelper {
 
 
     public HTMLNodesWriterHelper (
-        @NotNull HTMLWriter writer,
+        @NotNull Writer writer,
         @NotNull PMLToHTMLOptions options,
         @NotNull PMLNodesHandler nodesHandler ) {
 
-        this.writer = writer;
+        super ( writer );
+
+        // this.writer = writer;
         this.options = options;
         this.nodesHandler = nodesHandler;
     }
@@ -64,7 +67,7 @@ public class HTMLNodesWriterHelper {
 
         writeNewLine();
         writeIndent();
-        writeHTMLEndTag ( HTMLTag );
+        writeEndTag ( HTMLTag );
         writeNewLine();
     }
 
@@ -87,7 +90,7 @@ public class HTMLNodesWriterHelper {
 
         nodesHandler.handleChildNodes ( node.getInlineChildNodes () );
 
-        writeHTMLEndTag ( HTMLTag );
+        writeEndTag ( HTMLTag );
         writeNewLine();
     }
 
@@ -120,7 +123,7 @@ public class HTMLNodesWriterHelper {
 
         writeHTMLStartTag ( node, HTMLTag, CSSClass, extraAttributes );
         nodesHandler.handleChildNodes ( node.getInlineChildNodes() );
-        writeHTMLEndTag ( HTMLTag );
+        writeEndTag ( HTMLTag );
     }
 
     public void writeHTMLStartTag (
@@ -209,7 +212,7 @@ public class HTMLNodesWriterHelper {
 
 
     // HTMLWriter method wrappers
-
+/*
     public void write ( @NotNull String string ) throws IOException { writer.write ( string ); }
 
     public void writeNullable ( @Nullable String string ) throws IOException { writer.writeNullable ( string ); }
@@ -247,4 +250,5 @@ public class HTMLNodesWriterHelper {
 
     public void writeAttribute ( @NotNull String name, @Nullable String value ) throws IOException {
         writer.writeAttribute ( name, value ); }
+ */
 }

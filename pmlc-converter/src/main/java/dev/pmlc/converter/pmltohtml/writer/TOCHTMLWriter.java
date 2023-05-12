@@ -43,7 +43,7 @@ public class TOCHTMLWriter {
             helper.writeIndent();
             helper.write ( "<h2 class=\"pml-toc-title\">" );
             helper.escapeAndWriteText ( TOCTitle );
-            helper.writeHTMLEndTag ( "h2" );
+            helper.writeEndTag ( "h2" );
             helper.writeNewLine();
         }
 
@@ -107,8 +107,8 @@ public class TOCHTMLWriter {
         helper.write ( TOCNode.getChapterId() );
         helper.write ( "\">" );
         helper.escapeAndWriteText ( TOCNode.getChapterTitleTextOrEmpty () );
-        helper.writeHTMLEndTag ( "a" );
-        helper.writeHTMLEndTag ( "summary" );
+        helper.writeEndTag ( "a" );
+        helper.writeEndTag ( "summary" );
         helper.writeNewLine();
 
         helper.writeIndent();
@@ -141,8 +141,8 @@ public class TOCHTMLWriter {
         helper.write ( TOCNode.getChapterId() );
         helper.write ( "\">" );
         helper.escapeAndWriteText ( TOCNode.getChapterTitleTextOrEmpty () );
-        helper.writeHTMLEndTag ( "a" );
-        helper.writeHTMLEndTag ( "li" );
+        helper.writeEndTag ( "a" );
+        helper.writeEndTag ( "li" );
         helper.writeNewLine();
     }
 }

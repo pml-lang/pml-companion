@@ -27,8 +27,10 @@ public class HTMLPageWriter {
         @NotNull Writer HTMLOutputWriter,
         @NotNull PMLToHTMLOptions options ) throws Exception {
 
-        @NotNull HTMLWriter HTMLWriter = new HTMLWriter ( HTMLOutputWriter );
-        @NotNull HTMLNodesWriter HTMLNodesWriter = new HTMLNodesWriter ( HTMLWriter, options );
+        // @NotNull HTMLWriter HTMLWriter = new HTMLWriter ( HTMLOutputWriter );
+        // @NotNull HTMLNodesWriter HTMLNodesWriter = new HTMLNodesWriter ( HTMLWriter, options );
+        @NotNull HTMLNodesWriter HTMLNodesWriter = new HTMLNodesWriter ( HTMLOutputWriter, options );
+        HTMLWriter HTMLWriter = HTMLNodesWriter.getHTMLWriter();
 
         writePageStart ( HTMLWriter, options, documentNode );
         writeBodyStart ( HTMLWriter, HTMLNodesWriter, options, documentNode );

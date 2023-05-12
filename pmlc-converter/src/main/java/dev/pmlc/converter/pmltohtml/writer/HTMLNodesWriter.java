@@ -47,6 +47,7 @@ import dev.pp.basics.annotations.NotNull;
 import dev.pp.basics.annotations.Nullable;
 import dev.pp.text.utilities.html.HTMLWriter;
 
+import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
@@ -57,14 +58,27 @@ public class HTMLNodesWriter implements PMLNodesHandler {
 
 
     private final @NotNull PMLToHTMLOptions options;
+    // private final @NotNull HTMLNodesWriterHelper helper;
     private final @NotNull HTMLNodesWriterHelper helper;
+    // public @NotNull HTMLNodesWriterHelper getHTMLWriter() { return helper; }
+    public @NotNull HTMLWriter getHTMLWriter() { return helper; }
 
     private boolean writingTableHeader = false;
     private boolean writingTableFooter = false;
 
-
+/*
     public HTMLNodesWriter (
         @NotNull HTMLWriter writer,
+        @NotNull PMLToHTMLOptions options ) {
+
+        this.options = options;
+        this.helper = new HTMLNodesWriterHelperOld ( writer, options, this );
+    }
+
+ */
+
+    public HTMLNodesWriter (
+        @NotNull Writer writer,
         @NotNull PMLToHTMLOptions options ) {
 
         this.options = options;
@@ -160,7 +174,7 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         helper.writeHTMLStartTag ( "td", null, null, null, tdAttributes );
         helper.write ( String.valueOf ( node.getRenderPosition() ) );
         helper.write ( "." );
-        helper.writeHTMLEndTag ( "td" );
+        helper.writeEndTag ( "td" );
         helper.writeNewLine();
 
         // <td>^^</td>
@@ -170,9 +184,9 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         for ( FootnoteReferenceNode reference : node.getReferences () ) {
             helper.writeHTMLATag ( "#" + reference.getId() );
             helper.write ( "^" );
-            helper.writeHTMLEndTag ( "a" );
+            helper.writeEndTag ( "a" );
         }
-        helper.writeHTMLEndTag ( "td" );
+        helper.writeEndTag ( "td" );
         helper.writeNewLine();
 
         // <td>
@@ -221,7 +235,7 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         helper.writeHTMLStartTag ( tag, node.getNodeId(), HtmlCodeNodeSpec.CSS_CLASS, node.getHTMLAttributes(), null );
         @Nullable String code = node.getRawText();
         if ( code != null ) helper.write ( code );
-        helper.writeHTMLEndTag ( tag );
+        helper.writeEndTag ( tag );
         helper.writeNewLine();
     }
 
@@ -355,16 +369,16 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         if ( inlineText == null ) inlineText = String.valueOf ( node.getListIndex() );
         helper.write ( inlineText );
         // helper.write ( "]" ); // done in CSS
-        helper.writeHTMLEndTag ( "a" );
+        helper.writeEndTag ( "a" );
 
-        helper.writeHTMLEndTag ( FootnoteReferenceNodeSpec.HTML_TAG );
+        helper.writeEndTag ( FootnoteReferenceNodeSpec.HTML_TAG );
     }
 
     public void inlineCode ( @NotNull InlineCodeNode node ) throws Exception {
 
         helper.writeHTMLStartTag ( node, InlineCodeNodeSpec.HTML_TAG, InlineCodeNodeSpec.CSS_CLASS, null );
         helper.escapeAndWriteNullableText ( node.getRawText() );
-        helper.writeHTMLEndTag ( InlineCodeNodeSpec.HTML_TAG );
+        helper.writeEndTag ( InlineCodeNodeSpec.HTML_TAG );
     }
 
     public void inlineFootnote ( @NotNull InlineFootnoteNode node ) throws Exception {
@@ -372,6 +386,10 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         FootnoteReferenceNode reference = node.getReferenceNode ();
         assert reference != null;
         footnoteReference ( reference );
+    }
+
+    public void inlineUDN ( @NotNull InlineUDN node ) throws Exception {
+        node.writeHTML ( helper, this );
     }
 
     public void italic ( @NotNull ItalicNode node ) throws Exception {
@@ -383,7 +401,7 @@ public class HTMLNodesWriter implements PMLNodesHandler {
         helper.writeHTMLStartTag ( node, LinkNodeSpec.HTML_TAG, LinkNodeSpec.CSS_CLASS,
             Map.of ( "href", node.getURL() ) );
         handleChildNodes ( node.getInlineChildNodes() );
-        helper.writeHTMLEndTag ( LinkNodeSpec.HTML_TAG );
+        helper.writeEndTag ( LinkNodeSpec.HTML_TAG );
     }
 
     public void newLine ( @NotNull NewLineNode node ) throws Exception {
@@ -425,6 +443,6 @@ public class HTMLNodesWriter implements PMLNodesHandler {
             Map.of ( "href", "#" + node.getReferencedNodeId() ) );
 //        helper.escapeAndWriteText ( node.getText() );
         handleChildNodes ( node.getInlineChildNodes() );
-        helper.writeHTMLEndTag ( tag );
+        helper.writeEndTag ( tag );
     }
 }

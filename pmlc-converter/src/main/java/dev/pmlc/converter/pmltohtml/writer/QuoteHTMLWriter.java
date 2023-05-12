@@ -42,7 +42,7 @@ public class QuoteHTMLWriter {
         helper.writeIndent();
         helper.writeHTMLStartTag (
             "div", null, PMLNodeSpecCreator.prefixedHTMLClassName ( "quote-text-prefix" ), null, null );
-        helper.writeHTMLEndTag ( "div" );
+        helper.writeEndTag ( "div" );
         helper.writeNewLine();
 
         // <div class="pml-quote-text">
@@ -57,7 +57,7 @@ public class QuoteHTMLWriter {
         helper.writeIndent();
         helper.writeHTMLStartTag (
             "div", null, PMLNodeSpecCreator.prefixedHTMLClassName ( "quote-text-suffix" ), null, null );
-        helper.writeHTMLEndTag ( "div" );
+        helper.writeEndTag ( "div" );
         helper.writeNewLine();
 
         helper.decreaseIndent ();

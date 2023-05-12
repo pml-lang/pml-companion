@@ -124,6 +124,8 @@ public interface PMLNodesHandler {
 
     void inlineFootnote ( @NotNull InlineFootnoteNode node ) throws Exception;
 
+    void inlineUDN ( @NotNull InlineUDN node ) throws Exception;
+
     void italic ( @NotNull ItalicNode node ) throws Exception;
 
     void link ( @NotNull LinkNode node ) throws Exception;

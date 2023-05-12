@@ -125,6 +125,8 @@ public class DelegatingNodesHandler implements PMLNodesHandler {
 
     public void inlineFootnote ( @NotNull InlineFootnoteNode node ) throws Exception { delegateNode ( node ); }
 
+    public void inlineUDN ( @NotNull InlineUDN node ) throws Exception { delegateNode ( node ); }
+
     public void italic ( @NotNull ItalicNode node ) throws Exception { delegateNode ( node ); }
 
     public void link ( @NotNull LinkNode node ) throws Exception { delegateNode ( node ); }

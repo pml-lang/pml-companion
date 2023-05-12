@@ -63,8 +63,8 @@ public class RawTextHTMLWriter {
 
         writeRawText ( node, helper );
 
-        helper.writeHTMLEndTag ( codeTag );
-        helper.writeHTMLEndTag ( SourceCodeNodeSpec.HTML_TAG );
+        helper.writeEndTag ( codeTag );
+        helper.writeEndTag ( SourceCodeNodeSpec.HTML_TAG );
         helper.writeNewLine();
     }
 
@@ -77,7 +77,7 @@ public class RawTextHTMLWriter {
         String tag = InputNodeSpec.HTML_TAG;
         helper.writeHTMLStartTag ( tag, node.getNodeId(), CSSClassName, node.getHTMLAttributes(), null );
         writeRawText ( node, helper );
-        helper.writeHTMLEndTag ( tag );
+        helper.writeEndTag ( tag );
         helper.writeNewLine();
     }
 

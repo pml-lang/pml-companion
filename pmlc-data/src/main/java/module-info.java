@@ -4,6 +4,7 @@ module dev.pmlc.data {
     requires dev.pp.text;
     requires dev.pp.parameters;
     requires dev.pp.datatype;
+    requires dev.pp.scripting;
 
     requires dev.pdml.shared;
     requires dev.pdml.data;
@@ -39,4 +40,5 @@ module dev.pmlc.data {
     exports dev.pmlc.data.nodespec.block.quote;
     exports dev.pmlc.data.nodespec.block.admonition;
     exports dev.pmlc.data.node.block.admonition;
+    exports dev.pmlc.data.user_defined_node;
 }

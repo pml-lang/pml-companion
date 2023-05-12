@@ -121,6 +121,8 @@ public class ThrowingNodesHandler implements PMLNodesHandler {
 
     public void inlineFootnote ( @NotNull InlineFootnoteNode node ) throws Exception { handleNode ( node ); }
 
+    public void inlineUDN ( @NotNull InlineUDN node ) throws Exception { handleNode ( node ); }
+
     public void italic ( @NotNull ItalicNode node ) throws Exception { handleNode ( node ); }
 
     public void link ( @NotNull LinkNode node ) throws Exception { handleNode ( node ); }
